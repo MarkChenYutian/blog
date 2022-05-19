@@ -3,6 +3,14 @@ layout: post
 title: Serverless File System based on AWS S3
 tags: ["Web", "React"]
 category: ["Frontend"]
+banner: 
+    video: https://markdown-img-1304853431.file.myqcloud.com/20220518-files-video.mp4
+    loop: true
+    volume: 0
+    opacity: 0.618
+    background: "#000"
+    height: "100vh"
+    min_height: "38vh"
 ---
 
 This system is deployed on [My blog's file Sharing Page]({{site.baseurl}}/files.html) as a front-end application. The source code is also avalable in `React-S3-Viewer` Repo [here](https://github.com/MarkChenYutian/React-S3-viewer).

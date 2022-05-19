@@ -20,6 +20,22 @@ html[data-theme="dark"]  {
       border-top: solid 1px #2f2f2f !important;
       transition: 0s;
     }
+    header.site-header-transparent {
+      &.site-header {
+        @include media-query($on-laptop) {
+          .page-link {
+            color: #f8f8f8;
+          }
+        }
+      }
+    }
+
+    footer.site-footer {
+      .site-footer-inner {
+        border-top: solid 1px #2f2f2f !important;
+        transition: 0s;
+      }
+    }
   }
 
   body {
