@@ -68,6 +68,23 @@ $marker-yellow: #ffe564
     h1, h2, h3, h4, h5, blockquote
       color: $grey-3
 
+details > summary::marker 
+  display: none
+  content: ""
+
+details > summary
+  padding: .3rem
+
+details[open] > summary
+  border: none
+
+details
+  padding: 0 1rem 1rem 1rem
+  border: solid 1px lighten($text-color, 25%)
+  border-radius: .3rem
+  margin-bottom: 1rem
+  box-shadow: 6.7px 6.7px 5.3px rgba(0,0,0,.007),22.3px 22.3px 17.9px rgba(0,0,0,.011),100px 100px 80px rgba(0,0,0,.02)
+
 .notification 
   background-color: $notification-1
   padding: 0 $padding-ms

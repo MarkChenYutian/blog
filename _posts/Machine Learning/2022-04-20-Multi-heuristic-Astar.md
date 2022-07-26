@@ -6,9 +6,11 @@ category: [ "Machine Learning"]
 ---
 
 Let $g(s)$ denote the cost of a least-cost path from $s_{start}$ to $s$, we then have
+
 $$
 g(s) = \min_{s'\in pred(s)}{(g(s') + c(s', s))}
 $$
+
 That is, the minimum cost from $s_{start}$ to $s$ equals to the min cost to get to the predecessor of $s$ (a.k.a. $s’$ in the formula above) add the actual cost from $s’$ to $s$.
 
 ## A\* Search
@@ -18,9 +20,11 @@ That is, the minimum cost from $s_{start}$ to $s$ equals to the min cost to get 
 > Perform **minimal number of state expansions** required to guarantee optimality.
 
 The predicted cost to get from $s_{start}$ to $s_{goal}$ through state $s$ can be estimated through
+
 $$
 f(s_{start}, s, s_{goal}) = g(s_{start}, s) + h(s, s_{goal})
 $$
+
 $g$ represents the **actual** minimum cost of getting to $s$ from the starting state. $h$ represents a **heuristic estimation** of cost to get to $s_{goal}$ from $s$.
 
 ### Requirement of Heuristic Function
@@ -28,10 +32,13 @@ $g$ represents the **actual** minimum cost of getting to $s$ from the starting s
 Heuristic function must be
 
 **Admissible** - The heuristic function must *underestimate / accurately predict the cost*.
+
 $$
 h(s) \leq \min{c(s, s_{goal})}
 $$
+
 **Consistent** - the function $h$ should satisfy the triangle inequality.
+
 $$
 h(s_{goal}, s_{goal}) = 0,\quad h(S) \leq c(s, s') + h(s')
 $$
@@ -55,9 +62,11 @@ The scale of explored nodes in A\* search is much smaller than in the dijkastra 
 However, for high dimensional graph, the algorithm will soon out of memory. We need some stronger constraint to the expansion of nodes. **Weighted A\***, is one of the algorithm that apply a stronger constraint on expansion, with the cost of losing optimality of A\* search.
 
 Instead of using $f(s) = h(s) + g(s)$, the weighted A\* puts a weight $\epsilon$ on heuristic function
+
 $$
 f(s) = g(s) + \epsilon h(s)
 $$
+
 This will make the algorithm has more **bias towards states that are closer to goal.**
 
 **Definition ($\varepsilon$-suboptimal)** $cost(solution) \leq \varepsilon\cdot cost(optimal\;solution)$
@@ -79,10 +88,13 @@ This will make the algorithm has more **bias towards states that are closer to g
 1. If $h_1(s)$, $h_2(s)$ are consistent, then - $h(s) = \max(h_1(s), h_2(s))$ is also consistent.
 
 2. If A\* uses $\varepsilon$-consistent heuristics
+   
     $$
     \forall s\neq s_{goal}\quad h(s_{goal}) = 0 \wedge h(s) \leq \varepsilon c(s, succ(s)) + h(succ(s))
     $$
+
     then A\* is $\varepsilon$-suboptimal
+    
     $$
     Cost(solution) \leq \varepsilon \cdot Cost(optimal\;solution)
     $$

@@ -60,6 +60,7 @@ main {
  */
 img {
   max-width: 100%;
+  border-radius: .3rem;
   vertical-align: middle;
 }
 
@@ -159,6 +160,7 @@ pre {
   overflow-x: auto;
   position: relative;
   background-color: #f0f0f0;
+  border-radius: .3rem;
 
   > code {
     display: inline-block;
