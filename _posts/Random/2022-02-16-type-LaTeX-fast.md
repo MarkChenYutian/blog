@@ -1,7 +1,7 @@
 ---
 layout: post
 title: How to Type LaTeX Fast & Elegant - A Guide from & for Beginner
-tags: ["Notes"]
+tags: ["Notes", Random]
 category: ["Notes"]
 ---
 
