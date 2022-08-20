@@ -15,7 +15,7 @@ lang: "ch"
 
 LSTM，全称 Long Short Term Memory (长短期记忆) 是一种特殊的**递归神经网络** 。这种网络与一般的前馈神经网络不同，LSTM可以利用时间序列对输入进行分析；简而言之，当使用前馈神经网络时，神经网络会认为我们$t$时刻输入的内容与$t + 1$时刻输入的内容**完全无关**，对于许多情况，例如图片分类识别，这是毫无问题的，可是对于一些情景，例如**自然语言处理** (NLP, Natural Language Processing) 或者我们需要分析类似于**连拍照片**这样的数据时，合理运用 $t$ 或之前的输入来处理 $t+n$ 时刻显然可以更加合理的运用输入的信息。为了运用到时间维度上信息，人们设计了**递归神经网络** (RNN, Recurssion Neural Network)，一个简单的递归神经网络可以用这种方式表示
 
-![image-20200402223614052](Https://markchenyutian.github.io/Markchen_Blog/Asset/image-20200402223614052.png)
+![img](https://markdown-img-1304853431.file.myqcloud.com/20220810232451.png)
 
 在图中，$x_t$是在$t$时刻的输入信息，$h_t$是在$t$时刻的输入信息，我们可以看到神经元$A$会递归的调用自身并且将$t -1$时刻的信息传递给$t$时刻。
 
@@ -58,13 +58,13 @@ LSTM的设计或多或少的借鉴了人类对于自然语言处理的直觉性�
 
 一个普通的，使用tanh函数的RNN可以这么表示：
 
-![image-20200402233238756](Https://markchenyutian.github.io/Markchen_Blog/Asset/image-20200402233238756.png)
+![img](https://markdown-img-1304853431.file.myqcloud.com/20220810232513.jpeg)
 
 在这里，我们可以看到A在$t-1$时刻的输出值$h_t$被复制到了$t$时刻，与$t$时刻的输入$x_t$整合后经过一个带权重和偏置的tanh函数后形成输出，并继续将数据复制到$t+1$时刻……
 
 与上图朴素的RNN相比，单个LSTM单元拥有更加复杂的内部结构和输入输出：
 
-![image-20200402233826864](Https://markchenyutian.github.io/Markchen_Blog/Asset/image-20200402233826864.png)
+![img](https://markdown-img-1304853431.file.myqcloud.com/20220810232534.jpeg)
 
 在上图中，每一个红色圆形代表对向量做出的操作（pointwise operation， 对位操作），而黄色的矩形代表一个神经网络层，上面的字符代表神经网络所使用的激活函数
 
@@ -86,13 +86,13 @@ LSTM的设计或多或少的借鉴了人类对于自然语言处理的直觉性�
 
 LSTM能够从RNN中脱颖而出的关键就在于上图中从单元中贯穿而过的线 ——神经元的隐藏态，我们可以将神经元的隐藏态简单的理解成递归神经网络对于输入数据的“记忆”，用$C_t$表示神经元在$t$时刻过后的“记忆”，这个向量涵盖了在$t+1$时刻前神经网络对于所有输入信息的“概括总结”
 
-![image-20200402235227710](Https://markchenyutian.github.io/Markchen_Blog/Asset/image-20200402235227710.png)
+![img](https://markdown-img-1304853431.file.myqcloud.com/20220810232552.jpeg)
 
 接下来我们会看一下LSTM四个函数层分别在做些什么
 
 ### LSTM_1 遗忘门
 
-![image-20200403003547037](Https://markchenyutian.github.io/Markchen_Blog/Asset/image-20200403003547037.png)
+![img](https://markdown-img-1304853431.file.myqcloud.com/20220810232606.jpeg)
 
 对于上一时刻LSTM中的单元状态来说，一些“信息”可能会随着时间的流逝而“过时”。为了不让过多记忆影响神经网络对现在输入的处理，我们应该选择性遗忘一些在之前单元状态中的分量——这个工作就交给了“遗忘门”
 
@@ -108,7 +108,7 @@ $$
 
 记忆门是用来控制是否将在$t$时刻（现在）的数据并入单元状态中的控制单位。首先，用tanh函数层将现在的向量中的有效信息提取出来，然后使用（图上tanh函数层左侧）的sigmoid函数来控制这些记忆要放“多少”进入单元状态。这两者结合起来就可以做到：
 
-![image-20200403001917424](Https://markchenyutian.github.io/Markchen_Blog/Asset/image-20200403001917424.png)
+![img](https://markdown-img-1304853431.file.myqcloud.com/20220810232622.jpeg)
 
 1. 从当前输入中提取有效信息
 2. 对提取的有效信息做出筛选，为每个分量做出评级(0 ~ 1)，评级越高的最后会有越多的记忆进入单元状态
@@ -151,7 +151,7 @@ $$
 
 自从LSTM在自然语言处理等方面大获成功后，许多种LSTM的变体被提出，其中只有几种值得特别关注：
 
-![image-20200403021009010](Https://markchenyutian.github.io/Markchen_Blog/Asset/image-20200403021009010.png)
+![img](https://markdown-img-1304853431.file.myqcloud.com/20220810232641.jpeg)
 
 这种LSTM让各个门都可以在获得了上一时刻的单元状态的前提下进行运算。在上面的图中，单元状态被额外赋予到了所有三个层中（输出门除外），然而在实际的应用中，大部分研究者只会选择性的打开三个通道中的一或两个
 

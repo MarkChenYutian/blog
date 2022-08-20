@@ -438,11 +438,11 @@ html {
     }
 
     h2, h3, h4, h5, h6 {
-      margin: 60px 0 19px;
+      margin: $spacing-unit 0 $spacing-unit / 2;
     }
 
     p, hr {
-      margin-bottom: 24px;
+      margin-bottom: $spacing-unit / 1.5;
     }
 
     hr {
@@ -688,10 +688,11 @@ html {
     @extend %flex;
 
   .main {
-    @extend %flex-1;
+    @extend %flex-3;
   }
 
   .sidebar {
+    flex: 1;
     padding-left: 8px;
     transition: top 0.2s, display 0.2s;
 

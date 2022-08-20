@@ -16,9 +16,13 @@ lang: "ch"
 ## 0. 模型是一个函数 
 
 我们可以将一个深度学习中的模型看做一个映射关系：
+
+
 $$
 \text{Perception} \rightarrow \text{Output}
 $$
+
+
 对于一个深度学习模型是“感知”（模型可以获得的所有信息的总和）与一个“数字”或者 “决策"之间的映射关系。所以我们可以将模型看作一个函数$F(x)$.
 
 那么模型就可以被表示为：$F(\text{Perception}) =\text{Output}$
@@ -33,11 +37,14 @@ $$
 
 神经网络由许多神经元相互连接而组成，每个神经元都有自己的参数$\theta$ 。我们可以将神经元描绘为一个函数 $f(\theta_i, x) = y$。那么对于下面一个模型（$F(\Theta, x), \quad \Theta=\lbrace \theta_1, \theta_2, \dots, \theta_n\rbrace$），我们可以写出它的数学表达式：
 
-<img src="https://gitee.com/MarkYutianChen/mark-markdown-imagebed/raw/master/20210502163035.png" alt="image-20200731214204525" style="zoom:30%;" />
+<img src="https://markdown-img-1304853431.file.myqcloud.com/20220810233342.png" alt="img" width="50%" />
+
 
 $$
 F(\Theta, x) = f(\theta_5, (f(\theta_3, f(\theta_2, x_2) + f(\theta_1, x_1)), f(\theta_4, f(\theta_2, x_2))))
 $$
+
+
 从上面的式子我们可以看到参数$\theta$的取值和模型本身的结构（上图中函数互相嵌套的关系）共同决定了模型的最终输出。
 
 ## 2. 神经网络可以拟合函数
@@ -46,7 +53,7 @@ $$
 
 首先，我们可以用5个使用sigmoid函数的神经元来构建一个“高台”函数。(代码是具体的实现)
 
-<img src="https://gitee.com/MarkYutianChen/mark-markdown-imagebed/raw/master/20210502163037.png" alt="3" style="zoom:25%;" />
+<img src="https://markdown-img-1304853431.file.myqcloud.com/20220810233427.png" alt="3" width="30%" />
 
 ```python
 import matplotlib.pyplot as plt
@@ -81,7 +88,7 @@ ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.viridis)
 plt.show()
 ```
 
-![1](https://gitee.com/MarkYutianChen/mark-markdown-imagebed/raw/master/20210502163039.png)
+![1](https://markdown-img-1304853431.file.myqcloud.com/20220810233505.png)
 
 如果我们把这样的一个高台记作$Tower(x_1, x_2，\Theta)$，那么通过组合足够多这些高台，我们可以得到任何一个连续二元函数的任意小精度拟合（缩小每个高台的面积），例如下图（左：原函数，右：四个$Tower(x_1, x_2,\Theta)$的组合
 
@@ -104,7 +111,7 @@ ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.viridis)
 plt.show()
 ```
 
-![1](https://gitee.com/MarkYutianChen/mark-markdown-imagebed/raw/master/20210502163042.png)
+![1](https://markdown-img-1304853431.file.myqcloud.com/20220810233524.png)
 
 ## 3. 如何让电脑自动调参？
 
@@ -132,14 +139,18 @@ plt.show()
 为了让机器完成任务2 和 3，我们需要将”预测调节参数$\theta$（调大/调小）以后模型会变好还是变坏“这样一个主观的过程用数学方法表达出来。因为我们已经引入了损失函数，所以实际上这个过程可以被表述为“预测如何调节参数$\theta$（调大/调小）可以减小损失函数的值”
 
 在此之前，我们先看一看我们如何最小化一个一元函数$h(x)$. 对于一个一元函数，我们可以计算出当前位置的一阶导数$dh/dx$。如果一阶导数是正数，说明增大$x$可以增大$h(x)$，反之亦然。所以要最小化$h(x)$，我们只需要不停的执行下面这一个操作：
+
+
 $$
 x\stackrel{\text{update}}{\longrightarrow}x - \eta \cdot \frac{dh(x)}{dx},\quad\quad \text{where $\eta$ is a positive number}
 $$
+
+
 这里的$\eta$是一个参数“学习速率”，学习速率越高，每次更新$x$的时候$x$的值就会改变越多 。
 
-
-
 有了上面的铺垫，解决“预测如何调节参数$\theta$（调大/调小）可以减小损失函数的值”的方法就很明显了：计算$\partial L(\hat{y}, y)/\partial \theta$ 并且将$\theta$按照一下方式更新：
+
+
 $$
 \theta\stackrel{\text{update}}{\longrightarrow}\theta - \eta \cdot \frac{\partial L(\hat{y}, y)}{\partial\theta},\quad\quad \text{where $\eta$ is a positive number}
 $$
@@ -147,6 +158,8 @@ $$
 > 有些人可能会疑惑，在$L(\hat{y}, y)$中明明都没有自变量$\theta$ 啊，怎么计算$\frac{\partial L(\hat{y}, y)}{\partial \theta}$ 呢？
 >
 > 实际上注意到损失函数的第一个输入时$\hat{y}$，也就是模型的输出，而模型可以表示为$F(\theta, x)$，所以我们可以通过**链式法则**计算$\frac{\partial L(\hat{y}, y)}{\partial\theta}$
+>
+> 
 > $$
 > \frac{\partial L(\hat{y}, y)}{\partial \theta} = \frac{\partial L(\hat{y}, y)}{\partial \hat{y}}\cdot \frac{\partial \hat{y}}{\partial \theta}
 > $$

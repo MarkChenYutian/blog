@@ -38,7 +38,7 @@ banner: "/assets/images/banners/CS188Background.jpg"
 - AC4算法是一种非常激进的算法，使用了非常多的方法试图降低时间复杂度
 - AC4算法致力于降低AC3的时间复杂度，**使用了以空间换时间的策略**，AC4通过大量的存储来降低时间复杂度
 
-使用一个二位数组来存储两个变量之间的约束可以支持这两个变量取什么值，通过这些存储，AC4可以避免重复检查变量间的约束关系
+AC4使用二维数组来存储两个变量之间的约束可以支持这两个变量取的值，通过这些存储，AC4可以避免重复检查变量间的约束关系
 
 **AC4 算法的时间复杂度是最佳的**
 
@@ -64,11 +64,9 @@ banner: "/assets/images/banners/CS188Background.jpg"
 
 ### AC 算法的时间复杂度与版本树总结
 
-![img](https://gitee.com/MarkYutianChen/mark-markdown-imagebed/raw/master/20210502162955.jpeg)
+![img](https://markdown-img-1304853431.file.myqcloud.com/20220810233744.jpeg)
 
-## Part IV Other Methods for CSP[^1 ]
-
-*以下基于一个只有二元约束的CSP图（任意多元CSP问题都可以被转化为二元CSP问题）
+## Part IV Other Methods for CSP[^1]
 
 ### 启发式算法解决CSP问题
 
@@ -78,7 +76,7 @@ banner: "/assets/images/banners/CS188Background.jpg"
 
 ### 结构优化法解决CSP问题
 
-![img](https://gitee.com/MarkYutianChen/mark-markdown-imagebed/raw/master/20210502162958.jpeg)
+![img](https://markdown-img-1304853431.file.myqcloud.com/20220810233754.jpeg)
 
 树形的CSP约束问题可以在**线性时间内解决**，（例如使用“拓补排序”方法）将树**线性化**；一种CSP解决方法是**割集条件设置**，这种方法通过去掉图中产生环的关键节点来将有环的CSP约束图转化为若干个无环的CSP约束图，然后将每一个无环的CSP解加上之前删掉的关键节点后再次求解
 
@@ -96,6 +94,12 @@ banner: "/assets/images/banners/CS188Background.jpg"
 2. 空间结构不可重叠（一个位置不能有两个原子） *如下图所示
 3. 蛋白质的激活位置 / 活性位置不能太大，不然无法实现酶催化的专一性 *如下图所示
 
-![img](https://gitee.com/MarkYutianChen/mark-markdown-imagebed/raw/master/20210502163001.jpeg)
+![img](https://markdown-img-1304853431.file.myqcloud.com/20220810233838.jpeg)
 
 **值域：**三维空间内（可以离散化三维空间，使其转化为有限值域的CSP问题）
+
+---
+
+脚注：
+
+[^1]: 以下基于一个只有二元约束的CSP图（任意多元CSP问题都可以被转化为二元CSP问题）

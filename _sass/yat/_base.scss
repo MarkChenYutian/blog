@@ -44,7 +44,9 @@ ul, ol, dl, figure,
   margin-bottom: $spacing-unit / 2;
 }
 
-
+.post .post-content .footnotes p {
+  margin-bottom: $spacing-unit / 4;
+}
 
 /**
  * `main` element
@@ -60,10 +62,12 @@ main {
  */
 img {
   max-width: 100%;
-  border-radius: .3rem;
   vertical-align: middle;
 }
 
+.post img {
+  border-radius: .3rem;
+}
 
 
 /**
@@ -75,6 +79,8 @@ figure > img {
 
 figcaption {
   font-size: $small-font-size;
+  text-align: center;
+  color: lighten($text-color, 30%);
 }
 
 
@@ -86,12 +92,12 @@ ul, ol {
   margin-left: $spacing-unit;
 }
 
-li {
-  > ul,
-  > ol {
-    margin-bottom: 0;
-  }
-}
+// li {
+//   > ul,
+//   > ol {
+//     margin-bottom: 0;
+//   }
+// }
 
 
 
@@ -247,6 +253,11 @@ table {
 %flex-1 {
   flex: 1;
   min-width: 0; /* <-- fix flexbox width with pre tags  */
+}
+
+%flex-3 {
+  flex: 3;
+  min-width: 0;
 }
 
 /**

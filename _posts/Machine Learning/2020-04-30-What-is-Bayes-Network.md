@@ -27,9 +27,13 @@ category: [ "Machine Learning"]
 两个学派都各有优势，在一些简单并可以做出大量模拟的情况（例如预测抛硬币正反的概率分布）下，概率学派可以较为精确的获得某一事件的发生概率；在一些难以分析，很难模拟/大量采样的情况（例如地震概率的预测）下，贝叶斯学派则有极大的优势，可以使用有限的信息帮助我们做出合理的推断
 
 **贝叶斯公式**是贝叶斯学派的重要理论之一，这个公式告诉了我们如何通过我们对事件A已有的认知和新的采样（evidence）B来更新事件A的**后验概率**（在事件B发生后我们对事件A概率分布的新认知）
+
+
 $$
 P(A \mid B) = \frac{P(B\mid A)P(A)}{P(B)}
 $$
+
+
 概率学派也有关于这个公式的另一套解释方法：概率学派将概率看为“结果的比例（结果A在所有结果中的概率记为P(A) ）。这个公式在这种解释下成为了描述“具有B的所有结果中有A性质的结果所占的比例 = 具有A性质的所有结果中具有B性质的结果所占的比例 $\times$ 所有结果中A的比例 / 所有结果中B的比例” [2]
 
 ## 2 什么是贝叶斯网络
@@ -40,21 +44,27 @@ $$
 
 在贝叶斯网络中，已知$X$的父节点$parents(X)$时$X$的条件概率分布$P(X\mid parents(X))$ 与已知$X$的父节点时网络中$X$的“祖先节点”的概率分布$P(ancestor(X)\mid parents(X))$互相条件独立。[3]
 
->  例子：<img src="https://gitee.com/MarkYutianChen/mark-markdown-imagebed/raw/master/20210502163124.png" alt="image-20200430104043594" style="zoom:60%;" />
+>  例子：<img src="https://markdown-img-1304853431.file.myqcloud.com/20220810232753.png" alt="image-20200430104043594" width="33%" />
 >
 > 在这样一给贝叶斯网络图中，E的父节点$parent(E) = \{D\}$，E不包括父节点的祖先节点$ancestor(E) = \{B, C, A\}$
 >
 > 通过贝叶斯网络的定义，我们可以知道随机变量C, D, E之间存在这样的关系：
 
+
 $$
 P(E\mid D) \perp P(C\mid D)
 $$
 
+
+
 > 也就是说
+
 
 $$
 P(E\mid D, B, C, A) = P(E\mid D)
 $$
+
+
 
 贝叶斯网络本质上只是一种维持子节点与其祖先节点（不包括父节点）在给定父节点的条件下互相条件独立的存储随机变量之间互相关系的数据结构。
 
@@ -64,16 +74,24 @@ $$
 
 如果使用直接列出一张全联合分布的概率分布表（如下）的话，整张概率分布表会有$2^n$行，每次计算一行都要计算随机变量的所有情况，这使得求解概率分布的时间复杂度极高（时间复杂度$O(n2^n)$）。
 
-<img src="https://gitee.com/MarkYutianChen/mark-markdown-imagebed/raw/master/20210502163127.png" alt="image-20200430112420798" style="zoom: 80%;" />
+<img src="https://markdown-img-1304853431.file.myqcloud.com/20220810232856.png" alt="image-20200430112420798" style="zoom: 80%;" />
 
 如果我把这n个随机变量用贝叶斯网络表示出来，因为贝叶斯网络可以很好的表达随机变量之间的相互条件独立关系，我们的计算量可以大大减小
+
+
 $$
-P(x_1, x_2, \cdots, x_n) = \prod^n_{i = 1}{P(x_i | x_{i+1}, x_{i + 2}, \cdots x_n)}
+P (x_1, x_2, \cdots, x_n) = \prod_{i = 1}^n{P (x_i | x_{i+1}, x_{i + 2}, \cdots x_n)}
 $$
+
+
 上面的式子中连乘号中的概率分布也可以表示为：
+
+
 $$
 P(x_i \mid parents(x_i), ancestor(x_i))
 $$
+
+
 因为我们知道 $P(ancestor(x_i)\mid parents(x_i))\perp P(x_i \mid parents(x_i))$，我们可以消去上式中给定条件里的$ancestor(x_i)$这一项
 
 这时候，我们可以得知：
@@ -100,7 +118,7 @@ $$
 
 MNIST数据集是美国国家标准与技术研究所收集整理标注的一个手写数字数据集，其中包括了60000张28\*28的8bit灰度手写数字图片作为训练集，还有10000张28\*28的8bit灰度图片作为测试集。每张图片由$28^2 = 784$个像素构成，每个像素取值（从白到黑）在$[0, 255]$的范围内。
 
-![MNIST数据集中的一张'4'的样本](https://gitee.com/MarkYutianChen/mark-markdown-imagebed/raw/master/20210502163132.png)
+![MNIST数据集中的一张'4'的样本](https://markdown-img-1304853431.file.myqcloud.com/20220810233054.png)
 
 每一张图像都有一个“标签”，这个标签代表着这个图片上写的数字。
 
@@ -108,21 +126,29 @@ MNIST数据集是美国国家标准与技术研究所收集整理标注的一个
 
 因为在这个例子里面，我们假定每一个像素是一个单独的feature（特性），并且我们认为所有的像素之间都是互相独立的（显然不是，一个高亮的像素周边的像素大概率也比较亮）。这样一个略微脱离实际的假设使得我们可以大大简化模型的贝叶斯网络并且可以极快的求解概率分布（因为每个像素都只有一个父节点——图像的标签）。
 
-<img src="https://gitee.com/MarkYutianChen/mark-markdown-imagebed/raw/master/20210502163134.png" style="zoom: 70%;" />
+<img src="https://markdown-img-1304853431.file.myqcloud.com/20220810233105.png" style="zoom: 70%;" />
 
 ### 5.2 如何运用模型预测
 
 对于一张给定的图片，我们把里面的784个像素看成784个随机变量，同时，我们记这个模型的标签为$label$，在这种设定下，一张图片的标签可以这样表示：
+
+
 $$
 label = {\underset {label\in [0, 9]}{\operatorname {arg\,max} }}\,(P(label, f_1, f_2, \cdots, f_{784}))
 $$
 
+
+
 > 对于一幅图片（给定$f_1, f_2, \cdots f_{784}$），我们希望找到一个0 - 9之间的label，使得$P(label, f_1, f_2, \cdots, f_{784})$的值最大
 
 使用贝叶斯网络，我们可以发现这个概率$P(label, f_1, f_2, \cdots, f_{784})$可以这么计算：
+
+
 $$
 P(label, f_1, f_2, \cdots, f_{784}) = P(label) \cdot P(f_1 \mid label) \cdot P(f_2\mid label)\cdots P(f_{784}\mid label)
 $$
+
+
 我们只用完成这样的一个简单运算就可以得到一张照片是label = A的概率了：
 
 ```python
@@ -195,10 +221,8 @@ accumulative precision: 0.844
 
 ## 6. 参考资料
 
-[1]:  “hgz_dm.” *统计学中的频率学派与贝叶斯学派 - hgz_dm - 博客园*, www.cnblogs.com/hgz-dm/p/10292949.html.
+[1]  “hgz_dm.” *统计学中的频率学派与贝叶斯学派 - hgz_dm - 博客园*, www.cnblogs.com/hgz-dm/p/10292949.html.
 
-[2]: “Bayes' Theorem.” *Wikipedia*, Wikimedia Foundation, 27 Apr. 2020, en.wikipedia.org/wiki/Bayes'_theorem.
+[2] “Bayes' Theorem.” *Wikipedia*, Wikimedia Foundation, 27 Apr. 2020, en.wikipedia.org/wiki/Bayes'_theorem.
 
-[3]: Russell, Stuart J. *Artificial Intelligence: a Modern Approach*. Pearson, 2016.
-
-[4]: 
+[3] Russell, Stuart J. *Artificial Intelligence: a Modern Approach*. Pearson, 2016.

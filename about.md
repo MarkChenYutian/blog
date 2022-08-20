@@ -7,7 +7,7 @@ title: About
 
 Hi, Welcome to my Blog!
 
-I'm Yutian Chen, currently freshman in CMU and majoring in Statistics & Machine Learning with additional major Robotics. [Here's my resume]({{site.baseurl}}/files.html)
+I'm Yutian Chen, currently a sophomore in CMU and majoring in Statistics & Machine Learning with additional major in Robotics. [Here's my resume]({{site.baseurl}}/files.html)
 
 I'm interested in:
 
@@ -18,8 +18,9 @@ I'm interested in:
 ## Research
 <div style="display:flex; justify-content: space-between; align-items: baseline;">
     <h3 style="margin-top: 1rem;" hide-toc=true>Application of Computer Vision on Medical Imaging</h3>
-    <a class="fa fa-external-link" href="https://arxiv.org/pdf/2012.14564.pdf" aria-hidden="true">&nbsp;</a>
+    <a class="fa fa-external-link" href="https://www.frontiersin.org/articles/10.3389/fcvm.2022.804442/full" aria-hidden="true">&nbsp;</a>
 </div>
+<img src="https://markdown-img-1304853431.file.myqcloud.com/20220810230152.jpg" width="50%" style="float: right; margin: 1rem;"/>
 
 With the help of professor Shi and doctor Xu, I proposed a neural network model that automatically analyzes cardiac MRI sequences and provides semantic segmentation in the paper *Myocardial Segmentation of Cardiac MRI Sequence with Temporal Consistency for Coronary Artery Disease Diagnosis*. The paper is published on *Frontiers in Cardiovascular Medicine*.
 
@@ -31,17 +32,17 @@ The model uses U-net with residual blocks (Res U-net) as encoder and bidirection
 <summary>
 <div style="display:flex; justify-content: space-between; align-items: baseline;">
     <h3 style="margin-top: 1rem;" hide-toc=true>C0VM.ts</h3>
-    <a class="fa fa-external-link" href="https://github.com/MarkChenYutian/TartanHack-2022" aria-hidden="true">&nbsp;</a>
+    <a class="fa fa-external-link" href="https://github.com/MarkChenYutian/C0VM-ts" aria-hidden="true">&nbsp;</a>
 </div>
 <div markdown="1">
 > Date: 2022 May - 2022 Aug
 >
-> Keywords: TypeScript, React, Visualization, Virtual Machine
+> Keywords: React, Virtual Machine, Visualization
 </div>
 </summary>
 ![Demo](https://markdown-img-1304853431.file.myqcloud.com/20220725214811.gif)
 
-A web-based C0 byte code interpreter written with TypeScript and have different debugging & visualization applications built on it.
+CMU Summer Undergraduate Research Fellowship (SURF) Program Project, a web-based C0 virtual machine implemented in TypeScript with elegant debugging & visualization tools.
 
 Will be deployed on future 15-122 course materials as an effective way to help students learn and improve their programming skills.
 </details>
@@ -60,9 +61,12 @@ Will be deployed on future 15-122 course materials as an effective way to help s
 <div markdown="1">
 > Date: 2022 Jan
 >
-> Keywords: Web Assembly, Open CV, Web RTC
+> Keywords: Computer Vision, Web Assembly, Web RTC
 </div>
 </summary>
+
+[Related Post: The Fences AR Web Application](https://markchenyutian.github.io//blog/2022/the-fences.html)
+
 ![demo](https://user-images.githubusercontent.com/47029019/152687732-d309165a-c033-444b-8bb8-8011d533efcf.gif)
 
 The project consists of two parts - the iOS application and a web-based interactive AR application. Which allow users to create, edit and share geological-specific AR content across platforms.
@@ -83,6 +87,10 @@ The project consists of two parts - the iOS application and a web-based interact
 > Keywords: Vis.js, JavaScript, Real-time Collaboration
 </div>
 </summary>
+
+[Related Post: MAGC Map Design](https://markchenyutian.github.io//blog/2021/magc-map-intro.html)
+
+![MAGC_Map Demo](https://www.youtube.com/watch?v=Xb_u5h9mAk4)
 
 A collaborative non-linear online document. **Won the 3rd place in Hack CMU 2021** (a hackathon event) project. We design a lock and synchronous system that allow incremental update between clients. The document support markdown and LaTeX.
 </details>
@@ -137,26 +145,24 @@ A website for my high school computer science club. Contains the notes from ever
 <div markdown=1>
 <h3 style="margin-top: 0;" hide-toc=true>Front-end Web Dev</h3>
 * React
-* Three.js
-* HTML, CSS, JavaScript
+* HTML5
+* CSS3
 </div>
 <div markdown=1>
 <h3 style="margin-top: 0;" hide-toc=true>Back-end Web Dev</h3>
 * Flask
-* Django
+* FastAPI
 * SQL
 </div>
 <div markdown=1>
 <h3 style="margin-top: 0;" hide-toc=true>Photography & Video</h3>
 * Photoshop
-* Adobe Lightroom
-* After Effect (Elementary Usage)
+* Lightroom
 </div>
 <div markdown=1>
 <h3 style="margin-top: 0;" hide-toc=true>Other Skills</h3>
 * Amazon Web Service
 * LaTeX
-* Solidwork <br/>(Assembly, Basic CAD, FEA)
 </div>
 </div>
 
