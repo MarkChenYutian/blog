@@ -9,20 +9,26 @@ Hi, Welcome to my Blog!
 
 I'm Yutian Chen, currently a sophomore in CMU and majoring in Statistics & Machine Learning with additional major in Robotics. [Here's my resume]({{site.baseurl}}/files.html)
 
-I'm interested in:
+I'm interested in (academic stuff):
 
 * Computer Vision [View Related Posts]({{site.baseurl}}/tags.html#Computer%20Vision)
 * Frontend Technology (Web Application, Serverless, WebGL) [View Related Posts]({{site.baseurl}}/tags.html#h-Web)
 * Natural Language Processing [View Related Posts]({{site.baseurl}}/tags.html#NLP)
+* Sharing my (really) well-typed notes! [See here]({{site.baseurl}}/files.html)
+
+I'm also interested in (fun stuff):
+
+* Video games (Minecraft, Cities Skyline, Dyson sphere program, etc.)
+* Board games (Wingspan, Avalon, etc.)
+* Kayaking, Sailing
+* Cycling
 
 ## Research
-<div style="display:flex; justify-content: space-between; align-items: baseline;">
-    <h3 style="margin-top: 1rem;" hide-toc=true>Application of Computer Vision on Medical Imaging</h3>
-    <a class="fa fa-external-link" href="https://www.frontiersin.org/articles/10.3389/fcvm.2022.804442/full" aria-hidden="true">&nbsp;</a>
-</div>
+
+<h3 style="margin-top: 1rem;" hide-toc=true>Application of Computer Vision on Medical Imaging</h3>
 <img src="https://markdown-img-1304853431.file.myqcloud.com/20220810230152.jpg" width="50%" style="float: right; margin: 1rem;"/>
 
-With the help of professor Shi and doctor Xu, I proposed a neural network model that automatically analyzes cardiac MRI sequences and provides semantic segmentation in the paper *Myocardial Segmentation of Cardiac MRI Sequence with Temporal Consistency for Coronary Artery Disease Diagnosis*. The paper is published on *Frontiers in Cardiovascular Medicine*.
+With the help of [Prof. Shi](https://engineering.nd.edu/faculty/yiyu-shi/) and [Dr. Xu](https://xiaoweixu.github.io/), I proposed a neural network model that automatically analyzes cardiac MRI sequences and provides semantic segmentation in the paper [*Myocardial Segmentation of Cardiac MRI Sequence with Temporal Consistency for Coronary Artery Disease Diagnosis*](https://www.frontiersin.org/articles/10.3389/fcvm.2022.804442/full). The paper is published on Frontiers in Cardiovascular Medicine.
 
 The model uses U-net with residual blocks (Res U-net) as encoder and bidirectional Conv-LSTM as the decoder. Through the bidirectional Conv-LSTM decoder, we successfully introduce temporal consistency constraints in semantic segmentation and improve the accuracy of cMRI segmentation.
 
@@ -55,7 +61,7 @@ Will be deployed on future 15-122 course materials as an effective way to help s
 <details markdown="1">
 <summary>
 <div style="display:flex; justify-content: space-between; align-items: baseline;">
-    <h3 style="margin-top: 1rem;" hide-toc=true>The Fences</h3>
+    <h3 style="margin-top: 1rem;" hide-toc=true>TartanHack 2022: The Fences</h3>
     <a class="fa fa-external-link" href="https://github.com/MarkChenYutian/C0VM-ts" aria-hidden="true">&nbsp;</a>
 </div>
 <div markdown="1">
@@ -69,7 +75,9 @@ Will be deployed on future 15-122 course materials as an effective way to help s
 
 ![demo](https://user-images.githubusercontent.com/47029019/152687732-d309165a-c033-444b-8bb8-8011d533efcf.gif)
 
-The project consists of two parts - the iOS application and a web-based interactive AR application. Which allow users to create, edit and share geological-specific AR content across platforms.
+Using computer vision and image transformation, we built a web application that provides pseudo-AR experience for users across all platforms.
+
+Users are allowed to create virtual whiteboard and interact with each other by modifying the content on virtual whiteboard.
 </details>
 
 
@@ -78,7 +86,7 @@ The project consists of two parts - the iOS application and a web-based interact
 <details markdown="1">
 <summary>
 <div style="display:flex; justify-content: space-between; align-items: baseline;">
-    <h3 style="margin-top: 1rem;" hide-toc=true>MAGC Map</h3>
+    <h3 style="margin-top: 1rem;" hide-toc=true>Hack CMU 2021: MAGC Map</h3>
     <a class="fa fa-external-link" href="https://devpost.com/software/magc-map" aria-hidden="true">&nbsp;</a>
 </div>
 <div markdown="1">
@@ -122,7 +130,8 @@ A website for my high school computer science club. Contains the notes from ever
 
 ## My Awards
 
-* CMU Hack 2021 3rd Place
+* Dietrich College Dean's List *(2021 Fall, 2022 Spring)*
+* CMU Hack 3rd Place *(2021)*
 * USACO Platinum Contestant *(2021)*
 * British Physics Olympiad Top Gold *(2019)*
 * High School Mathematic Contest in Modeling (HiMCM) Meritorious *(2019, 2020)*

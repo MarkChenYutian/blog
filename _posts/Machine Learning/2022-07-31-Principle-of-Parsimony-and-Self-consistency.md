@@ -7,6 +7,8 @@ banner: "/assets/images/banners/NeuralNetworkBackground.jpg"
 draft: true
 ---
 
+> This post is the notes I wrote when reading paper *On the principle of Parsimony and Self-consistency for the Emergence of Intelligence* [arXiv Link](https://arxiv.org/abs/2207.04630).
+
 ## Context and Motivation
 
 ### Key features of Intelligence Agent
@@ -140,7 +142,7 @@ With this method, we can calculate the ratio between sum of subspaces and the fe
 
 $$
 \frac{\sum_n{\mathrm{vol}(S_n)}}{\mathrm{vol}(Z)} = 
-\frac{\sum_n{\left(\#\mathrm{sphere\;in\;}S_n\right)}}{\#\mathrm{sphere\;in\;}Z}
+\frac{\sum_n{\left(\text{#}\mathrm{sphere\;in\;}S_n\right)}}{\text{#}\mathrm{sphere\;in\;}Z}
 $$
 
 
