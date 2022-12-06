@@ -40,6 +40,7 @@ permalink: /:year/:title:output_ext
 yat:
   date_format: "%b %d, %Y"
 
+content_width: "1440px"
 # If you want more debug log, you can set true
 # debug: false
 
