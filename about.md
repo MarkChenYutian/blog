@@ -99,9 +99,4 @@ I'm Yutian Chen (陈昱天), currently a sophomore in Carnegie Mellon University
 - 11-785 Intro to Deep Learning
 </div>
 
-
-<div class="show-corner" style="padding: 1rem; flex: 1 1 0; min-width: 17rem;" markdown=1>
-(I don't know what to fill here)
-</div>
-
 </div>
