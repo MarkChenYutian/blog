@@ -1,0 +1,12 @@
+- title: About
+  url: /about/
+- title: Posts
+  url: /categories/
+- title: Files
+  url: /files/
+- title: More
+  sublinks:
+    - title: Tags
+      url: /tags/
+    - title: Years
+      url: /years/

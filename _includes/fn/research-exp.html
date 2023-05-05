@@ -1,0 +1,17 @@
+<div style="display: flex; align-items: flex-start; justify-content: space-between;">
+    <div style="display: flex;">
+        {% if include.avatar != nil %}
+            <img src="{{site.baseurl}}/{{include.avatar}}" style="width: 3rem; height: 3rem; padding-right: 1rem;"/>
+        {% endif %}
+        <p>    
+            {{include.topic}} <br/>
+            <span class="additional-info">{{include.date}}</span>
+        </p>
+    </div>
+    <p>
+        {{include.institute}}
+    </p>
+</div>
+<blockquote style="margin-left:1.5rem">
+    {{include.description}}
+</blockquote>
