@@ -5,12 +5,20 @@ tags: ["Machine Learning", "SLAM"]
 category: ["Machine Learning"]
 ---
 
+In deep learning, we usually use first-order optimizers like Stochastic Gradient Descent, Adam, or RMSProp.
+
+However, in SLAM problems, we use Bundle Adjustment to jointly optimize camera pose and landmark coordinate in **real time**. Naive first order optimizers is not efficient enough (requires many iterations to converge) for this situation.
+
+In this post, I will introduce the concept of second order optimizer. However, since the second order optimizer requries us to derive the Hessian matrix for the optimization target, it is usually impractical to use it directly.
+
+<!--more-->
+
 ## Optimization Problem
 
 The optimization problem, in general can be represented in the form of 
 
 $$
-x^* = \argmin_{x}f(x)
+x^* = \arg\min_{x}f(x)
 $$
 
 That is, we want to find some optimal input $x^*$ s.t. such input can minimize some given expression $f(x)$.
@@ -57,11 +65,11 @@ In this case, we need to use iterative optimization. The general algorithm for s
     2. Solve for $\Delta x^*$ such that
 
       $$
-      \Delta x^* = \argmin_{\Delta x}{\hat{f}(x + \Delta x)}
+      \Delta x^* = \arg\min_{\Delta x}{\hat{f}(x + \Delta x)}
       $$
     
     3. Update $x \gets x + \Delta x^*$
-    4. If $||\Delta x^*||_2 < \varepsilon$, the solution "converges" and break out the loop
+    4. If $\|\Delta x^*\|_2 < \varepsilon$, the solution "converges" and break out the loop
  3. Return $x$
 
 ## First Order Optimizers
@@ -69,7 +77,7 @@ In this case, we need to use iterative optimization. The general algorithm for s
 When using first order optimizer, we only use the first order derivative of $f$ to calculate $\Delta x^*$. Then, we have
 
 $$
-\Delta x^* = \argmin_{\Delta x} f(x) + \mathbf{J}(x) \Delta x = \argmin_{\Delta x} \mathbf{J}(x) \Delta x = -\argmax_{\Delta x}{\mathbf{J}(x) \Delta x}
+\Delta x^* = \arg\min_{\Delta x} f(x) + \mathbf{J}(x) \Delta x = \arg\min_{\Delta x} \mathbf{J}(x) \Delta x = -\arg\max_{\Delta x}{\mathbf{J}(x) \Delta x}
 $$
 
 Obviously, the solution will be $\Delta x^* = -\mathbf{J}(x)$. This is aligned with the definition of naive Stochastic Gradient Descent (SGD).
@@ -101,7 +109,7 @@ $$
 Then we have 
 
 $$
-\Delta x^* = \argmin_{\Delta x}{\hat{f}(x + \Delta x)} = \argmin_{\Delta x}\mathbf{J}(x)\Delta x + \frac{1}{2}\Delta x^T\mathbf{H}\Delta x
+\Delta x^* = \arg\min_{\Delta x}{\hat{f}(x + \Delta x)} = \arg\min_{\Delta x}\mathbf{J}(x)\Delta x + \frac{1}{2}\Delta x^T\mathbf{H}\Delta x
 $$
 
 Solving
@@ -141,12 +149,12 @@ $$
 $$
 
 $$\begin{aligned}
-\Delta x^* &= \argmin_{\Delta x} \mathbf{R}(x + \Delta x)\\
-  &\approx \argmin_{\Delta x}{(f(x) + \mathbf{J}(x)\Delta x)^2}\\
-  &= \argmin_{\Delta x}{f^2(x) + 2f(x)\mathbf{J}(x)\Delta x + (\mathbf{J}(x)\Delta x)^\top (\mathbf{J}(x) \Delta x)}\\
+\Delta x^* &= \arg\min_{\Delta x} \mathbf{R}(x + \Delta x)\\
+  &\approx \arg\min_{\Delta x}{(f(x) + \mathbf{J}(x)\Delta x)^2}\\
+  &= \arg\min_{\Delta x}{f^2(x) + 2f(x)\mathbf{J}(x)\Delta x + (\mathbf{J}(x)\Delta x)^\top (\mathbf{J}(x) \Delta x)}\\
 \end{aligned}$$
 
-Since the term in $\argmin$ is convex (is a square), we know the optimization target must be convex. Hence, we have $\Delta x = \Delta x^*$ when $\frac{\partial (f(x) + \mathbf{J}\Delta x)^2}{\partial \Delta x} = 0$.
+Since the term in $\arg\min$ is convex (is a square), we know the optimization target must be convex. Hence, we have $\Delta x = \Delta x^*$ when $\frac{\partial (f(x) + \mathbf{J}\Delta x)^2}{\partial \Delta x} = 0$.
 
 Hence, we have
 
@@ -160,7 +168,7 @@ where we can solve for $\Delta x^*$.
 
 In production environment, we may have $\mathbf{J}$ not full-ranked. This will cause the coefficient matrix $\mathbf{J}^\top \mathbf{J}$ on the left hand side being positive **semi-definite** (not full-ranked). In this case, the equation system is in singular condition and we can't solve for $\Delta x^*$ reliably.
 
-Also, in Gauss-Newton method, the $\Delta x^*$ we solved for may be very large. Since we only use the first order Taylor expansion, large $\Delta x^*$ usually indicates a poor approximation for $f(x + \Delta x^*)$. In these cases, the residual $\mathbf{R}$ may even increase as we update $x \gets x + \Delta x$.
+Also, in Gauss-Newton method, the $\Delta x^\*$ we solved for may be very large. Since we only use the first order Taylor expansion, large $\Delta x^\* $ usually indicates a poor approximation for $f(x + \Delta x^\*)$. In these cases, the residual $\mathbf{R}$ may even increase as we update $x \gets x + \Delta x$.
 
 ### Levenberg-Marquadt Optimizer
 
@@ -179,7 +187,7 @@ LM optimizer will then use this measure of approximation quality to control the 
 The update vector $\Delta x$ must be in the trusted region. Hence, the entire optimization problem is formulated as
 
 $$
-\argmin_{\Delta x}{(f(x) + \mathbf{J}(x)\Delta x)^2} \quad \text{s.t. }D\Delta x \leq \mu
+\arg\min_{\Delta x}{(f(x) + \mathbf{J}(x)\Delta x)^2} \quad \text{s.t. }D\Delta x \leq \mu
 $$
 
 where $D$ is a diagonal matrix constraining the $\Delta x$ in an ellipsoid domain.
