@@ -36,10 +36,10 @@ There are two 2D coordinate systems (pixel coordinates): the image 1 and image 2
 | $\xi$  | $\mathfrak{se}(3)$ | (1, 6) | Cam2's pose w.r.t. world coordinate (cam1) |
 | $I_1$  | $\mathbb{R^2} \to \mathbb{R}$ | - | Illuminance map from cam1 (w/ bilinear interpolation) |
 | $I_2$  | $\mathbb{R^2} \to \mathbb{R}$ | - | Illuminance map from cam2 (w/ bilinear interpolation) |
-| $Exp(\cdot)$ | $\mathfrak{se}(3) \to \mathbb{R}^{4\times 4}$ | - | Exponential Mapping + vector to matrix (Lie Algebra &rarr; Transformation Matrix) |
-| $Log(\cdot)$ | $\mathbb{R}^{4\times 4} \to \mathfrak{se}(3)$ | - | Matrix to vector + Logarithm Mapping (Transformation Matrix &rarr; Lie Algebra)  |
+| $Exp(\cdot)$ | $\mathfrak{se}(3) \to \mathbb{R}^{4\times 4}$ | - | vector to matrix + Exponential Mapping (Lie Algebra &rarr; Transformation Matrix) |
+| $Log(\cdot)$ | $\mathbb{R}^{4\times 4} \to \mathfrak{se}(3)$ | - | Logarithm Mapping + Matrix to vector (Transformation Matrix &rarr; Lie Algebra)  |
 | $exp(\cdot)$ | $\mathfrak{se}(3) \to SE(3)$ | - | Exponential Mapping (Lie Algebra &rarr; Lie Group) |
-| $\cdot^\wedge$ | $\mathbb{R}^{7}\to \mathbb{R}^{4\times 4}$ | - | $SE(3)$ vector representation to transformation matrix |
+| $\cdot^\wedge$ | $\mathbb{R}^{6}\to \mathbb{R}^{4\times 4}$ | - | $\mathfrak{se}(3)$ vector representation to matrix representation |
 | $\tilde{\cdot}$ | - | - | Homogenous coordinate system |
 
 *Unless explicitly specified, all the coordinates are represented under heterogeneous coordinate.*
