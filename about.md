@@ -11,7 +11,7 @@ I'm Yutian Chen (陈昱天), currently a sophomore in Carnegie Mellon University
 {% 
     include fn/research-exp.html 
         avatar='assets/image/airlab.png' 
-        topic='Dynamic Object SLAM'
+        topic='Differentiable SLAM'
         institute='AirLab, Robotics Institute'
         date='Sep 2022 - Now'
         description='
@@ -24,7 +24,7 @@ I'm Yutian Chen (陈昱天), currently a sophomore in Carnegie Mellon University
         avatar='assets/image/lti.png' 
         topic='Generated Text Detection'
         institute='Language Technology Institute'
-        date='Mar 2023 - Now'
+        date='Mar 2023 - Aug 2023'
         description='
             <p>Using language models like BERT and T5 as backbone, built a GPT-generated content detector called "GPT-Sentinel". Reaches 98% accuracy on test dataset and outperform existing content detector by OpenAI and ZeroGPT.</p>
 
@@ -44,6 +44,13 @@ I'm Yutian Chen (陈昱天), currently a sophomore in Carnegie Mellon University
             <p><b>Publication</b>: Myocardial Segmentation of Cardiac MRI Sequences With Temporal Consistency for Coronary Artery Disease Diagnosis [<a href="https://www.frontiersin.org/articles/10.3389/fcvm.2022.804442/full">Link</a>]</p>
         '
 %}
+
+
+## Teaching Assistant
+
+* 2022 Fall, 15-122 Principles of Imperative Programming
+* 2023 Fall, 10-701 Introduction to Machine Learning
+
 
 ## Projects
 

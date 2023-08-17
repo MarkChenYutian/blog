@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Second Order Optimizers in PyPose - Gauss Newton and Levenberg-Marquadt"
+title: "Optimizers in PyPose - Gauss Newton and Levenberg-Marquadt"
 tags: ["Machine Learning", "SLAM"]
 category: ["Machine Learning"]
 ---
@@ -9,7 +9,7 @@ In deep learning, we usually use first-order optimizers like Stochastic Gradient
 
 However, in SLAM problems, we use Bundle Adjustment to jointly optimize camera pose and landmark coordinate in **real time**. Naive first order optimizers is not efficient enough (requires many iterations to converge) for this situation.
 
-In this post, I will introduce the concept of second order optimizer. However, since the second order optimizer requries us to derive the Hessian matrix for the optimization target, it is usually impractical to use it directly.
+In this post, I will introduce the concept of second order optimizer. However, since the second order optimizer requries us to derive the Hessian matrix for the optimization target, it is usually impractical to use it directly. Therefore, we will use the Gauss-Newton and Levenberg-Marquadt optimizers instead.
 
 <!--more-->
 
