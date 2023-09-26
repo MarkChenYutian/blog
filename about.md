@@ -4,18 +4,22 @@ title: About Me
 permalink: /about/
 ---
 
-I'm Yutian Chen (陈昱天), currently a sophomore in Carnegie Mellon University majoring in Computer Science. My academic interest lies in the fields of *computer vision*, *deep learning* and *frontend technology*. If you'd like to learn more about me, please take a look at my <a href="{{site.baseurl}}/files/">resume</a>.
+I'm Yutian Chen (陈昱天), currently a junior in Carnegie Mellon University majoring in Computer Science. My academic interest lies in the fields of *deep learning*, *computer vision* and *frontend technology*. If you'd like to learn more about me, please take a look at my <a href="{{site.baseurl}}/files/">resume</a>.
 
-## Research
+## Research Experience
 
 {% 
     include fn/research-exp.html 
         avatar='assets/image/airlab.png' 
-        topic='Differentiable SLAM'
+        topic='Differentiable Visual-Inertial SLAM'
         institute='AirLab, Robotics Institute'
         date='Sep 2022 - Now'
-        description='
-            <p>Mentored by <a href="https://scholar.google.com/citations?user=aEK45mEAAAAJ">Yuheng Qiu</a>, I explored various methods to improve the performance of SLAM system with presence of multiple dynamic objects. Currently, I\'m working to expand the <a href="https://arxiv.org/abs/2109.09903">AirDOS</a> to support rigidity and motion constraints on generic objects, in addition to the current limitation on human poses.</p>
+        description='            
+            <p>
+            Building a differentiable visual Simultaneous Localization and Mapping (SLAM) system using PyPose.
+            Combining deep learning and self-supervised learning techniques into traditional SLAM system, allowing for
+            self-adaptive performance and improving the robustness of traditional algorithm under challenging environment.
+            </p>
         '
 %}
 
@@ -26,9 +30,9 @@ I'm Yutian Chen (陈昱天), currently a sophomore in Carnegie Mellon University
         institute='Language Technology Institute'
         date='Mar 2023 - Aug 2023'
         description='
-            <p>Using language models like BERT and T5 as backbone, built a GPT-generated content detector called "GPT-Sentinel". Reaches 98% accuracy on test dataset and outperform existing content detector by OpenAI and ZeroGPT.</p>
+            <p>Using language models like BERT and T5 as backbone, built a GPT-generated content detector called "GPT-Sentinel". Reaches 98% accuracy on test dataset and outperform existing content detector by OpenAI and ZeroGPT. Collected a OpenGPTText dataset, a dataset contains 30k human written text from OpenWebText and its corresponding rephrased version by ChatGPT.</p>
 
-            <p>Collected a OpenGPTText dataset, a dataset contains 30k human written text from OpenWebText and its corresponding rephrased version by ChatGPT.</p>
+            <p>Preliminary Report: GPT-Sentinel: Distinguishing Human and ChatGPT Generated Content [<a href="https://arxiv.org/abs/2305.07969">Link</a>]</p>
         '
 %}
 
@@ -52,7 +56,7 @@ I'm Yutian Chen (陈昱天), currently a sophomore in Carnegie Mellon University
 * 2023 Fall, 10-701 Introduction to Machine Learning
 
 
-## Projects
+## Personal Projects
 
 <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
 {%
@@ -84,11 +88,13 @@ I'm Yutian Chen (陈昱天), currently a sophomore in Carnegie Mellon University
 
 <div class="show-corner" style="padding: 1rem; flex: 1 1 0; min-width: 17rem;" markdown=1>
 **Computer Science**
-- 15-122 Principles of Imperative Programming
-- 15-150 Principles of Functional Programming
+<!-- - 15-122 Principles of Imperative Programming -->
+<!-- - 15-150 Principles of Functional Programming -->
 - 15-213 Introduction to Computer System
 - 15-251 Great Ideas in Theoretical Computer Science
 - 15-210 Sequential and Parallel Algorithm & Data Structure
+- 15-418 Parallel Computer Architecture and Programming
+- 15-451 Algorithm Design & Analysis
 </div>
 
 <div class="show-corner" style="padding: 1rem; flex: 1 1 0; min-width: 17rem;" markdown=1>
@@ -97,6 +103,7 @@ I'm Yutian Chen (陈昱天), currently a sophomore in Carnegie Mellon University
 - 21-259 Calculus in 3-dimension
 - 21-325 Probability
 - 21-373 Algebraic Structure
+- 21-341 Linear Algebra
 </div>
 
 <div class="show-corner" style="padding: 1rem; flex: 1 1 0; min-width: 17rem;" markdown=1>
