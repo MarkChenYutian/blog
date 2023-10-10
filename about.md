@@ -10,7 +10,7 @@ I'm Yutian Chen (陈昱天), currently a junior in Carnegie Mellon University ma
 
 {% 
     include fn/research-exp.html 
-        avatar='assets/image/airlab.png' 
+        avatar='/assets/image/airlab.png' 
         topic='Differentiable Visual-Inertial SLAM'
         institute='AirLab, Robotics Institute'
         date='Sep 2022 - Now'
@@ -25,7 +25,7 @@ I'm Yutian Chen (陈昱天), currently a junior in Carnegie Mellon University ma
 
 {%
     include fn/research-exp.html
-        avatar='assets/image/lti.png' 
+        avatar='/assets/image/lti.png' 
         topic='Generated Text Detection'
         institute='Language Technology Institute'
         date='Mar 2023 - Aug 2023'
@@ -36,7 +36,7 @@ I'm Yutian Chen (陈昱天), currently a junior in Carnegie Mellon University ma
 
 {% 
     include fn/research-exp.html 
-        avatar='assets/image/guangdong_cardiovescular_inst.jpg' 
+        avatar='/assets/image/guangdong_cardiovescular_inst.jpg' 
         topic='Medical Image Segmentation'
         institute=' Guangdong Cardiovascular Institute'
         date='Dec 2018 - Jan 2020'
