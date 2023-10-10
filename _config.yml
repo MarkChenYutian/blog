@@ -1,5 +1,5 @@
 title: Yutian's Blog
-baseurl: "/"
+baseurl: ""
 description: A place for me to Learn, Create and Share
 author: Yutian Chen
 avatar: /avatar.jpg
@@ -39,17 +39,9 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
 
-# Jekyll SEO Tag (Optional)
-# =========================
-# twitter:
-#   username: ngzhio
-#   card: summary
 logo: logo.png
 social:
   name: Yutian Chen
   links:
-    # - https://twitter.com/ngzhio
-    # - https://www.facebook.com/ngzhio
     - https://github.com/MarkChenYutian
-# google_site_verification: u4WXQl0Eu66rsQo2kRdCNx
 lang: en
