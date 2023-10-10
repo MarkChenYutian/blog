@@ -1,0 +1,27 @@
+<details style="margin-bottom: .5rem;">
+<summary style="margin-bottom: .5rem;">
+    {{include.title}} (<span class="additional-info">{{include.pubto}}, {{include.year}}</span>)
+    <br/>
+    <div style="padding-left: 1rem;">
+    {% if include.firstauthor != nil %}
+        <span style="background-color:lightgray; font-size: small; border-radius: .3rem; padding: .1rem;">First Author</span>
+    {% endif %}
+    {% if include.tag != nil %}
+        <span style="background-color: gold; font-size: small; border-radius: .3rem; padding: .1rem;">{{include.tag}}</span>
+    {% endif %}
+    </div>
+</summary>
+<blockquote style="margin-left:1.5rem">
+    <p>Authors: {{include.authors}}</p>
+    {% if include.arxiv != nil %}
+    <a href="{{include.arxiv}}">arXiv Link</a>
+    {% else %}
+    <span class="additional-info">arXiv Link (N/A)</span>
+    {% endif %},&nbsp;
+    {% if include.publink != nil %}
+    <a href="{{include.publink}}">Publication Link</a>
+    {% else %}
+    <span class="additional-info">Publication Link (N/A)</span>
+    {% endif %}
+</blockquote>
+</details>

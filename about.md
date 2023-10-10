@@ -31,9 +31,7 @@ I'm Yutian Chen (陈昱天), currently a junior in Carnegie Mellon University ma
         date='Mar 2023 - Aug 2023'
         description='
             <p>Using language models like BERT and T5 as backbone, built a GPT-generated content detector called "GPT-Sentinel". Reaches 98% accuracy on test dataset and outperform existing content detector by OpenAI and ZeroGPT. Collected a OpenGPTText dataset, a dataset contains 30k human written text from OpenWebText and its corresponding rephrased version by ChatGPT.</p>
-
-            <p>Preliminary Report: GPT-Sentinel: Distinguishing Human and ChatGPT Generated Content [<a href="https://arxiv.org/abs/2305.07969">Link</a>]</p>
-        '
+            '
 %}
 
 {% 
@@ -44,16 +42,57 @@ I'm Yutian Chen (陈昱天), currently a junior in Carnegie Mellon University ma
         date='Dec 2018 - Jan 2020'
         description='
             <p>Working under <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=LrjbEkIAAAAJ">prof. Yiyu Shi</a> and <a href="https://scholar.google.com.hk/citations?user=1vVgUeQAAAAJ&hl=zh-CN">Dr. Xiaowei Xu</a>, I proposed an encoder-decoder architecture to perform semantic segmentation on cardiac MRI sequence. By introducing Temporal constraint on segmentation result, the model improved the accuracy by 2% on ACDC Dataset comparing to the baseline model.</p>
-
-            <p><b>Publication</b>: Myocardial Segmentation of Cardiac MRI Sequences With Temporal Consistency for Coronary Artery Disease Diagnosis [<a href="https://www.frontiersin.org/articles/10.3389/fcvm.2022.804442/full">Link</a>]</p>
         '
 %}
+
+## Publications
+
+{%
+    include fn/publication-card.html
+        title='Token Prediction as Implicit Classification to Identify LLM-Generated Text'
+        pubto='EMNLP'
+        year='2023'
+        authors='<b>Yutian Chen</b>, Hao Kang, Vivian Zhai, Liangze Li, Rita Singh, Bhiksha Raj'
+        tag='Comming Soon'
+        firstauthor='true'
+%}
+
+{%
+    include fn/publication-card.html
+        title='PyPose v0.6: The Imperative Programming Interface for Robotics'
+        pubto='IROS'
+        year='2023'
+        authors='Zitong Zhan, Xiangfu Li, Qihang Li, Haonan He, Abhinav Pandey, Haitao Xiao, Yangmengfei Xu, Xiangyu Chen, Kuan Xu, Kun Cao, Zhipeng Zhao, Zihan Wang, Huan Xu, Zihang Fang, <b>Yutian Chen</b>, Wentao Wang, Xu Fang, Yi Du, Tianhao Wu, Xiao Lin, Yuheng Qiu, Fan Yang, Jingnan Shi, Shaoshu Su, Yiren Lu, Taimeng Fu, Karthik Dantu, Jiajun Wu, Lihua Xie, Marco Hutter, Luca Carlone, Sebastian Scherer, Daning Huang, Yaoyu Hu, Junyi Geng, Chen Wang'
+        arxiv='https://arxiv.org/abs/2309.13035'
+%}
+
+{%
+    include fn/publication-card.html
+        title='GPT-Sentinel: Distinguishing Human and ChatGPT Generated Content'
+        pubto='arXiv'
+        year='2023'
+        authors='<b>Yutian Chen</b>, Hao Kang, Vivian Zhai, Liangze Li, Rita Singh, Bhiksha Raj'
+        arxiv='https://arxiv.org/abs/2305.07969'
+        firstauthor='true'
+%}
+
+{%
+    include fn/publication-card.html
+        title='Myocardial Segmentation of Cardiac MRI Sequences With Temporal Consistency for Coronary Artery Disease Diagnosis'
+        pubto='Frontiers in Cardiovascular Medicine'
+        year='2022'
+        authors='<b>Yutian Chen</b>, Wen Xie, Jiawei Zhang, Hailong Qiu, Dewen Zeng, Yiyu Shi, Haiyun Yuan, Jian Zhuang, Qianjun Jia, Yanchun Zhang, Yuhao Dong, Meiping Huang, Xiaowei Xu'
+        arxiv='https://arxiv.org/abs/2012.14564'
+        publink='https://www.frontiersin.org/articles/10.3389/fcvm.2022.804442/full'
+        firstauthor='true'
+%}
+
 
 
 ## Teaching Assistant
 
-* 2022 Fall, 15-122 Principles of Imperative Programming
-* 2023 Fall, 10-701 Introduction to Machine Learning
+* 2023 Fall, Carnegie Mellon University, 10-701 Introduction to Machine Learning (PhD)
+* 2022 Fall, Carnegie Mellon University, 15-122 Principles of Imperative Programming
 
 
 ## Personal Projects
@@ -82,7 +121,7 @@ I'm Yutian Chen (陈昱天), currently a junior in Carnegie Mellon University ma
 </div>
 
 
-## Courses
+## Related Courses
 
 <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
 
