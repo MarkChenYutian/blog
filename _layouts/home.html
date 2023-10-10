@@ -18,7 +18,7 @@ layout: default
       {%- for post in posts -%}
       <li>
         <h2>
-          <a href="{{ post.url | relative_url }}">
+          <a href="{{ post.url  }}">
             {{ post.title | escape }}
           </a>
         </h2>
@@ -28,7 +28,7 @@ layout: default
           </time>
           <!--
             {% if site.disqus %}
-            • <a href="{{ post.url | relative_url }}#disqus_thread">
+            • <a href="{{ post.url  }}#disqus_thread">
                 <span class="disqus-comment-count" data-disqus-url="{{ post.url | absolute_url }}"></span>
               </a>
             {% endif %}
@@ -48,9 +48,9 @@ layout: default
         {% if page == paginator.page %}
           <li><div class="current-page">{{ page }}</div></li>
         {% elsif page == 1 %}
-          <li><a class="next-page" href="{{ '/' | relative_url }}">{{ page }}</a></li>
+          <li><a class="next-page" href="{{ '/'  }}">{{ page }}</a></li>
         {% else %}
-          <li><a class="next-page" href="{{ site.paginate_path | relative_url | replace: ':num', page }}">{{ page }}</a></li>
+          <li><a class="next-page" href="{{ site.paginate_path  | replace: ':num', page }}">{{ page }}</a></li>
         {% endif %}
         {% endfor %}
         </ul>

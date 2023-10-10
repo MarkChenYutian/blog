@@ -13,12 +13,12 @@
     {%- if site.avatar contains "://" -%}
       {%- assign avatar = site.avatar -%}
     {%- else -%}
-      {%- assign avatar = site.avatar | relative_url -%}
+      {%- assign avatar = site.avatar  -%}
     {%- endif -%}
     <i class="fa fa-user-circle"></i>
   </a>
 
-  <a class="site-title" rel="author" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
+  <a class="site-title" rel="author" href="{{ "/"  }}">{{ site.title | escape }}</a>
 
   {% if site.data.navigation %}
     <nav class="site-nav">
@@ -39,12 +39,12 @@
                 <a href="javascript:void(0)" class="dropbtn">{{ nav.title | escape }}</a>
                 <div class="dropdown-content">
                   {%- for link in nav.sublinks %}
-                    <a class="{% if page.url == link.url %}current-page{% endif %}" href="{{ link.url | relative_url }}">{{ link.title | escape }}</a>
+                    <a class="{% if page.url == link.url %}current-page{% endif %}" href="{{ link.url  }}">{{ link.title | escape }}</a>
                   {%- endfor %}
                 </div>
               </li>
             {% else %}
-              <li><a class="{% if page.url == nav.url %}current-page{% endif %}" href="{{ nav.url | relative_url }}">{{ nav.title | escape }}</a></li>
+              <li><a class="{% if page.url == nav.url %}current-page{% endif %}" href="{{ nav.url  }}">{{ nav.title | escape }}</a></li>
             {% endif %}
           {%- endif -%}
         {%- endfor -%}

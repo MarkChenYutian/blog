@@ -43,7 +43,7 @@ layout: default
           {% for category in categories %}
             <li class="post-category">
               {% assign slugified_category = category | slugify %}
-              <a href="{{ '/categories/#:category' | replace: ':category', slugified_category | relative_url }}">{{ category }}</a>
+              <a href="{{ '/categories/#:category' | replace: ':category', slugified_category  }}">{{ category }}</a>
             </li>
           {% endfor %}
         </ul>
@@ -58,7 +58,7 @@ layout: default
           {% for tag in tags %}
             <li class="post-tag">
               {% assign slugified_tag = tag | slugify %}
-              <a href="{{ '/tags/#:tag' | replace: ':tag', slugified_tag | relative_url }}">{{ slugified_tag }}</a>
+              <a href="{{ '/tags/#:tag' | replace: ':tag', slugified_tag  }}">{{ slugified_tag }}</a>
             </li>
           {% endfor %}
         </ul>
@@ -67,7 +67,7 @@ layout: default
 
     <nav class="post-pagination" role="navigation">
       {% if page.previous %}
-        <a class="post-previous" href="{{ page.previous.url | relative_url }}">
+        <a class="post-previous" href="{{ page.previous.url  }}">
           <h4 class="post-pagination-label">Prev</h4>
           <span class="post-pagination-title">
             <i class="fa fa-arrow-left"></i> {{ page.previous.title | markdownify | strip_html }}
@@ -76,7 +76,7 @@ layout: default
       {% endif %}
 
       {% if page.next %}
-        <a class="post-next" href="{{ page.next.url | relative_url }}">
+        <a class="post-next" href="{{ page.next.url  }}">
           <h4 class="post-pagination-label">Next</h4>
           <span class="post-pagination-title">
             {{ page.next.title | markdownify | strip_html }} <i class="fa fa-arrow-right"></i>

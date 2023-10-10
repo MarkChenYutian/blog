@@ -3,7 +3,7 @@
     {%- if site.avatar contains "://" -%}
       {%- assign avatar = site.avatar -%}
     {%- else -%}
-      {%- assign avatar = site.avatar | relative_url -%}
+      {%- assign avatar = site.avatar  -%}
     {%- endif -%}
     <img src="{{ avatar }}" class="author-avatar u-photo align-center" alt="{{ site.author }}">
   </div>
@@ -34,7 +34,7 @@
 
 {% if site.subscribe != false -%}
 <div class="sidebar-section feed-subscribe">
-  <a href="{{ 'feed.xml' | relative_url }}">
+  <a href="{{ 'feed.xml'  }}">
     <i class="sidebar-icon fa fa-rss"></i><span>Subscribe</span>
   </a>
 </div>
