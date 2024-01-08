@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Optimizers in PyPose - Gauss Newton and Levenberg-Marquadt | Yutian’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="Optimizers in PyPose - Gauss Newton and Levenberg-Marquadt" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="In deep learning, we usually use first-order optimizers like Stochastic Gradient Descent, Adam, or RMSProp. However, in SLAM problems, we use Bundle Adjustment to jointly optimize camera pose and landmark coordinate in real time. Naive first order optimizers is not efficient enough (requires many iterations to converge) for this situation. In this post, I will introduce the concept of second order optimizer. However, since the second order optimizer requries us to derive the Hessian matrix for the optimization target, it is usually impractical to use it directly. Therefore, we will use the Gauss-Newton and Levenberg-Marquadt optimizers instead." />
+<meta property="og:description" content="In deep learning, we usually use first-order optimizers like Stochastic Gradient Descent, Adam, or RMSProp. However, in SLAM problems, we use Bundle Adjustment to jointly optimize camera pose and landmark coordinate in real time. Naive first order optimizers is not efficient enough (requires many iterations to converge) for this situation. In this post, I will introduce the concept of second order optimizer. However, since the second order optimizer requries us to derive the Hessian matrix for the optimization target, it is usually impractical to use it directly. Therefore, we will use the Gauss-Newton and Levenberg-Marquadt optimizers instead." />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-07-14T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Optimizers in PyPose - Gauss Newton and Levenberg-Marquadt" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yutian Chen"},"dateModified":"2023-07-14T00:00:00+00:00","datePublished":"2023-07-14T00:00:00+00:00","description":"In deep learning, we usually use first-order optimizers like Stochastic Gradient Descent, Adam, or RMSProp. However, in SLAM problems, we use Bundle Adjustment to jointly optimize camera pose and landmark coordinate in real time. Naive first order optimizers is not efficient enough (requires many iterations to converge) for this situation. In this post, I will introduce the concept of second order optimizer. However, since the second order optimizer requries us to derive the Hessian matrix for the optimization target, it is usually impractical to use it directly. Therefore, we will use the Gauss-Newton and Levenberg-Marquadt optimizers instead.","headline":"Optimizers in PyPose - Gauss Newton and Levenberg-Marquadt","mainEntityOfPage":{"@type":"WebPage","@id":"/machine%20learning/2023/07/14/second-order-optimizer.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"url":"/machine%20learning/2023/07/14/second-order-optimizer.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <div class="sidebar-section"><img src="/avatar.jpg" class="author-avatar u-photo align-center" alt="Yutian Chen">
+  </div>
+
+<div class="sidebar-section">
+  <ul class="contact-list">
+    <li>
+        <i class="sidebar-icon fa fa-at"></i>
+        <span class="contact-info p-name">Yutian Chen</span>
+      </li>
+    <li>
+        <i class="sidebar-icon fa fa-envelope-o"></i>
+        <a class="contact-info u-email" href="mailto:yutianch@andrew.cmu.edu">yutianch@andrew.cmu.edu</a>
+      </li>
+    <li>
+        <i class="sidebar-icon fa fa-location-arrow"></i>
+        <a class="contact-info u-location" href="https://www.google.com/maps/search/Pittsburgh, PA">Pittsburgh, PA</a>
+      </li>
+  </ul>
+</div>
+
+<div class="sidebar-section feed-subscribe">
+  <a href="feed.xml">
+    <i class="sidebar-icon fa fa-rss"></i><span>Subscribe</span>
+  </a>
+</div>
+
+<div class="sidebar-section">
+    <ul class="social-icons">
+      <li>
+          <a class="social-icon" href="https://www.linkedin.com/in/yutian-chen-469602223/"><i class="fa fa-linkedin-square fa-2x" title="LinkedIn"></i></a>
+        </li><li>
+          <a class="social-icon" href="https://github.com/MarkChenYutian"><i class="fa fa-github-square fa-2x" title="GitHub"></i></a>
+        </li>
+    </ul>
+  </div>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">Optimizers in PyPose - Gauss Newton and Levenberg-Marquadt</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2023-07-14T00:00:00+00:00" itemprop="datePublished">
+        Jul 14, 2023
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>In deep learning, we usually use first-order optimizers like Stochastic Gradient Descent, Adam, or RMSProp.</p>
+
+<p>However, in SLAM problems, we use Bundle Adjustment to jointly optimize camera pose and landmark coordinate in <strong>real time</strong>. Naive first order optimizers is not efficient enough (requires many iterations to converge) for this situation.</p>
+
+<p>In this post, I will introduce the concept of second order optimizer. However, since the second order optimizer requries us to derive the Hessian matrix for the optimization target, it is usually impractical to use it directly. Therefore, we will use the Gauss-Newton and Levenberg-Marquadt optimizers instead.</p>
+
+<!--more-->
+
+<h2 id="optimization-problem">Optimization Problem</h2>
+
+<p>The optimization problem, in general can be represented in the form of</p>
+
+\[x^* = \arg\min_{x}f(x)\]
+
+<p>That is, we want to find some optimal input $x^*$ s.t. such input can minimize some given expression $f(x)$.</p>
+
+<h3 id="naive-optimization">Naive Optimization</h3>
+
+<p>When function $f$ is simple, we can find its Jacobian matrix (first order derivative) $\mathbf{J}$ and Hessian matrix (second order derivative) $\mathbf{H}$ easily.</p>
+
+\[\mathbf{J} = \begin{bmatrix}
+    \frac{\partial f}{\partial x_0} &amp; \frac{\partial f} {\partial x_1} &amp; \cdots &amp; \frac{\partial f}{\partial x_n}
+\end{bmatrix}
+\quad
+\mathbf{H} = \begin{bmatrix}
+    \frac{\partial^2 f}{\partial x_1^2} &amp; \frac{\partial^2f}{\partial x_1 \partial x_2} &amp; \cdots &amp; \frac{\partial^2 f}{\partial x_1\partial x_n} \\
+    \frac{\partial^2 f}{\partial x_2\partial x_1} &amp; \frac{\partial^2 f}{\partial x_2^2} &amp; &amp; \vdots \\
+    \vdots &amp; &amp; \ddots &amp; \vdots \\
+    \frac{\partial^2 f}{\partial x_n\partial x_1} &amp; \cdots &amp; \cdots &amp; \frac{\partial^2 f}{\partial x_n^2}
+\end{bmatrix}\]
+
+<p>We can then solve for $\mathbf{J}x = \mathbf{0}$. For every solution $x$, if the hessian matrix is positive definite, then a local minimum is found.</p>
+
+<h3 id="iterative-optimization">Iterative Optimization</h3>
+
+<p>However, when the function $f$ is complex or $x$ lives in very high dimension (~10k in sparse 3D reconstruction problem, or ~10M in usual neural network models), it is practically impossible to solve for analytical solution of $\mathbf{J}$ and $\mathbf{H}$.</p>
+
+<p>In this case, we need to use iterative optimization. The general algorithm for such approach can be summarized as following:</p>
+
+<ol>
+  <li>For some initial guess value $x_0$, we have $x \gets x_0$</li>
+  <li>While true
+    <ol>
+      <li>
+        <p>Use the Taylor expansion of $f$ around $x$,</p>
+
+        <p>If using second-order optimizer, we have
+\(\hat{f}(x + \Delta x) = f(x) + \mathbf{J}(x)\Delta x + \frac{1}{2}\Delta x^T\mathbf{H}(x) \Delta x\)
+If using first-order optimizer, we have
+\(\hat{f}(x + \Delta x) = f(x) + \mathbf{J}(x)\Delta x\)</p>
+      </li>
+      <li>
+        <p>Solve for $\Delta x^*$ such that</p>
+      </li>
+    </ol>
+
+\[\Delta x^* = \arg\min_{\Delta x}{\hat{f}(x + \Delta x)}\]
+
+    <ol>
+      <li>Update $x \gets x + \Delta x^*$</li>
+      <li>If $|\Delta x^*|_2 &lt; \varepsilon$, the solution “converges” and break out the loop</li>
+    </ol>
+  </li>
+  <li>Return $x$</li>
+</ol>
+
+<h2 id="first-order-optimizers">First Order Optimizers</h2>
+
+<p>When using first order optimizer, we only use the first order derivative of $f$ to calculate $\Delta x^*$. Then, we have</p>
+
+\[\Delta x^* = \arg\min_{\Delta x} f(x) + \mathbf{J}(x) \Delta x = \arg\min_{\Delta x} \mathbf{J}(x) \Delta x = -\arg\max_{\Delta x}{\mathbf{J}(x) \Delta x}\]
+
+<p>Obviously, the solution will be $\Delta x^* = -\mathbf{J}(x)$. This is aligned with the definition of naive Stochastic Gradient Descent (SGD).</p>
+
+<p>Intuitively, we can interpret first order optimization as locally approximate the optimization target $f$ as a plane with form of $\mathbf{J}x$.</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20230723164733.png" alt="20230723164733" /></p>
+
+<blockquote>
+  <p>First order Taylor approximation of $\sin(x) + \cos(y) + 2$ at $(2, 2)$. <em>Generated by GPT-4 with code interpreter.</em></p>
+</blockquote>
+
+<p>Such optimizer and its variants like Adam, AdamW, RMSProp are widely used in the field of deep learning and is supported by popular libraries like PyTorch.</p>
+
+<h3 id="why-not-first-order-optimizer">Why not First Order Optimizer?</h3>
+
+<p>While first order optimizers can support large scale optimization problem, it generally requires more iterations to converge since linearization (first order Taylor expansion) is not a good approximation.</p>
+
+<p>In applications like SLAM where bundle adjustments need to run in real-time, first order optimizer cannot fulfill our need.</p>
+
+<p>Therefore, we have the second order optimizers.</p>
+
+<h2 id="second-order-optimizers">Second Order Optimizers</h2>
+
+<p>The second order optimizers, specifically the <strong>Newton method</strong> uses second order Taylor expansion as the local approximation for optimization target:</p>
+
+\[\hat{f}(x + \Delta x) = f(x) + \mathbf{J}(x)\Delta x + \frac{1}{2}\Delta x^T \mathbf{H}(x) \Delta x\]
+
+<p>Then we have</p>
+
+\[\Delta x^* = \arg\min_{\Delta x}{\hat{f}(x + \Delta x)} = \arg\min_{\Delta x}\mathbf{J}(x)\Delta x + \frac{1}{2}\Delta x^T\mathbf{H}\Delta x\]
+
+<p>Solving</p>
+
+\[\frac{\partial }{\partial\Delta x} {\left(\mathbf{J}(x)\Delta x + \frac{1}{2}\Delta x^T\mathbf{H}\Delta x\right)} = \mathbf{0}\]
+
+<p>We have $\mathbf{H}(x)\Delta x^* = -\mathbf{J}(x)$.</p>
+
+<p>Intuitively, the second order optimizers like Newton method is using a paraboloid to locally approximate the function surface.</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20230723164919.png" alt="20230723164919" /></p>
+
+<blockquote>
+  <p>Second order Taylor approximation of $\sin(x) + \cos(y) + 2$ at $(2, 2)$. <em>Generated by GPT4 with code interpreter</em>.</p>
+</blockquote>
+
+<h3 id="why-not-second-order-optimizer">Why not Second Order Optimizer?</h3>
+
+<p>Second order optimizer provides a much better approximation to the original function. Hence, solver with second order optimizer can converge much faster than first order optimizer.</p>
+
+<p>However, it is often not practical to calculate the $\mathbf{H}$ of $f$. If $x \in \mathbf{R}^d$, then $\mathbf{H}$ will have $d^2$ elements.</p>
+
+<h2 id="pseudo-second-order-optimizers">Pseudo-second-order Optimizers</h2>
+
+<h3 id="gauss-newton-optimizer">Gauss-Newton Optimizer</h3>
+
+<p>Gauss-Newton optimizers requires the expression to be optimized to be in the form of sum-of-square. That is, the optimization target must have form of</p>
+
+\[\mathbf{R}(x) = \sum{f(x)^2}\]
+
+<p>Then, consider the first order approximation for $f$ at $x$:</p>
+
+\[\hat{f}(x + \Delta x) \approx f(x) + \mathbf{J}(x) \Delta x\]
+
+\[\begin{aligned}
+\Delta x^* &amp;= \arg\min_{\Delta x} \mathbf{R}(x + \Delta x)\\
+  &amp;\approx \arg\min_{\Delta x}{(f(x) + \mathbf{J}(x)\Delta x)^2}\\
+  &amp;= \arg\min_{\Delta x}{f^2(x) + 2f(x)\mathbf{J}(x)\Delta x + (\mathbf{J}(x)\Delta x)^\top (\mathbf{J}(x) \Delta x)}\\
+\end{aligned}\]
+
+<p>Since the term in $\arg\min$ is convex (is a square), we know the optimization target must be convex. Hence, we have $\Delta x = \Delta x^*$ when $\frac{\partial (f(x) + \mathbf{J}\Delta x)^2}{\partial \Delta x} = 0$.</p>
+
+<p>Hence, we have</p>
+
+\[\mathbf{J}^\top(x) \mathbf{J}(x) \Delta x^* = -f(x)\mathbf{J}(x)\]
+
+<p>where we can solve for $\Delta x^*$.</p>
+
+<p><strong>Problem of Gauss-Newton Optimizer</strong></p>
+
+<p>In production environment, we may have $\mathbf{J}$ not full-ranked. This will cause the coefficient matrix $\mathbf{J}^\top \mathbf{J}$ on the left hand side being positive <strong>semi-definite</strong> (not full-ranked). In this case, the equation system is in singular condition and we can’t solve for $\Delta x^*$ reliably.</p>
+
+<p>Also, in Gauss-Newton method, the $\Delta x^*$ we solved for may be very large. Since we only use the first order Taylor expansion, large $\Delta x^* $ usually indicates a poor approximation for $f(x + \Delta x^*)$. In these cases, the residual $\mathbf{R}$ may even increase as we update $x \gets x + \Delta x$.</p>
+
+<h3 id="levenberg-marquadt-optimizer">Levenberg-Marquadt Optimizer</h3>
+
+<p>Levenberg-Marquadt optimizer is a modified version of Gauss-Newton optimizer.</p>
+
+<p>The LM optimizer use a metric $\rho$ to evaluate the quality of approximation:</p>
+
+\[\rho(\Delta x) = \frac{f(x + \Delta x)}{f(x) + \mathbf{J}(x)\Delta x}\]
+
+<p>When the approximation is accurate, we have $\rho(\Delta x) = 1$.</p>
+
+<p>LM optimizer will then use this measure of approximation quality to control the “trusted region”. The “trusted region” represents a domain where the first order approximation for $f(x)$ is acceptable.</p>
+
+<p>The update vector $\Delta x$ must be in the trusted region. Hence, the entire optimization problem is formulated as</p>
+
+\[\arg\min_{\Delta x}{(f(x) + \mathbf{J}(x)\Delta x)^2} \quad \text{s.t. }D\Delta x \leq \mu\]
+
+<p>where $D$ is a diagonal matrix constraining the $\Delta x$ in an ellipsoid domain.</p>
+
+<p>Usually, the $D$ is configured as $diag(\mathbf{J}^\top(x)\mathbf{J}(x))$. This allows the update step to move more on the direction with lower gradient.</p>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fa fa-folder-o"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#machine-learning">Machine Learning</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fa fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#machine-learning">machine-learning</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#slam">slam</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/frontend/2022/12/06/c0vm-embeddable.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fa fa-arrow-left"></i> C0VM.ts: C0 Visualizer on the cloud
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/computer%20vision/2023/08/16/Direct-Method-Jacobian.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            Direct Method SLAM - Jacobian Formulation
+ <i class="fa fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Serverless File System based on AWS S3 | Yutian’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="Serverless File System based on AWS S3" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="This system is deployed on My blog’s file Sharing Page as a front-end application. The source code is also avalable in React-S3-Viewer Repo here. Reference Information: Viewing Photo stored in S3 Buckets AWS SDK for JavaScript AWS Cognito Identity Pool SessionStorage - MDN Access AWS Resources through SDK A user identity pool is created using AWS Cognito. Any user authenticated / unauthenticated join this identity pool will be automatically assigned with an AWS role. Then, we create a AWS SDK key corresponding to this identity pool. Anyone access AWS Service using SDK and given key will get an role called Cognito_MyBlogFilesUnAuth_Role." />
+<meta property="og:description" content="This system is deployed on My blog’s file Sharing Page as a front-end application. The source code is also avalable in React-S3-Viewer Repo here. Reference Information: Viewing Photo stored in S3 Buckets AWS SDK for JavaScript AWS Cognito Identity Pool SessionStorage - MDN Access AWS Resources through SDK A user identity pool is created using AWS Cognito. Any user authenticated / unauthenticated join this identity pool will be automatically assigned with an AWS role. Then, we create a AWS SDK key corresponding to this identity pool. Anyone access AWS Service using SDK and given key will get an role called Cognito_MyBlogFilesUnAuth_Role." />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-01-19T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Serverless File System based on AWS S3" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yutian Chen"},"dateModified":"2022-01-19T00:00:00+00:00","datePublished":"2022-01-19T00:00:00+00:00","description":"This system is deployed on My blog’s file Sharing Page as a front-end application. The source code is also avalable in React-S3-Viewer Repo here. Reference Information: Viewing Photo stored in S3 Buckets AWS SDK for JavaScript AWS Cognito Identity Pool SessionStorage - MDN Access AWS Resources through SDK A user identity pool is created using AWS Cognito. Any user authenticated / unauthenticated join this identity pool will be automatically assigned with an AWS role. Then, we create a AWS SDK key corresponding to this identity pool. Anyone access AWS Service using SDK and given key will get an role called Cognito_MyBlogFilesUnAuth_Role.","headline":"Serverless File System based on AWS S3","mainEntityOfPage":{"@type":"WebPage","@id":"/frontend/2022/01/19/serverless-file-system.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"url":"/frontend/2022/01/19/serverless-file-system.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#access-aws-resources-through-sdk">Access AWS Resources through SDK</a></li>
+  <li><a href="#local-caching">Local Caching</a>
+    <ul>
+      <li><a href="#file-list-cache">File List Cache</a></li>
+      <li><a href="#file-content-cache">File Content Cache</a></li>
+    </ul>
+  </li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">Serverless File System based on AWS S3</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2022-01-19T00:00:00+00:00" itemprop="datePublished">
+        Jan 19, 2022
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>This system is deployed on <a href="/files.html">My blog’s file Sharing Page</a> as a front-end application. The source code is also avalable in <code class="language-plaintext highlighter-rouge">React-S3-Viewer</code> Repo <a href="https://github.com/MarkChenYutian/React-S3-viewer">here</a>.</p>
+
+<p>Reference Information:</p>
+
+<ul>
+  <li><a href="https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/s3-example-photos-view.html">Viewing Photo stored in S3 Buckets</a></li>
+  <li><a href="https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/welcome.html">AWS SDK for JavaScript</a></li>
+  <li><a href="https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-started-browser.html#getting-started-browser-create-identity-pool">AWS Cognito Identity Pool</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage">SessionStorage - MDN</a></li>
+</ul>
+
+<h2 id="access-aws-resources-through-sdk">Access AWS Resources through SDK</h2>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220119171645.jpg" alt="Serverless-file-system" /></p>
+
+<p>A user identity pool is created using AWS Cognito. Any user authenticated / unauthenticated join this identity pool will be automatically assigned with an AWS role. Then, we create a AWS SDK key corresponding to this identity pool. Anyone access AWS Service using SDK and given key will get an role called <code class="language-plaintext highlighter-rouge">Cognito_MyBlogFilesUnAuth_Role</code>.</p>
+
+<!--more-->
+
+<p>Using IAM, we can assign this role with permission to access some specific AWS Resource. In this case, we only allow users to access the S3 storage bucket <code class="language-plaintext highlighter-rouge">yutian-public</code> and allow them to <code class="language-plaintext highlighter-rouge">List</code> and <code class="language-plaintext highlighter-rouge">Get</code> objects from the bucket.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VisualEditor0"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3:ListBucket"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:s3:::yutian-public"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VisualEditor1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3:GetObject"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:s3:::yutian-public/*"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="local-caching">Local Caching</h2>
+
+<p>Since 2022 May, the file sharing page is reconstructed using <code class="language-plaintext highlighter-rouge">React</code> and <code class="language-plaintext highlighter-rouge">Ant-design</code>. Two major improvements are implemented in this latest version:</p>
+
+<ol>
+  <li>
+    <p>The file directory will be cached in the <code class="language-plaintext highlighter-rouge">SessionStorage</code>. For each session, the client will only request once from the AWS. This can significantly reduce the #requests.</p>
+  </li>
+  <li>
+    <p>When downloading, files will be cached to the <code class="language-plaintext highlighter-rouge">IndexDB</code>. Therefore, unless the user reset the IndexDB or the file is updated, every file is guaranteed to be downloaded only once on each client.</p>
+  </li>
+</ol>
+
+<h3 id="file-list-cache">File List Cache</h3>
+
+<p><img src="http://markdown-img-1304853431.cosgz.myqcloud.com/20220509205039.png" alt="File Structure saved in Session Storage" /></p>
+
+<p>When the page is first loaded, the client will request all objects in S3 storage bucket through <code class="language-plaintext highlighter-rouge">ListObjectV2</code> API. The result is a list of objects in the bucket.</p>
+
+<p>There is no file structure in S3, all the “folders” are just key of object with <code class="language-plaintext highlighter-rouge">/</code> slashes between words. Therefore, we need to parse the result to rebuild a “file structure” back from plain list.</p>
+
+<p>The file structure will then be stored into <code class="language-plaintext highlighter-rouge">SessionStorage</code>. Unless the user explicitly request for reload, the <code class="language-plaintext highlighter-rouge">ListObjectV2</code> API will not be called anymore in current session.</p>
+
+<h3 id="file-content-cache">File Content Cache</h3>
+
+<p><img src="http://markdown-img-1304853431.cosgz.myqcloud.com/20220509211227.png" alt="image-20220509211227847" /></p>
+
+<p>On the other hand, we want to reduce the amount of data downloaded from the AWS to minimize cost. Therefore, we want to cache the files that users has downloaded previously.</p>
+
+<p>We will need to use <code class="language-plaintext highlighter-rouge">IndexedDB</code> since the quota for session storage is very small (~1Mb per entry). IndexedDB is much more complicated to use than SessionStorage. Luckily, there’s a third-party module called <code class="language-plaintext highlighter-rouge">idb-key-val</code> that allows us to use IndexDB in an extremely simple way.</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">val</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span>
+
+<span class="kd">function</span> <span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p>By converting <code class="language-plaintext highlighter-rouge">Uint8Array</code> to base64 string, we can store the file in client’s cache and reduce the redundant request to AWS.</p>
+
+<p><mark>Yet, there is just **one more thing**</mark></p>
+
+<p>Suppose the file on S3 is updated to a newer version but the client is still caching the older version, how can the client know when to update/descard the cache?</p>
+
+<p>We resolve this problem by storing the <code class="language-plaintext highlighter-rouge">ETag</code> field along with data. <code class="language-plaintext highlighter-rouge">ETag</code> is a string that reflects the change of file content (notice it’s not necessarily MD5). When the key is requested, the program will also compare the <code class="language-plaintext highlighter-rouge">ETag</code> of requested resource and current cache. If they don’t match, then a later version will overwrite the current cache.</p>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fa fa-folder-o"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#frontend">Frontend</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fa fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#react">react</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#web">web</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/neural%20network/2022/01/09/Transformers.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fa fa-arrow-left"></i> NLP 101: Transformer Model
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/frontend/2022/02/11/the-fences.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            
+  
+    
+      The Fences
+      AR Web Application
+    
+  
+
+ <i class="fa fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>NLP 101: Attention Mechanism | Yutian’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="NLP 101: Attention Mechanism" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="ch" />
+<meta name="description" content="Seq2Seq 模型的问题 在之前关于 Seq2Seq 模型的文章中，我们在最后提到了编码器与解码器之间的信息瓶颈问题 Fig 1. Seq2Seq 模型中编码器与解码器之间的“瓶颈” 由于编码器与解码器之间只使用总结向量连接，当向编码器输入长序列时，总结向量由于维度限制可能无法包涵输入序列中的所有信息。 同时，因为我们只将编码器的最后时刻的隐藏状态作为总结向量传递给了解码器，编码器中间隐藏状态的信息不可避免的被丢失了。 Attention Mechanism 最开始被提出就是为了解决 Seq2Seq 模型的这两个问题。" />
+<meta property="og:description" content="Seq2Seq 模型的问题 在之前关于 Seq2Seq 模型的文章中，我们在最后提到了编码器与解码器之间的信息瓶颈问题 Fig 1. Seq2Seq 模型中编码器与解码器之间的“瓶颈” 由于编码器与解码器之间只使用总结向量连接，当向编码器输入长序列时，总结向量由于维度限制可能无法包涵输入序列中的所有信息。 同时，因为我们只将编码器的最后时刻的隐藏状态作为总结向量传递给了解码器，编码器中间隐藏状态的信息不可避免的被丢失了。 Attention Mechanism 最开始被提出就是为了解决 Seq2Seq 模型的这两个问题。" />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-01-04T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="NLP 101: Attention Mechanism" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yutian Chen"},"dateModified":"2022-01-04T00:00:00+00:00","datePublished":"2022-01-04T00:00:00+00:00","description":"Seq2Seq 模型的问题 在之前关于 Seq2Seq 模型的文章中，我们在最后提到了编码器与解码器之间的信息瓶颈问题 Fig 1. Seq2Seq 模型中编码器与解码器之间的“瓶颈” 由于编码器与解码器之间只使用总结向量连接，当向编码器输入长序列时，总结向量由于维度限制可能无法包涵输入序列中的所有信息。 同时，因为我们只将编码器的最后时刻的隐藏状态作为总结向量传递给了解码器，编码器中间隐藏状态的信息不可避免的被丢失了。 Attention Mechanism 最开始被提出就是为了解决 Seq2Seq 模型的这两个问题。","headline":"NLP 101: Attention Mechanism","mainEntityOfPage":{"@type":"WebPage","@id":"/neural%20network/2022/01/04/Attention-Mechanism.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"url":"/neural%20network/2022/01/04/Attention-Mechanism.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#seq2seq-模型的问题">Seq2Seq 模型的问题</a></li>
+  <li><a href="#使用平均隐藏状态作为总结向量">使用平均隐藏状态作为总结向量？</a></li>
+  <li><a href="#attention-mechanism--">Attention Mechanism ｜ 注意力机制</a></li>
+  <li><a href="#attention-mechanism-q-k-v">Attention Mechanism 的实现与q, K, V表示法</a></li>
+  <li><a href="#section">注意力权重的分布：英语-法语翻译模型中的例子</a></li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">NLP 101: Attention Mechanism</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2022-01-04T00:00:00+00:00" itemprop="datePublished">
+        Jan 4, 2022
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="seq2seq-模型的问题">Seq2Seq 模型的问题</h2>
+
+<p>在之前关于 <code class="language-plaintext highlighter-rouge">Seq2Seq</code> 模型的<a href="/2021/Seq2Seq.html">文章</a>中，我们在最后提到了编码器与解码器之间的信息瓶颈问题</p>
+
+<figure>
+  <p><img src="https://markdown-img-1304853431.file.myqcloud.com/IMG_82F6020DAD92-1.jpeg" alt="IMG_82F6020DAD92-1" /></p>
+  <figcaption>Fig 1. Seq2Seq 模型中编码器与解码器之间的“瓶颈”</figcaption>
+</figure>
+
+<ol>
+  <li>由于编码器与解码器之间只使用总结向量连接，当向编码器输入长序列时，总结向量由于维度限制可能无法包涵输入序列中的所有信息。</li>
+  <li>同时，因为我们只将编码器的最后时刻的隐藏状态作为总结向量传递给了解码器，编码器中间隐藏状态的信息不可避免的被丢失了。</li>
+</ol>
+
+<p>Attention Mechanism 最开始被提出就是为了解决 Seq2Seq 模型的这两个问题。</p>
+
+<!--more-->
+
+<h2 id="使用平均隐藏状态作为总结向量">使用平均隐藏状态作为总结向量？</h2>
+
+<figure>
+  <p><img src="https://markdown-img-1304853431.file.myqcloud.com/IMG_95D1E32E6D0D-1.jpeg" alt="IMG_95D1E32E6D0D-1" /></p>
+  <figcaption>Fig 2. 将编码器所有隐藏状态取平均后在每一个时刻作为输入的一部分传递给解码器</figcaption>
+  <figure />
+
+  <p>在这样的一个模型中，我们将编码器的所有隐藏状态取平均后通过与解码器的输入直接拼接将编码器的信息传递给解码器。通过计算编码器所有隐藏状态的平均值，我们解决了问题2 - 现在传递的“总结向量” $h_{avg}$ 包涵了编码器中所有隐藏状态的信息。</p>
+
+  <p>虽然在上图中编码器与解码器中看起来有大量的连接，但是<strong>信息瓶颈的问题并没有在这个模型中得到解决</strong>。因为在编码器与解码器之间所有的信息传递还是由一个单独的向量 $h_{avg}$ 完成的。实际上，由于这个总结向量要现在要传递的信息变得更多了（以前只用传递时刻 $t$ 的隐藏状态中的信息，现在要传递时刻 $0$ 到 $t$ 所有隐藏状态中的信息），在这个模型中<strong>信息瓶颈问题反而变得更加显著了</strong>。</p>
+
+  <p>这个模型还有一个缺陷 - 因为我们直接对所有时刻的隐藏状态取平均值，编码器每个时刻的隐藏状态权重都是一样的。这并不符合实际解决问题时的经验 - 当我们在翻译句子的第 $i$ 个词的时候，我们往往只会关心原句中特定的一两个词。</p>
+
+  <p><strong>总结：</strong></p>
+
+  <p>对于直接将编码器隐藏状态取平均后传递给解码器的模型，有以下这些优缺点：</p>
+
+  <ul>
+    <li>:+1: 解码器接收到了编码器所有隐藏状态的信息</li>
+    <li>:-1: 编码器与解码器之间的信息瓶颈问题变得更加显著</li>
+    <li>:-1: 编码器每个时刻的隐藏状态权重一样，解码器在解码时没有“重点”。</li>
+  </ul>
+
+  <h2 id="attention-mechanism--">Attention Mechanism ｜ 注意力机制</h2>
+
+  <p>既然直接对所有编码器隐藏状态直接取平均会产生新的问题，那么我们有么有可能给解码器在每一时刻都输入一个独特的，所有编码器隐藏状态的加权平均值呢？这种动态加权平均就是 Attention 机制的核心思路</p>
+
+  <figure>
+    <p><img src="https://markdown-img-1304853431.file.myqcloud.com/IMG_485EC646512E-1.jpeg" alt="IMG_485EC646512E-1" /></p>
+    <figcaption>Fig 3. 假如解码器生成的序列长度为$n$，我们生成 $n$ 个不同的总结向量，每一个总结向量都是对编码器所有隐藏状态的加权平均</figcaption>
+  </figure>
+
+  <p>对于解码器的每一个时刻 $t$ ，我们都使用不同的权重计算编码器中所有隐藏状态的加权平均，并将计算结果 $c_t$ 与解码器在 $t - 1$ 时刻的输出 $y_{t-1}$ 拼接 ( concatenate) 后作为解码器在该时刻的输入。</p>
+
+  <p>假设输入序列长度为 $N$，在时刻 $t$ 输入到解码器中的总结向量 $c_t$ 可以这样表示</p>
+
+\[c_t = \sum_{i=0}^{N}{w_i\cdot h_i}\]
+
+  <p>其中 $w_i$ 被称为 <strong>注意力权重</strong>（Attention Weight）。因为 $w_i$ 会“帮助”解码器在解码过程中“集中注意”到编码器的特定隐藏状态上。在下面的例子中，我们让模型将 “我昨天吃了一个苹果” 翻译为英文。可以看到，一个良好训练的模型会通过注意力权重帮助解码器将其“注意力”“聚焦”到编码器特定的隐藏状态上。</p>
+
+  <figure>
+    <p><img src="https://markdown-img-1304853431.file.myqcloud.com/IMG_C6C26F5222FB-1.jpeg" alt="IMG_C6C26F5222FB-1" /></p>
+    <figcaption>Fig 4. 注意力权重帮助解码器在编码器所有隐藏状态中“选择性获取”所需的信息</figcaption>
+  </figure>
+
+  <blockquote>
+    <p>上图的一些解释：</p>
+
+    <p><code class="language-plaintext highlighter-rouge">&lt;SOS&gt;</code> 表示 “Start of Sequence” - 我们使用这个 token 向模型表示“可以开始解码了”。</p>
+
+    <p>为了得到英文翻译结果的主语 “I” ，模型获取<strong>只需要中文输入的主语 “我”</strong> 就有足够的信息了，所以 $c_0$ 的注意力权重只在 “我” 输入的隐藏状态 $h_0$ 上有较大权重</p>
+
+    <p>要得到英文翻译结果中的谓语 “ate”，解码器<strong>不但要知道中文的谓语 “吃”</strong> ，还要知道 <strong>中文输入的时态 “昨天”（过去），“了”（动作已经完成）</strong>。所以 $c_1$ 的注意力权重虽然在 $h_2$ - “吃” 上最高，在 $h_1$ （“昨天”）与 $h_3$ （“了”） 也显著大于其它值。</p>
+  </blockquote>
+
+  <p>注意力机制可以同时解决 <code class="language-plaintext highlighter-rouge">Seq2Seq</code> 模型中的两个主要问题：</p>
+
+  <ol>
+    <li>
+      <p><em>信息瓶颈问题</em> - 通过不同的注意力权重，编码器与解码器之间会传递 $n$ 个不同的总结向量。这大大拓宽了编码器与解码器之间的信息通道。</p>
+    </li>
+    <li>
+      <p><em>中间信息丢失问题</em> - 注意力权重机制理论上允许解码器获得编码器中的任意隐藏状态。</p>
+    </li>
+  </ol>
+
+  <p>那么，这个能够帮助解码器“集中注意”的神奇“注意力权重”到底是怎么实现的呢？</p>
+
+  <h2 id="attention-mechanism-q-k-v">Attention Mechanism 的实现与q, K, V表示法</h2>
+
+  <p>虽然在第一个提出注意力机制的论文 <a href="https://arxiv.org/pdf/1409.0473.pdf"><em>Neural Machine Translation by Jointly Learning to Align and Translate</em></a> 中，作者并没有使用 query-Key-Value (q, K, V)的表示方法，将注意力机制真正发扬光大的论文 <a href="https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf"><em>Attention is All You Need</em></a> 中提出的 q, K, V 表示方法一定程度上成为了事实上的“标准”。</p>
+
+  <p>Fig 4. 中的模型实际上是一种简化的表示方法。在实际实现注意力机制的过程中，我们会让编码器在对每一个输入 $x_t$ 输出一对 Key-value pair $K_t$ 与 $V_t$。对于解码器
+的每一个隐藏状态 $s_t$，我们会让解码器在输出 $y_t$ 的同时输出一个 query 值 $q_{t + 1}$。</p>
+
+  <p>假如我们在解码器输出完第 $t-1$ 个token后有</p>
+
+\[K = \left\langle K_0, K_1, \cdots, K_m \right\rangle\]
+
+\[V = \left\langle V_0, V_1, \cdots, V_m \right\rangle\]
+
+\[e^t_i = g(K_i, q_t)\]
+
+  <p>那么 $c_t$ 可以通过这样的方式计算：</p>
+
+\[e^t = \left\langle g(k_0, q_t), g(k_1, q_t), \cdots, g(k_m, q_t)\right\rangle\]
+
+\[w^t = Softmax (e^t)\]
+
+\[c_t = w^t\cdot V\]
+
+  <p>写成伪代码的形式，我们有</p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func compute_context(q: Mat, K: Vec&lt;Mat&gt;, V: Vec&lt;Mat&gt;)
+    e = new Vec&lt;float&gt;(m)
+    for t = 1:m
+        e[t] = raw_attention(q, K[t])   # Function 'g' in math above
+    end
+
+    w = softmax(e)
+
+    c = new Mat&lt;float&gt;  # Initialize c as a zero tensor
+    for t = 1:m
+        c += w[t] * V[t]
+    end
+    return c
+end
+</code></pre></div>  </div>
+  <figure>
+    <p><img src="https://markdown-img-1304853431.file.myqcloud.com/IMG_536CF3684689-1.jpeg" alt="IMG_536CF3684689-1" /></p>
+    <figcaption>Fig 5. 使用 q，K，V 结构实现的 Attention 模型</figcaption>
+  </figure>
+
+  <p>现在我们离完全实现一个注意力结构只剩下一步之遥了 - 在上面的伪代码中有一个神奇的函数 <code class="language-plaintext highlighter-rouge">raw_attention</code> - 给定一个 query 张量与 Key 张量，这个函数会返回一个浮点数表示分配到这个 Key 所对应的 Value 张量上的注意力权重。</p>
+
+  <p>这个函数的实现出人意料的简单：对于两个向量 $K$ 与 $q$，它会返回这两个向量的点乘结果。</p>
+
+\[g(K, q) = \frac{k_i\cdot q}{\sqrt{\dim{k_i}}}\]
+
+  <div class="notification">
+    <h4 hide-toc="true" style="margin-top: 0">2021/01/11 Update</h4>
+
+    <p>这里我们在乘法运算完了以后还要对结果进行一个缩放 - i.e. 上面公式中除以 $\sqrt{\dim{k_i}}$ 的步骤。这是为了得到更加平滑的参数梯度。<a href="https://towardsdatascience.com/illustrated-guide-to-transformers-step-by-step-explanation-f74876522bc0">Source</a></p>
+
+    <p>对 Raw Attention Score 进行 Softmax 而不是直接正则化 ($w_i = \frac{w_i}{\sum_{w}}$) 则是为了让正则化后的结果“大的值更大，小的值更小”，让模型更加稳定（输出的结果更加确定）。<a href="https://towardsdatascience.com/illustrated-guide-to-transformers-step-by-step-explanation-f74876522bc0">Source</a></p>
+  </div>
+
+  <div class="notification">
+    <h4 hide-toc="true" style="margin-top: 0;">2021/01/09 Update</h4>
+
+    <p>直接将 $K$ 与 $q$ 点乘是最简单的 Attention Weight 计算函数，其它函数包括</p>
+
+\[g(k_i, q) = q^{\top}Wk_i\]
+
+    <p>其中，$W$ 是一个可学习的参数权重矩阵。</p>
+  </div>
+
+  <h2 id="section">注意力权重的分布：英语-法语翻译模型中的例子</h2>
+
+  <p>在下图中可以看到注意力权重的值主要分布在对角线上 —— 这是因为英语和法语句子中的语序在很大程度上是相似的。这也证明注意力权重确实可以学习到输入与输出之间的对应关系。</p>
+
+  <figure>
+    <p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220105120525.png" alt="20220105120525" /></p>
+    <figcaption>Fig 6. 英语-法语 机器翻译模型中的注意力权重</figcaption>
+  </figure>
+
+</figure>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fa fa-folder-o"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#neural-network">Neural Network</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fa fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#nlp">nlp</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#neural-network">neural-network</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/neural%20network/2021/12/28/Seq2Seq.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fa fa-arrow-left"></i> NLP 101: Seq2Seq 模型
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/neural%20network/2022/01/09/Transformers.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            NLP 101: Transformer Model
+ <i class="fa fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>USACO 2017 Jan Gold Analysis | Yutian’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="USACO 2017 Jan Gold Analysis" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Problem 1 Balanced Photo Link to Problem Problem Summary John want to arrange his $N$ , $1\leq N \leq 100,000$ cows to take a photo. The height of $i$th cow is $h_i$. the heights of all cows are distinct. In a line, a cow is called “unbalanced” if the number of cow that is higher than it on the left is two time (or half of) the number of cow that is lower than it. Given the line of cow, give out the number of unbalanced cows in the photo." />
+<meta property="og:description" content="Problem 1 Balanced Photo Link to Problem Problem Summary John want to arrange his $N$ , $1\leq N \leq 100,000$ cows to take a photo. The height of $i$th cow is $h_i$. the heights of all cows are distinct. In a line, a cow is called “unbalanced” if the number of cow that is higher than it on the left is two time (or half of) the number of cow that is lower than it. Given the line of cow, give out the number of unbalanced cows in the photo." />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-11-11T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="USACO 2017 Jan Gold Analysis" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yutian Chen"},"dateModified":"2020-11-11T00:00:00+00:00","datePublished":"2020-11-11T00:00:00+00:00","description":"Problem 1 Balanced Photo Link to Problem Problem Summary John want to arrange his $N$ , $1\\leq N \\leq 100,000$ cows to take a photo. The height of $i$th cow is $h_i$. the heights of all cows are distinct. In a line, a cow is called “unbalanced” if the number of cow that is higher than it on the left is two time (or half of) the number of cow that is lower than it. Given the line of cow, give out the number of unbalanced cows in the photo.","headline":"USACO 2017 Jan Gold Analysis","mainEntityOfPage":{"@type":"WebPage","@id":"/algorithm/2020/11/11/USACO-2017-Jan-Gold.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"url":"/algorithm/2020/11/11/USACO-2017-Jan-Gold.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <div class="sidebar-section"><img src="/avatar.jpg" class="author-avatar u-photo align-center" alt="Yutian Chen">
+  </div>
+
+<div class="sidebar-section">
+  <ul class="contact-list">
+    <li>
+        <i class="sidebar-icon fa fa-at"></i>
+        <span class="contact-info p-name">Yutian Chen</span>
+      </li>
+    <li>
+        <i class="sidebar-icon fa fa-envelope-o"></i>
+        <a class="contact-info u-email" href="mailto:yutianch@andrew.cmu.edu">yutianch@andrew.cmu.edu</a>
+      </li>
+    <li>
+        <i class="sidebar-icon fa fa-location-arrow"></i>
+        <a class="contact-info u-location" href="https://www.google.com/maps/search/Pittsburgh, PA">Pittsburgh, PA</a>
+      </li>
+  </ul>
+</div>
+
+<div class="sidebar-section feed-subscribe">
+  <a href="feed.xml">
+    <i class="sidebar-icon fa fa-rss"></i><span>Subscribe</span>
+  </a>
+</div>
+
+<div class="sidebar-section">
+    <ul class="social-icons">
+      <li>
+          <a class="social-icon" href="https://www.linkedin.com/in/yutian-chen-469602223/"><i class="fa fa-linkedin-square fa-2x" title="LinkedIn"></i></a>
+        </li><li>
+          <a class="social-icon" href="https://github.com/MarkChenYutian"><i class="fa fa-github-square fa-2x" title="GitHub"></i></a>
+        </li>
+    </ul>
+  </div>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">USACO 2017 Jan Gold Analysis</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2020-11-11T00:00:00+00:00" itemprop="datePublished">
+        Nov 11, 2020
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="problem-1-balanced-photo">Problem 1 Balanced Photo</h2>
+
+<p><a href="http://usaco.org/index.php?page=viewproblem2&amp;cpid=693">Link to Problem</a></p>
+
+<h3 id="problem-summary">Problem Summary</h3>
+
+<p>John want to arrange his $N$ , $1\leq N \leq 100,000$ cows to take a photo. The height of $i$th cow is $h_i$. the heights of all cows are distinct. In a line, a cow is called “unbalanced” if the number of cow that is higher than it on the left is two time (or half of) the number of cow that is lower than it. Given the line of cow, give out the number of unbalanced cows in the photo.</p>
+
+<!--more-->
+
+<h3 id="proposed-solution">Proposed Solution</h3>
+
+<p>First, we can range all the cows from high to low, and fill the array with the cow’s height.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cows</span> <span class="o">=</span> <span class="p">[</span><span class="mi">34</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">99</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="p">[</span><span class="n">_</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cows</span><span class="p">))]</span>
+<span class="n">arr</span><span class="p">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">cows</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>After doing this, we can initialize a new list that used to store whether a cow has been counted. The new list will be filled with 0.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">cows</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>After this, we will apply following steps, suppose we are dealing with the $k$th highest cow, where <code class="language-plaintext highlighter-rouge">cows[k] = n</code></p>
+
+<p>To decrease the time complexity of solution, we will use a data structure called <strong>Binary Index Tree (BIT)</strong> on $l$. Using BIT, we can calculate $L$, $R$, and update $l$ with time complexity of $O(\log{n})$.</p>
+
+<ol>
+  <li>
+    <p>Calculate  $L = \sum_{i = 0}^n l[i]$. Since we will process all the cows from highest to the shortest, the result of formula will be the number of cow that is higher than current cow and stands on its left.</p>
+  </li>
+  <li>
+    <p>Calculate $R = k - 1 - \sum_{i = 0}^n l[i]$. Since the current cow we are dealing with is the $k$th highest cow, there are $k-1$ cows that are higher than current one. The cow that is higher than current cow and NOT on its left must stand on its right.</p>
+  </li>
+  <li>
+    <p>Calculate
+\(\frac{\min{(L, R)}}{\max{(L, R)}}\)
+If the result is greater than 2, add the number of unbalanced cow by 1.</p>
+  </li>
+  <li>
+    <p>Set the value of $l[n] = 1$.</p>
+  </li>
+</ol>
+
+<h3 id="time-complexity-analysis">Time Complexity Analysis</h3>
+
+<ul>
+  <li>Time complexity of sorting - $O(n\log{n})$</li>
+  <li>Travel through all the cows - $O(n)$
+    <ul>
+      <li>Calculate L, R, and update $l[n]$ - $O(\log{n})$</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Therefore, the total time complexity will be $O(n\log{n})$.</p>
+
+<h2 id="problem-2-hoof-paper-scissors">Problem 2. Hoof, Paper, Scissors</h2>
+
+<h3 id="problem-summary-1">Problem Summary</h3>
+
+<p>Hoof Paper Scissors is a game like paper, scissor, stone. In the game, Hoof &gt; Scissors, Scissors &gt; Paper, and Paper &gt; Hoof. The cow Bessie know the sequence of gesture that will be used by Farmer John, but it only can change its gesture for $k$ times, where $k$ is a number that is less than 20.</p>
+
+<p>Given the gesture sequence of farmer John and maximum number of change ($k$) for Bessie, what is the maximum number of games Bessie can win?</p>
+
+<h3 id="proposed-solution-1">Proposed Solution</h3>
+
+<p>We can use the dynamic programming to solve this problem. First, we noticed that three variables are needed to represent a state for Bessie.</p>
+
+<ol>
+  <li>The current gesture Bessie is using</li>
+  <li>The number of game Bessie has won</li>
+  <li>The number of time that Bessie change its gesture</li>
+</ol>
+
+<p>Therefore, we will build up a 3D array $T$ with size $3\times N \times k$, where $N$ is the number of games Bessie and John will have. $T[0][n][k]$ represent the maximum number of game that Bessie can win when it has “Hoof” at $n$th game and has changed its gesture for $k$ times.</p>
+
+<p>Suppose we have a function <code class="language-plaintext highlighter-rouge">isWin(gesture, n)</code> that will return whether Bessie will win. If Bessie wins, return 1; otherwise, return 0. Then we can calculate through the whole table using these equations:
+\(\begin{aligned}
+T[g][n][k] = \max{\left( T[g][n-1][k]+ isWin(g, n),\;\\
+T[(g+1)\%3][n-1][k-1]+ isWin(g, n),\;\\
+T[(g + 2)\%3][n-1][k-1]+ isWin(g, n) \right)} 
+\end{aligned}\)
+If either $n$ or $k$ is out of bound (not in 3D array $T$, return 0.</p>
+
+<p>After calculating through all the table, we should check all the elements in slice $T[][N][]$. (the maximum win number may not require maximum number of change). The final result will be the maximum value of these $3\times k$ values.</p>
+
+<h3 id="time-complexity-analysis-1">Time Complexity Analysis</h3>
+
+<p>Since we know that $1\leq N\leq 100,000$ and $1\leq k\leq 20$, the 3D array we will construct has a size of $3\times100,000\times20 = 6\times 10^7$. Since we need to calculate through the whole table, our program may require $1\times 10^8$ computational steps and time complexity of $O(kN)$. Since this time complexity is on the edge of TLE, we should use Java to solve this problem.</p>
+
+<h2 id="problem-3-cow-navigation">Problem 3. Cow Navigation</h2>
+
+<p><a href="http://usaco.org/index.php?page=viewproblem2&amp;cpid=695">Link to Problem</a></p>
+
+<h3 id="problem-summary-2">Problem Summary</h3>
+
+<p>Bessie is in the barn of John. The barn has a size of $N\times N$, and some of the square cells are impassable. Bessie starts in the lower-left corner (cell 1, 1) and wants to move to the right corner (cell N, N).</p>
+
+<p>In each second, Bessie can either <strong>go forward</strong>, <strong>turn left</strong>, or <strong>turn right</strong>. If one instruction let it enter an impassable square, it will skip through that instruction. At the beginning, Bessie doesn’t know if she starts out facing up or facing left. You need to give the <strong>shortest sequence of directions</strong> that will guide her to the goal <strong>regardless of which case is true.</strong> Once she reaches the goal, she will ignore further commands.</p>
+
+<h3 id="proposed-solution-2">Proposed Solution</h3>
+
+<p>The difficult point in this problem is that we don’t know whether Bessie starts with which position and we have to make sure it can arrive at the destination. Since in each situation, the series of instructions used are the same, we can apply BFS on each situation simultaneously.</p>
+
+<p>In this BFS, each state will have two “sub-state”, which represent the position and direction of Bessie when start pointing upward and pointing rightward. We can also apply dynamic programming on this problem - if a set of instruction can reach the same state with shorter length, we should use the shorter instruction series.</p>
+
+<p>We will construct a table with size $N\times N \times 4 \times N \times N \times 4$. The first part $N\times N \times 4$ is the DP table for first sub-state. The second part of table is the DP-table for second sub-state.</p>
+
+<p>The update of DP table and state transition of BFS will follow these rules:</p>
+
+<ol>
+  <li>
+\[T[S_1, S_2] = \min{(T[S_1, S_2], T[S_1', S_2'] + 1)}\]
+  </li>
+  <li>
+\[Update(S_1, S_2) = S_1, S_2' \text{  if $S_1$ is at final state}\]
+  </li>
+  <li>
+\[Update(S_1, S_2) = S_1',S_2 \text{ if the update will let $S_2$ get into impassable square}\]
+  </li>
+</ol>
+
+<h3 id="time-complexity-analysis-2">Time Complexity Analysis</h3>
+
+<p>Therefore, we will search through a graph with $O(N^4)$ nodes. (For each sub-state, there are $N^2$ nodes, though for most of the time, the sub-states has same position, the overall upper bound is $O(N^4)$). Since $0\leq N\leq 20$, the proposed solution will be fast enough.</p>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fa fa-folder-o"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#algorithm">Algorithm</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fa fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#algorithm">algorithm</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/algorithm/2020/11/06/USACO-2016-Dec-Gold.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fa fa-arrow-left"></i> USACO 2016 Dec Gold Analysis
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/algorithm/2020/11/13/Binary-Index-Tree.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            Binary Index Tree (Fenwick Tree)
+ <i class="fa fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

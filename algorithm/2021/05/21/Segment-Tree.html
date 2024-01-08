@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>线段树 Segment Tree | Yutian’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="线段树 Segment Tree" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="zh" />
+<meta name="description" content="使用场景 线段树的应用场景与二进制索引树相似，当我们需要多次查询数组子区间的特性/数据并同时高效修改数组内容的时候，我们可以使用线段树。 线段树并不是一种单一的数据结构 - 它代表了一类具有相同思想方法的数据结构 - 通过二叉树做到区间内容的高效查询，这里的内容可以是区间最大/最小值，区间和，等等 。 数据结构 线段树是一个二叉树，线段树中的每一个节点代表序列中的一个区间。假设对于 长度为 $N$ 的 array $A$，我们有对应的线段树 $T$，那么……" />
+<meta property="og:description" content="使用场景 线段树的应用场景与二进制索引树相似，当我们需要多次查询数组子区间的特性/数据并同时高效修改数组内容的时候，我们可以使用线段树。 线段树并不是一种单一的数据结构 - 它代表了一类具有相同思想方法的数据结构 - 通过二叉树做到区间内容的高效查询，这里的内容可以是区间最大/最小值，区间和，等等 。 数据结构 线段树是一个二叉树，线段树中的每一个节点代表序列中的一个区间。假设对于 长度为 $N$ 的 array $A$，我们有对应的线段树 $T$，那么……" />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-05-21T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="线段树 Segment Tree" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yutian Chen"},"dateModified":"2021-05-21T00:00:00+00:00","datePublished":"2021-05-21T00:00:00+00:00","description":"使用场景 线段树的应用场景与二进制索引树相似，当我们需要多次查询数组子区间的特性/数据并同时高效修改数组内容的时候，我们可以使用线段树。 线段树并不是一种单一的数据结构 - 它代表了一类具有相同思想方法的数据结构 - 通过二叉树做到区间内容的高效查询，这里的内容可以是区间最大/最小值，区间和，等等 。 数据结构 线段树是一个二叉树，线段树中的每一个节点代表序列中的一个区间。假设对于 长度为 $N$ 的 array $A$，我们有对应的线段树 $T$，那么……","headline":"线段树 Segment Tree","mainEntityOfPage":{"@type":"WebPage","@id":"/algorithm/2021/05/21/Segment-Tree.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"url":"/algorithm/2021/05/21/Segment-Tree.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#使用场景">使用场景</a></li>
+  <li><a href="#数据结构">数据结构</a></li>
+  <li><a href="#时间复杂度">时间复杂度</a></li>
+  <li><a href="#java实现">Java实现</a></li>
+  <li><a href="#full-java-code">Full Java Code</a></li>
+  <li><a href="#问题练习">问题练习</a></li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">线段树 Segment Tree</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2021-05-21T00:00:00+00:00" itemprop="datePublished">
+        May 21, 2021
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h3 id="使用场景">使用场景</h3>
+
+<p>线段树的应用场景与二进制索引树相似，当我们需要多次查询数组子区间的特性/数据并同时高效修改数组内容的时候，我们可以使用线段树。</p>
+
+<p>线段树并不是一种单一的数据结构 - 它代表了一类具有相同思想方法的数据结构 - 通过二叉树做到区间内容的高效查询，这里的内容可以是区间最大/最小值，区间和，等等 。</p>
+
+<h3 id="数据结构">数据结构</h3>
+
+<p>线段树是一个<strong>二叉树</strong>，线段树中的每一个节点代表序列中的一个区间。假设对于 长度为 $N$ 的 array $A$，我们有对应的线段树 $T$，那么……</p>
+
+<!--more-->
+
+<ul>
+  <li>$T$ 的根节点代表整个 array $A$</li>
+  <li>$T$ 的每个叶子节点都代表 array $A$ 中的一个值 $A[i]$，$0\leq i\lt N$</li>
+  <li>$T$ 中的每一个非叶节点都代表 array $A$ 的一个子序列 $A[i:j]$，$0\leq i\lt j \lt N$</li>
+</ul>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20210524105215.jpg" alt="c8def3486964f5c15f15ac41ecacbc0" style="zoom: 33%;" /></p>
+
+<blockquote>
+  <p>在一个线段树中，所有的叶子节点<strong>一定</strong>代表原数组中的一个值</p>
+
+  <p>注意线段树不一定是满二叉树</p>
+</blockquote>
+
+<h3 id="时间复杂度">时间复杂度</h3>
+
+<p><strong>初始化复杂度 - $O(n)$</strong></p>
+
+<p>对于一个长度为 $n$ 的 array，对应的线段树中最多一共有 $2n + 1$ 个节点。每个节点的初始化都是 $O(1)$ 的时间复杂度，所以线段树的初始化复杂度是 $O(n)$。</p>
+
+<p><strong>更新复杂度 - $O(\log{n})$</strong></p>
+
+<p>对于一个长度为 $n$ 的 array，每次修改一个单一的值需要修改这个节点的所有父节点与“祖先节点”（例如父节点的父节点，父节点的父节点的父节点……）。对于一颗线段树，最多有 $\log_2{n}$ 的高度，所以更新一次线段树的值的时间复杂度是 $O(\log_2{n}) = O(\log{n})$</p>
+
+<p><strong>查询复杂度 - $O(\log{n})$</strong></p>
+
+<p>查询节点数量最多的情况出现于查询 $[l, l]$ 时，这时候我们需要从根节点一路递归的遍历到叶子节点，一共遍历 $O(\log{n})$ 个节点。所以查询区间的时间复杂度是 $O(\log{n})$</p>
+
+<h3 id="java实现">Java实现</h3>
+
+<p>一个线段树有三个主要的方法：</p>
+
+<ul>
+  <li>初始化（Constructor）- 给定一个 Array，构建这个 Array 对应的线段树</li>
+  <li>查询 （Query）- 给定一个区间范围 $[l, r]$，返回这个区间的信息（最大值，最小值，和 etc）</li>
+  <li>更新 （Update）- 给定 index $i$ 与新的值 $v$，更新线段树</li>
+</ul>
+
+<p>下面，我们会实现一个基于 <a href="https://docs.oracle.com/javase/tutorial/java/generics/types.html">范型 (Generic Type)</a> 的最小线段树。对于任意实现了 <code class="language-plaintext highlighter-rouge">Comparable</code> 接口的类型 <code class="language-plaintext highlighter-rouge">T</code> 的 <code class="language-plaintext highlighter-rouge">ArrayList&lt;T&gt;</code>，我们都可以使用这个线段树来求出区间 $[l, r]$ 中的最小对象 $T$。</p>
+
+<h4 id="helper-functions">Helper Functions</h4>
+
+<p>在正式实现线段树前，我们先写一些后面可以用到的 Helper Functions。</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">genericMin</code> 函数通过比对 <code class="language-plaintext highlighter-rouge">T.compareTo</code> 的值来返回两个 <code class="language-plaintext highlighter-rouge">T</code> 对象中较小的一个对象</li>
+  <li><code class="language-plaintext highlighter-rouge">getLChild</code> 计算出当前节点的左子节点的 index</li>
+  <li><code class="language-plaintext highlighter-rouge">getRChild</code> 计算出当前节点的右子节点的 index</li>
+  <li><code class="language-plaintext highlighter-rouge">inInterval</code> 计算出区间 $[l1, r1]$ 和 $[l2, r2]$ 之间的关系</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SegmentTree</span> <span class="o">&lt;</span><span class="no">T</span> <span class="kd">extends</span> <span class="nc">Comparable</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;&gt;{</span>
+    <span class="kd">private</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">tree</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="no">T</span><span class="o">[]</span> <span class="n">value</span><span class="o">;</span>
+    
+	<span class="kd">private</span> <span class="kt">int</span> <span class="nf">getLChild</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">){</span> <span class="k">return</span> <span class="n">index</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getRChild</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">){</span> <span class="k">return</span> <span class="n">index</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">private</span> <span class="no">T</span> <span class="nf">genericMin</span><span class="o">(</span><span class="no">T</span> <span class="n">o1</span><span class="o">,</span> <span class="no">T</span> <span class="n">o2</span><span class="o">){</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">o1</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">o2</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">){</span> <span class="k">return</span> <span class="n">o2</span><span class="o">;</span> <span class="o">}</span>
+        <span class="k">return</span> <span class="n">o1</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">inInterval</span><span class="o">(</span><span class="kt">int</span> <span class="n">l1</span><span class="o">,</span> <span class="kt">int</span> <span class="n">r1</span><span class="o">,</span> <span class="kt">int</span> <span class="n">l2</span><span class="o">,</span> <span class="kt">int</span> <span class="n">r2</span><span class="o">){</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">r2</span> <span class="o">&lt;</span> <span class="n">l1</span> <span class="o">||</span> <span class="n">l2</span> <span class="o">&gt;</span> <span class="n">r1</span><span class="o">){</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span> <span class="o">}</span>        <span class="c1">// Intervals do not have any intersection</span>
+        <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">l2</span> <span class="o">&gt;=</span> <span class="n">l1</span> <span class="o">&amp;&amp;</span> <span class="n">r2</span> <span class="o">&lt;=</span> <span class="n">r1</span><span class="o">){</span> <span class="k">return</span> <span class="mi">1</span><span class="o">;</span> <span class="o">}</span> <span class="c1">// Interval 2 complete in Interval 1</span>
+        <span class="k">else</span><span class="o">{</span> <span class="k">return</span> <span class="mi">2</span><span class="o">;</span> <span class="o">}</span>                           <span class="c1">// Interval 2 partially intersect with Interval 1</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>注意我们的 tree 属性使用的是 ArrayList 而不是 array</p>
+
+  <p>这是因为 Java 中不能创造 Generic Type Array</p>
+</blockquote>
+
+<h4 id="construct-segment-tree">Construct Segment Tree</h4>
+
+<p>我们使用递归的方法来构建线段树 - 根节点的范围是 $[0, arr.length - 1]$，计算出中间的节点 $mid = (arr.length - 1) / 2$，左节点的范围就是 $[0, mid]$，右节点的范围是 $[mid + 1, arr.length - 1]$。</p>
+
+<p>当节点的范围是 $[l, r]$ 且 $l = r$ 时，节点的值就是 Array 中对应元素的值 - 此时这个节点时叶子节点。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nf">SegmentTree</span><span class="o">(</span><span class="no">T</span><span class="o">[]</span> <span class="n">values</span><span class="o">){</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;(</span><span class="nc">Collections</span><span class="o">.</span><span class="na">nCopies</span><span class="o">(</span><span class="n">values</span><span class="o">.</span><span class="na">length</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="kc">null</span><span class="o">));</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">values</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">constructTree</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">values</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">constructTree</span><span class="o">(</span><span class="kt">int</span> <span class="n">node</span><span class="o">,</span> <span class="kt">int</span> <span class="n">l</span><span class="o">,</span> <span class="kt">int</span> <span class="n">r</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">l</span> <span class="o">==</span> <span class="n">r</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">tree</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">node</span><span class="o">,</span> <span class="n">value</span><span class="o">[</span><span class="n">l</span><span class="o">]);</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="o">(</span><span class="n">l</span> <span class="o">+</span> <span class="n">r</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">constructTree</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getLChild</span><span class="o">(</span><span class="n">node</span><span class="o">),</span> <span class="n">l</span><span class="o">,</span> <span class="n">mid</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">constructTree</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getRChild</span><span class="o">(</span><span class="n">node</span><span class="o">),</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">r</span><span class="o">);</span>
+        <span class="n">tree</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">node</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">genericMin</span><span class="o">(</span><span class="n">tree</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getLChild</span><span class="o">(</span><span class="n">node</span><span class="o">)),</span> <span class="n">tree</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getRChild</span><span class="o">(</span><span class="n">node</span><span class="o">))));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="update-segment-tree">Update Segment Tree</h4>
+
+<p>类似的，我们在更新 Segment Tree 时也使用递归的方法更新 - 如果要修改的 index 在当前节点的范围内，我们就递归的修改下一层，最后再 bottom-up 的更新整条路径上的 $O(\log{n})$ 个节点</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">updateTree</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">,</span> <span class="no">T</span> <span class="n">val</span><span class="o">){</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">updateTree</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">index</span><span class="o">,</span> <span class="n">val</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">updateTree</span><span class="o">(</span><span class="kt">int</span> <span class="n">node</span><span class="o">,</span> <span class="kt">int</span> <span class="n">l</span><span class="o">,</span> <span class="kt">int</span> <span class="n">r</span><span class="o">,</span> <span class="kt">int</span> <span class="n">index</span><span class="o">,</span> <span class="no">T</span> <span class="n">val</span><span class="o">){</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">l</span> <span class="o">==</span> <span class="n">r</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">tree</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">node</span><span class="o">,</span> <span class="n">val</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">value</span><span class="o">[</span><span class="n">l</span><span class="o">]</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">else</span><span class="o">{</span>
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="o">(</span><span class="n">l</span> <span class="o">+</span> <span class="n">r</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">l</span> <span class="o">&lt;=</span> <span class="n">index</span> <span class="o">&amp;&amp;</span> <span class="n">index</span> <span class="o">&lt;=</span> <span class="n">mid</span><span class="o">){</span> <span class="k">this</span><span class="o">.</span><span class="na">updateTree</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getLChild</span><span class="o">(</span><span class="n">node</span><span class="o">),</span> <span class="n">l</span><span class="o">,</span> <span class="n">mid</span><span class="o">,</span> <span class="n">index</span><span class="o">,</span> <span class="n">val</span><span class="o">);</span> <span class="o">}</span>
+        <span class="k">else</span><span class="o">{</span> <span class="k">this</span><span class="o">.</span><span class="na">updateTree</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getRChild</span><span class="o">(</span><span class="n">node</span><span class="o">),</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">r</span><span class="o">,</span> <span class="n">index</span><span class="o">,</span> <span class="n">val</span><span class="o">);</span> <span class="o">}</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">tree</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">node</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">genericMin</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">tree</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getLChild</span><span class="o">(</span><span class="n">node</span><span class="o">)),</span> <span class="k">this</span><span class="o">.</span><span class="na">tree</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getRChild</span><span class="o">(</span><span class="n">node</span><span class="o">))));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="query-interval-minimum">Query Interval Minimum</h4>
+
+<p>在查询线段树中的区间最小值时，我们把所有情况分为三种：</p>
+
+<ul>
+  <li>当前节点代表的区间完全在查询的区间内</li>
+  <li>当前节点代表的区间部分在查询的区间内</li>
+  <li>当前节点代表的区间完全不在查询的范围内</li>
+</ul>
+
+<p>对这三种情况，我们采取不同的动作</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>情况</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>节点区间完全在查询区间内</td>
+      <td>返回当前节点的值</td>
+    </tr>
+    <tr>
+      <td>节点区间部分在查询区间内</td>
+      <td>继续向下递归，返回左节点与右节点返回值的较小值</td>
+    </tr>
+    <tr>
+      <td>节点区间完全不在查询区间内</td>
+      <td>返回 <code class="language-plaintext highlighter-rouge">null</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="no">T</span> <span class="nf">queryMin</span><span class="o">(</span><span class="kt">int</span> <span class="n">l</span><span class="o">,</span> <span class="kt">int</span> <span class="n">r</span><span class="o">){</span>
+    <span class="k">return</span> <span class="nf">queryMin</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="kd">private</span> <span class="no">T</span> <span class="nf">queryMin</span><span class="o">(</span><span class="kt">int</span> <span class="n">node</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">end</span><span class="o">,</span> <span class="kt">int</span> <span class="n">l</span><span class="o">,</span> <span class="kt">int</span> <span class="n">r</span><span class="o">){</span>
+    <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">inInterval</span><span class="o">(</span><span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="n">end</span><span class="o">)</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span> <span class="o">}</span>
+    <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">inInterval</span><span class="o">(</span><span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="n">end</span><span class="o">)</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span> <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">tree</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">node</span><span class="o">);</span> <span class="o">}</span>
+    <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="o">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">end</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+    <span class="no">T</span> <span class="n">leftInterval</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">queryMin</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getLChild</span><span class="o">(</span><span class="n">node</span><span class="o">),</span> <span class="n">start</span><span class="o">,</span> <span class="n">mid</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">);</span>
+    <span class="no">T</span> <span class="n">rightInterval</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">queryMin</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getRChild</span><span class="o">(</span><span class="n">node</span><span class="o">),</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">end</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">leftInterval</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span> <span class="k">return</span> <span class="n">rightInterval</span><span class="o">;</span> <span class="o">}</span>
+    <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">rightInterval</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span> <span class="k">return</span> <span class="n">leftInterval</span><span class="o">;</span> <span class="o">}</span>
+    <span class="k">else</span><span class="o">{</span> <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">genericMin</span><span class="o">(</span><span class="n">leftInterval</span><span class="o">,</span> <span class="n">rightInterval</span><span class="o">);</span> <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>对于基于数组</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Integer</span><span class="o">[]{</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">6</span><span class="o">}</span>
+</code></pre></div></div>
+
+<p>的线段树，我们执行 <code class="language-plaintext highlighter-rouge">queryMin(2, 3)</code> 时函数的递归情况如下</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20210524115756.jpg" alt="fb5b1012c2c20d4f2ab433ad800d475" style="zoom:33%;" /></p>
+
+<h3 id="full-java-code">Full Java Code</h3>
+
+<details>
+<summary>Click to see Java Full Code</summary>
+    <pre>
+        <code class="java">
+ /* Segment Tree, Java */
+
+import java.util.*;
+
+public class SegmentTree &lt;T extends Comparable&lt;T&gt;&gt;{
+
+    public static void main(String[] args) {
+        SegmentTree&lt;Integer&gt; test = new SegmentTree&lt;&gt;(new Integer[]{1, 2, 3, 4, 5, 6});
+        System.out.println(test.dumpTree());
+        // test.updateTree(0, 7);
+        // System.out.println(test.dumpTree());
+        System.out.println(test.queryMin(2, 5));
+    }
+    
+    private ArrayList&lt;T&gt; tree;
+    private T[] value;
+    
+    public SegmentTree(T[] values){
+        this.tree = new ArrayList&lt;&gt;(Collections.nCopies(values.length * 2 + 1, null));
+        this.value = values;
+        this.constructTree(0, 0, values.length - 1);
+    }
+    
+    public void updateTree(int index, T val){
+        this.updateTree(0, 0, this.value.length - 1, index, val);
+    }
+    
+    public T queryMin(int l, int r){
+        return queryMin(0, 0, this.value.length - 1, l, r);
+    }
+    
+    public ArrayList&lt;T&gt; dumpTree(){
+        return this.tree;
+    }
+    
+    private T queryMin(int node, int start, int end, int l, int r){
+        if (this.inInterval(l, r, start, end) == 0){ return null; }
+        else if (this.inInterval(l, r, start, end) == 1){ return this.tree.get(node); }
+        int mid = (start + end) / 2;
+        T leftInterval = this.queryMin(this.getLChild(node), start, mid, l, r);
+        T rightInterval = this.queryMin(this.getRChild(node), mid + 1, end, l, r);
+        if (leftInterval == null){ return rightInterval; }
+        else if (rightInterval == null){ return leftInterval; }
+        else{ return this.genericMin(leftInterval, rightInterval); }
+    }
+    
+    private void updateTree(int node, int l, int r, int index, T val){
+        if (l == r){
+            this.tree.set(node, val);
+            this.value[l] = val;
+        }
+        else{
+            int mid = (l + r) / 2;
+            if (l &lt;= index &amp;&amp; index &lt;= mid){ this.updateTree(this.getLChild(node), l, mid, index, val); }
+            else{ this.updateTree(this.getRChild(node), mid + 1, r, index, val); }
+            this.tree.set(node, this.genericMin(this.tree.get(this.getLChild(node)), this.tree.get(this.getRChild(node))));
+        }
+    }
+    
+    private void constructTree(int node, int l, int r) {
+        if (l == r) {
+            tree.set(node, value[l]);
+        } else {
+            int mid = (l + r) / 2;
+            this.constructTree(this.getLChild(node), l, mid);
+            this.constructTree(this.getRChild(node), mid + 1, r);
+            tree.set(node, this.genericMin(tree.get(this.getLChild(node)), tree.get(this.getRChild(node))));
+        }
+    }
+    
+    private int getLChild(int index){ return index * 2 + 1; }
+    private int getRChild(int index){ return index * 2 + 2; }
+    private T genericMin(T o1, T o2){
+        if (o1.compareTo(o2) &gt; 0){ return o2; }
+        return o1;
+    }
+    private int inInterval(int l1, int r1, int l2, int r2){
+        if (r2 &lt; l1 || l2 &gt; r1){ return 0; }        // Intervals do not have any intersection
+        else if (l2 &gt;= l1 &amp;&amp; r2 &lt;= r1){ return 1; } // Interval 2 complete in Interval 1
+        else{ return 2; }                           // Interval 2 partially intersect with Interval 1
+    }
+}
+        </code>
+    </pre>
+</details>
+
+<h3 id="问题练习">问题练习</h3>
+
+<ul class="time-vertical" style="margin-left: 32px;">
+	<li><online></online><a href="https://leetcode.com/problems/range-sum-query-mutable/">Leetcode 307. Range Sum Query - Mutable</a> 非常 straight-forward 的 Segment Tree 问题</li>
+	<li><online></online><a href="https://leetcode.com/problems/the-skyline-problem/">Leetcode 218. The Skyline Problem</a></li>
+    <li><online></online><a href="https://leetcode.com/problems/count-of-smaller-numbers-after-self/">Leetcode 318. Count of Small Numbers After Self</a></li>
+    <li><online></online><a href="http://www.usaco.org/index.php?page=viewproblem2&amp;cpid=1041">USACO 2020 US Open Contest, Gold Problem 1. Haircut</a></li>
+    <li><online></online><a href="http://www.usaco.org/index.php?page=viewproblem2&amp;cpid=693">USACO 2017 January Contest, Gold Problem 1. Balanced Photo</a></li>
+    <li><online></online><a href="http://www.usaco.org/index.php?page=viewproblem2&amp;cpid=719">USACO 2017 February Contest, Gold Problem 3. Why Did the Cow Cross the Road III</a></li>
+
+</ul>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fa fa-folder-o"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#algorithm">Algorithm</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fa fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#algorithm">algorithm</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/neural%20network/2021/05/02/R-CNN.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fa fa-arrow-left"></i> 物体检测模型 R-CNN
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/algorithm/2021/05/26/2D-Prefix-Sum.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            二维前缀和 2D Prefix Sum
+ <i class="fa fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>CubeSLAM: Monocular 3D Object SLAM | Yutian’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="CubeSLAM: Monocular 3D Object SLAM" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Existing Problem [Object SLAM] Most existing monocular SLAM solves object detection and SLAM separately and depend on the prior object models. Classic approach of SLAM and SfM is to track geometric features like points, lines, planes etc. Object as an important element in scene, is not well explored in SLAM. [Dynamic SLAM] Dynamic features are generally discarded as outlier. However in many scene it is important to recognize &amp; predict dynamic object’s trajectory (motion model)." />
+<meta property="og:description" content="Existing Problem [Object SLAM] Most existing monocular SLAM solves object detection and SLAM separately and depend on the prior object models. Classic approach of SLAM and SfM is to track geometric features like points, lines, planes etc. Object as an important element in scene, is not well explored in SLAM. [Dynamic SLAM] Dynamic features are generally discarded as outlier. However in many scene it is important to recognize &amp; predict dynamic object’s trajectory (motion model)." />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-12-01T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="CubeSLAM: Monocular 3D Object SLAM" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yutian Chen"},"dateModified":"2022-12-01T00:00:00+00:00","datePublished":"2022-12-01T00:00:00+00:00","description":"Existing Problem [Object SLAM] Most existing monocular SLAM solves object detection and SLAM separately and depend on the prior object models. Classic approach of SLAM and SfM is to track geometric features like points, lines, planes etc. Object as an important element in scene, is not well explored in SLAM. [Dynamic SLAM] Dynamic features are generally discarded as outlier. However in many scene it is important to recognize &amp; predict dynamic object’s trajectory (motion model).","headline":"CubeSLAM: Monocular 3D Object SLAM","mainEntityOfPage":{"@type":"WebPage","@id":"/computer%20vision/2022/12/01/Cube-SLAM_Monocular_3D_Object_SLAM.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"url":"/computer%20vision/2022/12/01/Cube-SLAM_Monocular_3D_Object_SLAM.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#existing-problem">Existing Problem</a></li>
+  <li><a href="#related-work">Related Work</a></li>
+  <li><a href="#innovation-in-this-work">Innovation in This Work</a>
+    <ul>
+      <li><a href="#3d-box-proposal-generating--scoring">3D Box Proposal Generating &amp; Scoring</a></li>
+      <li><a href="#object-in-slam---ba-formulation--measurement-error">Object in SLAM - BA Formulation &amp; Measurement Error</a></li>
+      <li><a href="#data-association-featureobject-matching">Data Association (Feature/Object Matching)</a></li>
+      <li><a href="#dynamic-object">Dynamic Object</a></li>
+    </ul>
+  </li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">CubeSLAM: Monocular 3D Object SLAM</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2022-12-01T00:00:00+00:00" itemprop="datePublished">
+        Dec 1, 2022
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="existing-problem">Existing Problem</h2>
+
+<p><strong>[Object SLAM]</strong> Most existing monocular SLAM solves object detection and SLAM separately and depend on the prior object models.</p>
+
+<p>Classic approach of SLAM and SfM is to track geometric features like points, lines, planes etc. Object as an important element in scene, is not well explored in SLAM.</p>
+
+<p><strong>[Dynamic SLAM]</strong> Dynamic features are generally discarded as outlier. However in many scene it is important to recognize &amp; predict dynamic object’s trajectory (motion model).</p>
+
+<!--more-->
+
+<h2 id="related-work">Related Work</h2>
+
+<p><strong>[3D Object Detection]</strong></p>
+
+<ul>
+  <li>w/ shape prior (e.g. CAD model of object to detect) - Align object by Perspective n-Point (PnP) matching</li>
+  <li>w/o shape prior - combination of geometry &amp; learning.</li>
+</ul>
+
+<p><strong>[Object SLAM]</strong></p>
+
+<ul>
+  <li>Decoupled - Object detection build upon SLAM system - only use the result point cloud generated by SLAM - May fail if SLAM can’t produce high-quality map</li>
+  <li>Coupled - Jointly optimize camera pose, objects, points and planes</li>
+</ul>
+
+<p><strong>[Dynamic SLAM]</strong></p>
+
+<ul>
+  <li>Most SLAM system eliminate the dynamic feature points and see them as “outlier” and relies on static background</li>
+  <li>Some SLAM will try to detect, track, and optimize trajectory of dynamic objects to build a complete 3D map - but didn’t utilize these information</li>
+</ul>
+
+<h2 id="innovation-in-this-work">Innovation in This Work</h2>
+
+<ol>
+  <li>Efficient, accurate and robust 3D box generation w/o prior object models</li>
+  <li>New method to measure cameras, objects and points</li>
+  <li>Showing that object detection and SLAM benefits each other</li>
+  <li>Utilize dynamic objects in scene to improve pose estimation</li>
+</ol>
+
+<h3 id="3d-box-proposal-generating--scoring">3D Box Proposal Generating &amp; Scoring</h3>
+
+<p>Generate 3D Box proposal based on vanishing points, omitted.</p>
+
+<h3 id="object-in-slam---ba-formulation--measurement-error">Object in SLAM - BA Formulation &amp; Measurement Error</h3>
+
+<p>Each box is represented as a $\mathbb{R}^9$ vector - representing the rotation matrix, center position, and dimension of the box.</p>
+
+\[C^\star, O^\star, P^\star = argmin_{C, O, P} \sum{|e(c_i, o_j)|^2_{\sum_{ij}} + |e(c_i, p_k)|^2_{\sum_{ik}} + |e(o_j, p_k)|^2_{\sum_{jk}}}\]
+
+<p>The graph optimization problem is solved by Gauss-newton or L-M algorithm.</p>
+
+<p><strong>[Camera-Object Measurement]</strong>  - <em>3D Mode</em> Suppose we already have some estimation of object’s pose $(T_{om}, d_m)$ and an <strong>accurate</strong> measurement to current object (e.g. with RGBD cam), we can measure the error by defining error as a $\mathbb{R}^9$ vector containing the difference between measured object &amp; previously estimated object’s pose. ($T\in SE(3)$ is transformed into a vector in $\mathbb{R}^6$ in Lie-Algebra)</p>
+
+<p><em>2D Measurement</em> - Otherwise (e.g. with monocular camera), Given the 2D bounding box of objects, the error is defined as the difference between center ($\mathbb{R}^2$ vector) and difference between dimension (of 2D box, $\mathbb{R}^2$ vector).</p>
+
+<blockquote>
+  <p><strong><em>Why there are two ways to measure Camera-Object error?</em></strong></p>
+</blockquote>
+
+<p><strong>[Object-Point Measurement]</strong> - All points on object $O$ must stay in $O$’s 3D bounding box</p>
+
+<p><strong>[Camera-Point Measurement]</strong> - Reprojection error as usual SLAM system</p>
+
+<h3 id="data-association-featureobject-matching">Data Association (Feature/Object Matching)</h3>
+
+<p>A feature point is considered “on an object” if it is in 2D bounding box and &lt; 1m from center of 3D bounding box.</p>
+
+<p>Two objects are matched across frames if they have the most number of shared feature points between each other.</p>
+
+<p>Points in overlapping area are not associated with any object.</p>
+
+<h3 id="dynamic-object">Dynamic Object</h3>
+
+<p>Dynamic feature points are “anchored” on a dynamic object. The object is modeled using “nonholonomic wheel model” - roll/pitch = 0 and we can represent car’s motion using only velocity and yaw.</p>
+
+<p>When matching features across dynamic objects, we predict where we expect to see the feature point and do local search around the expected position.</p>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fa fa-folder-o"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#computer-vision">Computer Vision</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fa fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#computer-vision">computer-vision</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#slam">slam</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/computer%20vision/2022/12/01/AirDOS-Dynamic_SLAM_Benefits_from_Articulated_Objects.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fa fa-arrow-left"></i> AirDOS: Dynamic SLAM Benefits from Articulated Objects
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/frontend/2022/12/06/c0vm-embeddable.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            C0VM.ts: C0 Visualizer on the cloud
+ <i class="fa fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Yutian’s Blog | A place for me to Learn, Create and Share</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="Yutian’s Blog" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="A place for me to Learn, Create and Share" />
+<meta property="og:description" content="A place for me to Learn, Create and Share" />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="website" />
+<link rel="next" href="/page2" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Yutian’s Blog" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"Yutian Chen"},"description":"A place for me to Learn, Create and Share","headline":"Yutian’s Blog","name":"Yutian Chen","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"sameAs":["https://github.com/MarkChenYutian"],"url":"/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <div class="sidebar-section"><img src="/avatar.jpg" class="author-avatar u-photo align-center" alt="Yutian Chen">
+  </div>
+
+<div class="sidebar-section">
+  <ul class="contact-list">
+    <li>
+        <i class="sidebar-icon fa fa-at"></i>
+        <span class="contact-info p-name">Yutian Chen</span>
+      </li>
+    <li>
+        <i class="sidebar-icon fa fa-envelope-o"></i>
+        <a class="contact-info u-email" href="mailto:yutianch@andrew.cmu.edu">yutianch@andrew.cmu.edu</a>
+      </li>
+    <li>
+        <i class="sidebar-icon fa fa-location-arrow"></i>
+        <a class="contact-info u-location" href="https://www.google.com/maps/search/Pittsburgh, PA">Pittsburgh, PA</a>
+      </li>
+  </ul>
+</div>
+
+<div class="sidebar-section feed-subscribe">
+  <a href="feed.xml">
+    <i class="sidebar-icon fa fa-rss"></i><span>Subscribe</span>
+  </a>
+</div>
+
+<div class="sidebar-section">
+    <ul class="social-icons">
+      <li>
+          <a class="social-icon" href="https://www.linkedin.com/in/yutian-chen-469602223/"><i class="fa fa-linkedin-square fa-2x" title="LinkedIn"></i></a>
+        </li><li>
+          <a class="social-icon" href="https://github.com/MarkChenYutian"><i class="fa fa-github-square fa-2x" title="GitHub"></i></a>
+        </li>
+    </ul>
+  </div>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <div class="home">
+
+  
+
+  <ul class="post-list"><li>
+        <h2>
+          <a href="/computer%20vision/2023/08/16/Direct-Method-Jacobian.html">
+            Direct Method SLAM - Jacobian Formulation
+          </a>
+        </h2>
+        <p class="post-meta">
+          <time class="dt-published" datetime="2023-08-16T00:00:00+00:00" itemprop="datePublished">
+            Aug 16, 2023
+          </time>
+          <!--
+            
+          -->
+        </p><div class="post-excerpt">
+
+
+  This post is mainly a re-formulation and detailed expansion for the section 8.4, “Direct Method” in “14 lectures on Visual SLAM”.
+
+  When I was working on direct method SLAM, I found the notations used on the book is hard to understand and many details to derive the final equation are omitted. Hence, I wrote this post as a note and record for my own derivation of the Jacobian in Direct Method of SLAM.
+
+
+</div></li><li>
+        <h2>
+          <a href="/machine%20learning/2023/07/14/second-order-optimizer.html">
+            Optimizers in PyPose - Gauss Newton and Levenberg-Marquadt
+          </a>
+        </h2>
+        <p class="post-meta">
+          <time class="dt-published" datetime="2023-07-14T00:00:00+00:00" itemprop="datePublished">
+            Jul 14, 2023
+          </time>
+          <!--
+            
+          -->
+        </p><div class="post-excerpt">In deep learning, we usually use first-order optimizers like Stochastic Gradient Descent, Adam, or RMSProp.
+
+However, in SLAM problems, we use Bundle Adjustment to jointly optimize camera pose and landmark coordinate in real time. Naive first order optimizers is not efficient enough (requires many iterations to converge) for this situation.
+
+In this post, I will introduce the concept of second order optimizer. However, since the second order optimizer requries us to derive the Hessian matrix for the optimization target, it is usually impractical to use it directly. Therefore, we will use the Gauss-Newton and Levenberg-Marquadt optimizers instead.
+
+</div></li><li>
+        <h2>
+          <a href="/frontend/2022/12/06/c0vm-embeddable.html">
+            C0VM.ts: C0 Visualizer on the cloud
+          </a>
+        </h2>
+        <p class="post-meta">
+          <time class="dt-published" datetime="2022-12-06T00:00:00+00:00" itemprop="datePublished">
+            Dec 6, 2022
+          </time>
+          <!--
+            
+          -->
+        </p><div class="post-excerpt">What is C0 Language
+
+The programming language C0 is a carefully crafted subset of the C aimed at teaching introductory algorithms and imperative programming. It is used in 15-122 Principles of Imperative Programming and 15-411 Compiler Design by more than 600 students each semester.
+
+</div></li><li>
+        <h2>
+          <a href="/computer%20vision/2022/12/01/Cube-SLAM_Monocular_3D_Object_SLAM.html">
+            CubeSLAM: Monocular 3D Object SLAM
+          </a>
+        </h2>
+        <p class="post-meta">
+          <time class="dt-published" datetime="2022-12-01T00:00:00+00:00" itemprop="datePublished">
+            Dec 1, 2022
+          </time>
+          <!--
+            
+          -->
+        </p><div class="post-excerpt">Existing Problem
+
+[Object SLAM] Most existing monocular SLAM solves object detection and SLAM separately and depend on the prior object models.
+
+Classic approach of SLAM and SfM is to track geometric features like points, lines, planes etc. Object as an important element in scene, is not well explored in SLAM.
+
+[Dynamic SLAM] Dynamic features are generally discarded as outlier. However in many scene it is important to recognize &amp; predict dynamic object’s trajectory (motion model).
+
+</div></li><li>
+        <h2>
+          <a href="/computer%20vision/2022/12/01/AirDOS-Dynamic_SLAM_Benefits_from_Articulated_Objects.html">
+            AirDOS: Dynamic SLAM Benefits from Articulated Objects
+          </a>
+        </h2>
+        <p class="post-meta">
+          <time class="dt-published" datetime="2022-12-01T00:00:00+00:00" itemprop="datePublished">
+            Dec 1, 2022
+          </time>
+          <!--
+            
+          -->
+        </p><div class="post-excerpt">Existing Problem
+
+“Traditional” SLAM model assumes the world is (mostly) static: Performance degradation and lack of robustness in dynamic world
+
+The actual world contains dynamic objects.
+
+</div></li><li>
+        <h2>
+          <a href="/machine%20learning/2022/07/31/Principle-of-Parsimony-and-Self-consistency.html">
+            On the principles of Parsimony and Self-consistency for the Emergence of Intelligence
+          </a>
+        </h2>
+        <p class="post-meta">
+          <time class="dt-published" datetime="2022-07-31T00:00:00+00:00" itemprop="datePublished">
+            Jul 31, 2022
+          </time>
+          <!--
+            
+          -->
+        </p><div class="post-excerpt">
+  This post is the notes I wrote when reading paper On the principle of Parsimony and Self-consistency for the Emergence of Intelligence arXiv Link.
+
+
+Context and Motivation
+
+Key features of Intelligence Agent
+
+For an autonomous intelligence agent to survive and function in complex world, it must efficiently and effectively learn models that reflect both its past experience and the current environment being perceived.
+
+That is, it must be able to:
+
+
+  Utilize knowledge from past experience
+  Reflect on immediate sensory inputs (new perception)
+
+
+</div></li><li>
+        <h2>
+          <a href="/notes/2022/07/26/why-fp-matters.html">
+            Why Functional Programming Matters
+          </a>
+        </h2>
+        <p class="post-meta">
+          <time class="dt-published" datetime="2022-07-26T00:00:00+00:00" itemprop="datePublished">
+            Jul 26, 2022
+          </time>
+          <!--
+            
+          -->
+        </p><div class="post-excerpt">
+  This is the notes I wrote when reading paper - Why Functional Programming Matters, John Hughes, “Research Topics in Functional Programming”, pp 17-42.
+
+
+Functional Programming is so called because its fundamental operation is the application of functions to arguments.
+
+Characteristics of Functional Programs
+
+</div></li><li>
+        <h2>
+          <a href="/frontend/2022/04/05/clac-embeddable.html">
+            Embeddable Clac Execution Environment
+          </a>
+        </h2>
+        <p class="post-meta">
+          <time class="dt-published" datetime="2022-04-05T00:00:00+00:00" itemprop="datePublished">
+            Apr 5, 2022
+          </time>
+          <!--
+            
+          -->
+        </p><div class="post-excerpt">Demo
+
+An open-to-use, embeddable clac execution implemented with React and TypeScript. You can try it below!
+
+For example, try to input the instruction : square 1 pick * ; 2 square print into the wedget below and see what will happen!
+
+
+
+</div></li><li>
+        <h2>
+          <a href="/notes/2022/02/16/type-LaTeX-fast.html">
+            How to Type LaTeX Fast &amp; Elegant - A Guide from &amp; for Beginner
+          </a>
+        </h2>
+        <p class="post-meta">
+          <time class="dt-published" datetime="2022-02-16T00:00:00+00:00" itemprop="datePublished">
+            Feb 16, 2022
+          </time>
+          <!--
+            
+          -->
+        </p><div class="post-excerpt">1 用 LaTeX, 而不是与 LaTeX 搏斗
+
+
+  LaTeX 的设计哲学是：让使用者付出最少的努力就能得到工整美观的排版
+
+
+然而，讽刺的是，大部分人（至少一开始）的体验似乎都与这个设计哲学正好相反。这是因为我们都习惯了使用 Word 这样“所见即所得”的排版软件/文字编辑器。当我们按下空格的时候，屏幕上就一定会出现一个空格。
+
+在 LaTeX 中，因为使用的是“编辑 - 编译 - 排版”的流程，我们不能直观的立刻看到我们在TeX文件中做出的改变。当我们在单词之间输入好几个空格却发现排版结果中只有一个空格时，自然会感觉非常奇怪和不适应。
+
+</div></li><li>
+        <h2>
+          <a href="/frontend/2022/02/11/the-fences.html">
+            The Fences | AR Web Application
+          </a>
+        </h2>
+        <p class="post-meta">
+          <time class="dt-published" datetime="2022-02-11T00:00:00+00:00" itemprop="datePublished">
+            Feb 11, 2022
+          </time>
+          <!--
+            
+          -->
+        </p><div class="post-excerpt">In a Sentence, What is It?
+
+Our inspiration came from The Fence at CMU:
+
+By providing a synchronized, immersive AR experience across different platforms, we aim to build a bond between virtual space and physical world, allowing people to share their ideas openly, just like role of The Fence.
+
+</div></li></ul>
+
+    
+      <div class="pager">
+        <ul class="pagination">
+        
+        
+          <li><div class="current-page">1</div></li>
+        
+        
+        
+          <li><a class="next-page" href="/page2">2</a></li>
+        
+        
+        
+          <li><a class="next-page" href="/page3">3</a></li>
+        
+        
+        
+          <li><a class="next-page" href="/page4">4</a></li>
+        
+        
+        </ul>
+      </div></div>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

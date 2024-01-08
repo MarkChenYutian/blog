@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Batch Normalization 浅入深出 | Yutian’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="Batch Normalization 浅入深出" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="ch" />
+<meta name="description" content="0 符号表 符号 意义 $\nabla_{W}f$ 函数 $f$ 关于变量（集合）$W$ 的梯度 $N$ 训练集中数据总量 $C$ 损失函数（Cost Function），对于给定模型输出 $\hat{y}$ 与目标输出 $y$ 进行差距评估 $f(x, W)$ 拥有权重参数 $W$ 神经网络对于输入 $x$ 的输出 $D$ 目标函数（Ground Truth） $X$ 训练数据集 $X’$ 训练数据集中的一个 mini-batch， $X’\subseteq X$" />
+<meta property="og:description" content="0 符号表 符号 意义 $\nabla_{W}f$ 函数 $f$ 关于变量（集合）$W$ 的梯度 $N$ 训练集中数据总量 $C$ 损失函数（Cost Function），对于给定模型输出 $\hat{y}$ 与目标输出 $y$ 进行差距评估 $f(x, W)$ 拥有权重参数 $W$ 神经网络对于输入 $x$ 的输出 $D$ 目标函数（Ground Truth） $X$ 训练数据集 $X’$ 训练数据集中的一个 mini-batch， $X’\subseteq X$" />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-12-26T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Batch Normalization 浅入深出" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yutian Chen"},"dateModified":"2021-12-26T00:00:00+00:00","datePublished":"2021-12-26T00:00:00+00:00","description":"0 符号表 符号 意义 $\\nabla_{W}f$ 函数 $f$ 关于变量（集合）$W$ 的梯度 $N$ 训练集中数据总量 $C$ 损失函数（Cost Function），对于给定模型输出 $\\hat{y}$ 与目标输出 $y$ 进行差距评估 $f(x, W)$ 拥有权重参数 $W$ 神经网络对于输入 $x$ 的输出 $D$ 目标函数（Ground Truth） $X$ 训练数据集 $X’$ 训练数据集中的一个 mini-batch， $X’\\subseteq X$","headline":"Batch Normalization 浅入深出","mainEntityOfPage":{"@type":"WebPage","@id":"/neural%20network/2021/12/26/Batch-Normalization.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"url":"/neural%20network/2021/12/26/Batch-Normalization.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#0-符号表">0 符号表</a></li>
+  <li><a href="#1-mini-batch-增量训练法与协方差问题">1 Mini-Batch 增量训练法与协方差问题</a></li>
+  <li><a href="#2-batch-normalization-理论">2 Batch Normalization 理论</a></li>
+  <li><a href="#3-batch-normalization-实现">3 Batch Normalization 实现</a></li>
+  <li><a href="#4-batch-normalization-反向传播数学推导">4 Batch Normalization 反向传播数学推导</a>
+    <ul>
+      <li><a href="#41--bn中的直接连接反向传播公式推导">4.1  BN中的直接连接反向传播公式推导</a></li>
+      <li><a href="#42-bn-中的跨越连接反向传播公式推导">4.2 BN 中的跨越连接反向传播公式推导</a></li>
+    </ul>
+  </li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">Batch Normalization 浅入深出</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2021-12-26T00:00:00+00:00" itemprop="datePublished">
+        Dec 26, 2021
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="0-符号表">0 符号表</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>符号</th>
+      <th>意义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$\nabla_{W}f$</td>
+      <td>函数 $f$ 关于变量（集合）$W$ 的梯度</td>
+    </tr>
+    <tr>
+      <td>$N$</td>
+      <td>训练集中数据总量</td>
+    </tr>
+    <tr>
+      <td>$C$</td>
+      <td>损失函数（Cost Function），对于给定模型输出 $\hat{y}$ 与目标输出 $y$ 进行差距评估</td>
+    </tr>
+    <tr>
+      <td>$f(x, W)$</td>
+      <td>拥有权重参数 $W$ 神经网络对于输入 $x$ 的输出</td>
+    </tr>
+    <tr>
+      <td>$D$</td>
+      <td>目标函数（Ground Truth）</td>
+    </tr>
+    <tr>
+      <td>$X$</td>
+      <td>训练数据集</td>
+    </tr>
+    <tr>
+      <td>$X’$</td>
+      <td>训练数据集中的一个 mini-batch， $X’\subseteq X$</td>
+    </tr>
+  </tbody>
+</table>
+
+<!--more-->
+
+<h2 id="1-mini-batch-增量训练法与协方差问题">1 Mini-Batch 增量训练法与协方差问题</h2>
+
+<p>在进行神经网络训练的过程中，我们使用以下公式计算神经网络的权重参数梯度</p>
+
+\[\nabla_{W} L(W) = \frac{1}{N}\sum_{x}{\nabla_{W}C(f(x, W), D(x))}\]
+
+<p>对于训练集中的每一个数据 $x$，我们都计算出权重参数的梯度，将他们相加后除以$N$得到一个“平均梯度”。</p>
+
+<p>因为（我们假设）<strong>训练集中的数据分布于生产/测试环境一致</strong>，当使用整个训练集的结果进行梯度计算和参数更新时，网络 $f$ 能够更加准确的拟合到完整的目标函数 $D$ 上，而非目标函数 $D$ 一部分特殊的定义域上。</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/IMG_B72671CFC736-1.jpeg" alt="IMG_B72671CFC736-1" /></p>
+
+<center>Fig 1. 当训练集数据分布与测试集不同时（右图），模型拟合结果会显著降低</center>
+
+<p>然而，这样的参数更新方法虽然能够最大化模型的拟合准确率，由于每次进行参数更新前必须得知训练集中所有的输入 $x$ 对应的损失函数 $C(f(x, W), D(x))$ 和权重梯度 $\nabla_{W}C$，模型的权重更新速度会非常缓慢。</p>
+
+<p>为了解决这个问题，我们可以使用 Mini-batch 增量训练方法。每次我们从一个拥有 $N$ 个数据的训练集中随机，不重复的选择 $B$ 个数据作为一个 Batch。得到这 $B$ 个数据的损失函数和对应的梯度后，我们马上对模型进行一次参数更新。</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/IMG_BF395E0F0FEB-1.jpeg" alt="IMG_BF395E0F0FEB-1" /></p>
+
+<center>Fig 2. 使用 mini-batch 方法训练的模型更新参数的频率有显著提升</center>
+
+<p>可惜，天下没有免费的午餐，当我们使用 mini-batch 来训练神经网络的时候实际上我们有一个隐含的假设：<strong>mini-batch 中的数据分布于训练集相同</strong>。</p>
+
+\[\text{argmin}_{W}{\left(
+	\sum_{x\in X'}{C(f(x, W), D(x))}
+\right)}
+
+\Leftrightarrow 
+
+\text{argmin}_{W}{\left(
+	\sum_{x\in X}{C(f(x, W), D(x))}
+\right)}\]
+
+<p>上面这两个最优化目标只有在 $X’$ （Mini-batch 中的数据） 与 $X$ （Training Set 中的数据） 的数据分布一致时才是一致的。</p>
+
+<p><strong>然而这个假设在很多情况下是不成立的</strong>。mini-batch 中的数据可能会有较大的协方差 (Covariance) - 也就是说，当前 mini-batch 的数据分布与训练集的数据分布并不相同。</p>
+
+<p>数据分布的差异会导致模型在优化权重参数时的目标 “最优化模型在当前 mini-batch 上的表现” 这个目标与我们真正的目标 —— “最优化模型在训练集上的表现”之间的偏差。</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/IMG_FD5CF492EE8A-1.jpeg" alt="IMG_FD5CF492EE8A-1" /></p>
+
+<center>Fig 3. 当我们训练模型时，我们构建的逻辑链条</center>
+
+<h2 id="2-batch-normalization-理论">2 Batch Normalization 理论</h2>
+
+<p>为了解决这个问题，Sergey Ioffe 和 Christian Szegedy 在 2015 年提出了 Batch Normalization （下文简称BN）的方法。BN 的理解实际上很简单 - 我们可以将所有的 mini-batch 移动到一个特殊的位置 ($\mu = 0$, $\sigma =1$)，来“正则化（Normalize）” mini-batch，让所有的 mini-batch 拥有一致的数据分布。</p>
+
+<p>然而，如果 BN 只有这一步，我们会不可避免的丢失数据本身的部分信息 - 训练集本身的平均值与方差。对于一个训练集 $X$，我们可以求出其平均值 $\mu_X$ 与方差 $\sigma_X$。这两个数据本身也是数据集的信息之一。</p>
+
+<p>为了解决这个问题，我们要向BN中添加两个<strong>可训练的参数</strong> $\gamma$ 与 $\beta$。在将mini-batch正则化后，我们通过计算 $\gamma x + \beta$ 把所有的 batch 统一移动到 $\mu = \beta$，$\sigma = \gamma$ 的位置。</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/image-20211227115058717.png" alt="image-20211227115058717" /></p>
+
+<center>Fig 4. Batch Normalization 的正则化过程可以分为三步：1. Centering （$\mu=0$）2. Scaling ($\sigma = 1$) 3. Moving （$\mu = \beta$, $\sigma = \gamma$)
+</center>
+
+<p>通过BN的操作，我们可以尽可能减小 mini-batch 中数据分布与训练集的不一致性，a.k.a mini-batch 的协方差。</p>
+
+<h2 id="3-batch-normalization-实现">3 Batch Normalization 实现</h2>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/image-20211227123210186.png" alt="image-20211227123210186" /></p>
+
+<center>Fig 5. 一个使用了BN的神经元，可以看到BN实际上是在每个神经元中对输入加权&amp;偏置的值进行正则化</center>
+
+<p>可以将 BN 看作插入在神经元中的一个中间件。图5中的蓝色变量都是神经网络 $f(x, W)$ 中可训练的参数集合 $W$ 中的变量。如果我们用计算图的形式表现变量之间相互依赖的关系，我们会得到下面这样一张计算图：</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/IMG_4E0BC0496AB3-1.jpeg" alt="IMG_4E0BC0496AB3-1" style="zoom: 33%;" /></p>
+
+<p>其中，我们有</p>
+
+\[\mu_B = \frac{1}{B}\sum_{i=1}^B{z_i}\]
+
+\[\sigma^2_B = \frac{1}{B}\sum_{i=1}^B{(z_i - \mu_B)^2}\]
+
+\[u_i = \frac{z_i - u_B}{\sqrt{\sigma^2_B + \epsilon}},\quad\text{Where }\epsilon\text{ is a smooth factor}\]
+
+\[\hat{z}_i = \gamma u_i + \beta\]
+
+<h2 id="4-batch-normalization-反向传播数学推导">4 Batch Normalization 反向传播数学推导</h2>
+
+<blockquote>
+  <p>Adapted from CMU 11785 Lecture 8 Notes</p>
+</blockquote>
+
+<p>假设我们现在已知 $\nabla_{\hat{z}} C(f(x, W), D(x))$，我们希望让这个梯度通过含有 Batch Normalization 的神经元，反向传播到 $\nabla_x C(f(x, W), D(x))$，那么我们需要计算 $\frac{\partial C}{\partial x_1}$，… ，$\frac{\partial C}{\partial x_n}$。</p>
+
+<p>根据偏微分的链式法则，我们知道</p>
+
+\[\frac{\partial C}{\partial x_1} = \sum_{i=1}^{n}{\frac{\partial C}{\partial \hat{z}_i}\frac{\partial \hat{z}_i}{\partial x_1}}\]
+
+<p>不失一般性的，因为在神经元的计算中，每一个 $x$ 分量的计算都是相同的，我们可以通过计算 $\frac{\partial C}{\partial x_1}$得出计算 $\frac{\partial C}{\partial x_i}$ 的通项公式。所以在下文中，我们会以计算 $x_1$ 的梯度为例子进行计算与推导。</p>
+
+<p>因为从 $u_i$ 开始，向量中的每个分量都是单独计算的，我们可以得知对于任意 $i\neq j$，我们有 $\partial \hat{z}_i /\partial u_j = 0$：</p>
+
+\[\frac{\partial C}{\partial u_i} = \sum_{j=1}^n{\frac{\partial C}{\partial \hat z_j}\frac{\partial \hat z_j}{\partial u_i}} = \frac{\partial C}{\partial \hat z_i}\frac{\partial \hat z_i}{\partial u_i} = \frac{\partial C}{\partial \hat z_i}\cdot \gamma\]
+
+<h3 id="41--bn中的直接连接反向传播公式推导">4.1  BN中的直接连接反向传播公式推导</h3>
+
+<p>重新回顾一下之前的BN计算图，我们不难发现 $z_1$ 的值计算到 $u_1$ 有三条不同的路线。我们需要计算 $\partial {u_i}/{\partial z_i}$ 时，需要计算三条路线上的微分并相加起来。</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/IMG_614F94CA4D21-1.jpeg" alt="IMG_614F94CA4D21-1" style="zoom:25%;" /></p>
+
+\[\frac{\partial u_1}{\partial z_1} = \frac{\partial u_1}{\partial z_1} + \frac{\partial u_1}{\partial \mu_B}\frac{\partial \mu_B}{\partial z_1} + \frac{\partial u_1}{\partial \sigma^2_B}\frac{\partial \sigma^2_B}{\partial z_1}\]
+
+<p>对于上式<strong>第一项（计算图中的黑色路线）</strong>，$\partial u_1/\partial z_1$，这里的直接连接来自于公式</p>
+
+\[u_i = \frac{z_i - u_B}{\sqrt{\sigma^2_B + \epsilon}}\]
+
+<p>所以我们可以直接计算出</p>
+
+\[\frac{\partial u_1}{\partial z_1} = \frac{1}{\sqrt{\sigma^2_B + \epsilon}}\]
+
+<p>对于<strong><font color="blue">第二项（计算图中的蓝色路线）</font></strong>，我们需要分别计算单独一个 $z_1$ 对整个 Mini-batch 的平均数 $\mu_B$ 的偏导数以及平均数 $\mu_B$ 对于BN结果 $u_1$ 的偏导数。</p>
+
+<p>因为我们有</p>
+
+\[\mu_B = \frac{1}{B}\sum_{i=1}^B{z_i}\]
+
+<p>不难得出</p>
+
+\[\frac{\partial \mu_B}{\partial z_1} = \frac{1}{B}\]
+
+<p>同时，对于 $\partial \mu_B/\partial u_1$，我们有</p>
+
+\[u_i = \frac{z_i - u_B}{\sqrt{\sigma^2_B + \epsilon}}\]
+
+<p>所以有</p>
+
+\[\frac{\partial u_1}{\partial \mu_B} = -\frac{1}{\sqrt{\sigma_B^2 + \epsilon}}\]
+
+<p>将两个偏导数乘起来，我们就能得到计算图中蓝色路线的反向传播公式：</p>
+
+\[-\frac{1}{B\sqrt{\sigma_B^2 + \epsilon}}\]
+
+<p>对于<strong><font color="purple">第三项（计算图中的紫色路线）</font></strong>，我们需要分别计算两条“支路”的偏微分之和</p>
+
+\[\frac{\partial u_i}{\partial \sigma^2_B}\frac{\partial \sigma^2_B}{\partial z_1} = \frac{\partial u_i}{\partial \sigma^2_B}\left(
+	\frac{\partial \sigma^2_B}{\partial z_1} + \frac{\partial \sigma^2_B}{\partial \mu_B}\frac{\partial \mu_B}{\partial z_1}
+\right)\]
+
+<p>从 $u_i$ 的计算公式，我们可以得知</p>
+
+\[\frac{\partial u_1}{\partial \sigma^2B} = \frac{\partial }{\partial \sigma^2_B}\frac{z_1 - u_B}{\sqrt{\sigma^2_B + \epsilon}} = -\frac{z_1 - \mu_B}{2(\sigma_B^2 + \epsilon)^{3/2}}\]
+
+<p>因为有方差$\sigma_B^2$的计算公式</p>
+
+\[\sigma^2_B = \frac{1}{B}\sum_{i=1}^B{(z_i - \mu_B)^2}\]
+
+<p>我们可以得知 $\partial \sigma_B^2 / \partial z_1$</p>
+
+\[\frac{\partial \sigma_B^2}{\partial z_1} = \frac{\partial }{\partial z_1}\frac{(z_1 - \mu_B)^2}{B} = 2\frac{z_1 - \mu_B}{B}\]
+
+<p>同时，我们有</p>
+
+\[\frac{\partial \sigma_B^2}{\partial \mu_B}
+ = \frac{1}{B}\sum_{i=1}^B{-2(z_i - \mu_B) = -\frac{2}{B}\left(\sum_{i=1}^B{z_i} - \sum_{i=1}^B{\mu_B}\right)} = 0\]
+
+<p>因此，计算图中的紫色路线的反向传播公式是：</p>
+
+\[-\frac{z_1 - \mu_B}{2(\sigma_B^2 + \epsilon)^{3/2}} \cdot 2\frac{z_1 - \mu_B}{B} = -\frac{(z_1 - \mu_B)^2}{(\sigma_B^2 + \epsilon)^{3/2}B}\]
+
+<p>将三条路线的反向传播公式相加，我们就能得到“直接连接“的反向传播公式</p>
+
+\[\frac{\partial u_i}{\partial z_i} = \frac{1}{\sqrt{\sigma^2_B + \epsilon}} -\frac{1}{B\sqrt{\sigma_B^2 + \epsilon}} -\frac{(z_1 - \mu_B)^2}{B(\sigma_B^2 + \epsilon)^{3/2}}\]
+
+<h3 id="42-bn-中的跨越连接反向传播公式推导">4.2 BN 中的跨越连接反向传播公式推导</h3>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/image-20211227162304898.png" alt="image-20211227162304898" style="zoom:25%;" /></p>
+
+<p>对于跨越连接（$\partial u_i/\partial z_j$, where $i\neq j$），计算图中只有蓝色与紫色两条路径，所以我们有</p>
+
+\[\frac{\partial u_i}{\partial z_j} = \begin{cases}
+\frac{1}{\sqrt{\sigma^2_B + \epsilon}} -\frac{1}{B\sqrt{\sigma_B^2 + \epsilon}} -\frac{(z_1 - \mu_B)^2}{B(\sigma_B^2 + \epsilon)^{3/2}} &amp; i=j\\
+-\frac{1}{B\sqrt{\sigma_B^2 + \epsilon}} -\frac{(z_1 - \mu_B)^2}{B(\sigma_B^2 + \epsilon)^{3/2}} &amp; i\neq j
+\end{cases}\]
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fa fa-folder-o"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#neural-network">Neural Network</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fa fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#neural-network">neural-network</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/neural%20network/2021/11/24/Word-Embedding.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fa fa-arrow-left"></i> NLP 101: Word Embedding 词嵌入
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/neural%20network/2021/12/28/Seq2Seq.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            NLP 101: Seq2Seq 模型
+ <i class="fa fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>什么是贝叶斯网络 What is Bayes Network | Yutian’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="什么是贝叶斯网络 What is Bayes Network" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="贝叶斯网络是人们在探索机器学习时的一个重要里程碑，通过贝叶斯网络，机器学习摆脱了以往基于形式逻辑推理和庞大知识库的限制，开始了“统计学习”的新纪元。那么什么是贝叶斯网络呢？贝叶斯网络和贝叶斯统计学派又有什么关系呢? 目录 统计贝叶斯学派与贝叶斯公式 什么是贝叶斯网络 为什么我们需要贝叶斯网络 贝叶斯网络“加速”的原理 用朴素的贝叶斯网络识别手写数字 参考资料" />
+<meta property="og:description" content="贝叶斯网络是人们在探索机器学习时的一个重要里程碑，通过贝叶斯网络，机器学习摆脱了以往基于形式逻辑推理和庞大知识库的限制，开始了“统计学习”的新纪元。那么什么是贝叶斯网络呢？贝叶斯网络和贝叶斯统计学派又有什么关系呢? 目录 统计贝叶斯学派与贝叶斯公式 什么是贝叶斯网络 为什么我们需要贝叶斯网络 贝叶斯网络“加速”的原理 用朴素的贝叶斯网络识别手写数字 参考资料" />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-30T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="什么是贝叶斯网络 What is Bayes Network" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yutian Chen"},"dateModified":"2020-04-30T00:00:00+00:00","datePublished":"2020-04-30T00:00:00+00:00","description":"贝叶斯网络是人们在探索机器学习时的一个重要里程碑，通过贝叶斯网络，机器学习摆脱了以往基于形式逻辑推理和庞大知识库的限制，开始了“统计学习”的新纪元。那么什么是贝叶斯网络呢？贝叶斯网络和贝叶斯统计学派又有什么关系呢? 目录 统计贝叶斯学派与贝叶斯公式 什么是贝叶斯网络 为什么我们需要贝叶斯网络 贝叶斯网络“加速”的原理 用朴素的贝叶斯网络识别手写数字 参考资料","headline":"什么是贝叶斯网络 What is Bayes Network","mainEntityOfPage":{"@type":"WebPage","@id":"/machine%20learning/2020/04/30/What-is-Bayes-Network.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"url":"/machine%20learning/2020/04/30/What-is-Bayes-Network.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#1-统计贝叶斯学派与贝叶斯公式">1 统计贝叶斯学派与贝叶斯公式</a></li>
+  <li><a href="#2-什么是贝叶斯网络">2 什么是贝叶斯网络</a></li>
+  <li><a href="#3-为什么我们需要贝叶斯网络">3. 为什么我们需要贝叶斯网络</a></li>
+  <li><a href="#4-贝叶斯网络加速的原理">4. 贝叶斯网络“加速”的原理</a></li>
+  <li><a href="#5-朴素的贝叶斯网络识别手写数字">5. 朴素的贝叶斯网络识别手写数字</a>
+    <ul>
+      <li><a href="#50-什么是mnist数据集">5.0 什么是MNIST数据集</a></li>
+      <li><a href="#51-为什么说是朴素的贝叶斯网络">5.1 为什么说是“朴素的”贝叶斯网络</a></li>
+      <li><a href="#52-如何运用模型预测">5.2 如何运用模型预测</a></li>
+      <li><a href="#53-如何训练模型">5.3 如何训练模型</a></li>
+      <li><a href="#54-模型准确率">5.4 模型准确率</a></li>
+    </ul>
+  </li>
+  <li><a href="#6-参考资料">6. 参考资料</a></li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">什么是贝叶斯网络 | What is Bayes Network</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2020-04-30T00:00:00+00:00" itemprop="datePublished">
+        Apr 30, 2020
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>贝叶斯网络是人们在探索机器学习时的一个重要里程碑，通过贝叶斯网络，机器学习摆脱了以往基于形式逻辑推理和庞大知识库的限制，开始了“统计学习”的新纪元。那么什么是贝叶斯网络呢？贝叶斯网络和贝叶斯统计学派又有什么关系呢?</p>
+
+<p><strong>目录</strong></p>
+
+<blockquote>
+  <ol>
+    <li>统计贝叶斯学派与贝叶斯公式</li>
+    <li>什么是贝叶斯网络</li>
+    <li>为什么我们需要贝叶斯网络</li>
+    <li>贝叶斯网络“加速”的原理</li>
+    <li>用朴素的贝叶斯网络识别手写数字</li>
+    <li>参考资料</li>
+  </ol>
+</blockquote>
+
+<!--more-->
+
+<h2 id="1-统计贝叶斯学派与贝叶斯公式">1 统计贝叶斯学派与贝叶斯公式</h2>
+
+<p>根据对统计的理解，数理统计存在<strong>概率学派</strong>与<strong>贝叶斯学派</strong>两种学派，他们之间的主要区别在于对于概率的理解方法不同</p>
+
+<p><strong>概率学派</strong>认为世界存在一个固定的<strong>先验概率</strong>，例如一枚公平的硬币抛出正反面的概率一定分别是1/2。换句话说，古典学派认为任何事件都<strong>存在一个固定的概率模型</strong>，虽然我们可能不知道这个概率分布中的一些参数，但是只要我们进行了足够多次的取样，我们可以通过取样的结果来推断事件的概率分布。</p>
+
+<p><strong>贝叶斯学派</strong>则认为世界<strong>没有一个确定的先验概率</strong>，假设我们只得到了事件A的样本X，那么我们就只能依靠样本X对事件A的概率分布做出推断，而不必考虑“可能出现但未出现（在样本X中）”的情况。在这种理解的背景下，我们每次对事件A进行采样就会更新我们对事件A各个情况概率分布的认知（Belief）。[1]</p>
+
+<p>两个学派都各有优势，在一些简单并可以做出大量模拟的情况（例如预测抛硬币正反的概率分布）下，概率学派可以较为精确的获得某一事件的发生概率；在一些难以分析，很难模拟/大量采样的情况（例如地震概率的预测）下，贝叶斯学派则有极大的优势，可以使用有限的信息帮助我们做出合理的推断</p>
+
+<p><strong>贝叶斯公式</strong>是贝叶斯学派的重要理论之一，这个公式告诉了我们如何通过我们对事件A已有的认知和新的采样（evidence）B来更新事件A的<strong>后验概率</strong>（在事件B发生后我们对事件A概率分布的新认知）</p>
+
+\[P(A \mid B) = \frac{P(B\mid A)P(A)}{P(B)}\]
+
+<p>概率学派也有关于这个公式的另一套解释方法：概率学派将概率看为“结果的比例（结果A在所有结果中的概率记为P(A) ）。这个公式在这种解释下成为了描述“具有B的所有结果中有A性质的结果所占的比例 = 具有A性质的所有结果中具有B性质的结果所占的比例 $\times$ 所有结果中A的比例 / 所有结果中B的比例” [2]</p>
+
+<h2 id="2-什么是贝叶斯网络">2 什么是贝叶斯网络</h2>
+
+<p>贝叶斯网络是一种描述<strong>随机变量之间互相条件独立关系的有向无环图</strong>。在这个有向无环图中，每个节点代表一个<strong>随机变量对其父节点的条件概率分布</strong> $P(X_i \mid parents(X_i))$，每一条边可以理解成变量之间的联系。</p>
+
+<blockquote>
+  <p>注意：虽然一般来讲这种“联系”可以被解释为“因果关系”，但是实际上 这种关系并不一定是因果关系，只要两个变量之间互相不条件独立就应该被连在一起</p>
+</blockquote>
+
+<p>在贝叶斯网络中，已知$X$的父节点$parents(X)$时$X$的条件概率分布$P(X\mid parents(X))$ 与已知$X$的父节点时网络中$X$的“祖先节点”的概率分布$P(ancestor(X)\mid parents(X))$互相条件独立。[3]</p>
+
+<blockquote>
+  <p>例子：<img src="https://markdown-img-1304853431.file.myqcloud.com/20220810232753.png" alt="image-20200430104043594" width="33%" /></p>
+
+  <p>在这样一给贝叶斯网络图中，E的父节点$parent(E) = {D}$，E不包括父节点的祖先节点$ancestor(E) = {B, C, A}$</p>
+
+  <p>通过贝叶斯网络的定义，我们可以知道随机变量C, D, E之间存在这样的关系：</p>
+</blockquote>
+
+\[P(E\mid D) \perp P(C\mid D)\]
+
+<blockquote>
+  <p>也就是说</p>
+</blockquote>
+
+\[P(E\mid D, B, C, A) = P(E\mid D)\]
+
+<p>贝叶斯网络本质上只是一种维持子节点与其祖先节点（不包括父节点）在给定父节点的条件下互相条件独立的存储随机变量之间互相关系的数据结构。</p>
+
+<h2 id="3-为什么我们需要贝叶斯网络">3. 为什么我们需要贝叶斯网络</h2>
+
+<p>在生产生活中，我们经常需要对具有随机性的状态的出现概率进行推断。假设我们想用随机变量$X_0$到$X_n$来表示一个事件的“状态”，其中每一个随机变量都只有2个可能的取值：1（发生）或0（不发生） 我们这时候想要得知$P(x_1, x_2, \cdots, x_n)$这的概率分布。</p>
+
+<p>如果使用直接列出一张全联合分布的概率分布表（如下）的话，整张概率分布表会有$2^n$行，每次计算一行都要计算随机变量的所有情况，这使得求解概率分布的时间复杂度极高（时间复杂度$O(n2^n)$）。</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220810232856.png" alt="image-20200430112420798" style="zoom: 80%;" /></p>
+
+<p>如果我把这n个随机变量用贝叶斯网络表示出来，因为贝叶斯网络可以很好的表达随机变量之间的相互条件独立关系，我们的计算量可以大大减小</p>
+
+\[P (x_1, x_2, \cdots, x_n) = \prod_{i = 1}^n{P (x_i | x_{i+1}, x_{i + 2}, \cdots x_n)}\]
+
+<p>上面的式子中连乘号中的概率分布也可以表示为：</p>
+
+\[P(x_i \mid parents(x_i), ancestor(x_i))\]
+
+<p>因为我们知道 $P(ancestor(x_i)\mid parents(x_i))\perp P(x_i \mid parents(x_i))$，我们可以消去上式中给定条件里的$ancestor(x_i)$这一项</p>
+
+<p>这时候，我们可以得知：
+\(P(x_1, x_2, \cdots, x_n) = \prod^n_{i = 1}P(x_i \mid parents(x_i))\)
+看到这里，你可能会觉得这个式子有些似曾相识……</p>
+
+<p>是的，这里被连乘的每一项就是贝叶斯网络中每一个节点所存储的条件概率表所存储的概率分布！</p>
+
+<p>这时候，在一个最多有$k$个父节点的贝叶斯网络中，求解状态的概率分布所需要的时间复杂度就被缩小到了$O(n2^k)$。虽然求解问题依然是一个非多项式时间问题（NP）， 但是在大多数情况中贝叶斯网络的使用可以有效的降低时间复杂度的幂。[3]</p>
+
+<h2 id="4-贝叶斯网络加速的原理">4. 贝叶斯网络“加速”的原理</h2>
+
+<p>为什么贝叶斯网络处理同样的问题比直接计算所有随机变量的全联合分布要快呢？这个问题其实可以在贝叶斯网络的时间复杂度表达式中看出端倪：对于一个<strong>每个节点最多有$k$个父节点</strong>的贝叶斯网络，求解概率分布的时间复杂度是$O(n2^k)$。这意味着如果有一个贝叶斯网络是一个<strong>完全图</strong>（每个节点之间都有连线）的话，它的求解时间复杂度会达到$O(n2^n)$，和全联合分布一样。</p>
+
+<p>实际上，贝叶斯网络可以计算的比全联合分布快是因为贝叶斯网络可以有效的表示变量之间的条件独立关系，基于这种条件独立的假设来简化计算，从而降低算法时间复杂度。</p>
+
+<h2 id="5-朴素的贝叶斯网络识别手写数字">5. 朴素的贝叶斯网络识别手写数字</h2>
+
+<p>上面简单的介绍了什么是贝叶斯网络和贝叶斯网络的存在意义，接下来我们要看一个<strong>朴素的</strong>贝叶斯网络用来识别MNIST数据集中的手写数字的一个实践案例</p>
+
+<h3 id="50-什么是mnist数据集">5.0 什么是MNIST数据集</h3>
+
+<p>MNIST数据集是美国国家标准与技术研究所收集整理标注的一个手写数字数据集，其中包括了60000张28*28的8bit灰度手写数字图片作为训练集，还有10000张28*28的8bit灰度图片作为测试集。每张图片由$28^2 = 784$个像素构成，每个像素取值（从白到黑）在$[0, 255]$的范围内。</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220810233054.png" alt="MNIST数据集中的一张'4'的样本" /></p>
+
+<p>每一张图像都有一个“标签”，这个标签代表着这个图片上写的数字。</p>
+
+<h3 id="51-为什么说是朴素的贝叶斯网络">5.1 为什么说是“朴素的”贝叶斯网络</h3>
+
+<p>因为在这个例子里面，我们假定每一个像素是一个单独的feature（特性），并且我们认为所有的像素之间都是互相独立的（显然不是，一个高亮的像素周边的像素大概率也比较亮）。这样一个略微脱离实际的假设使得我们可以大大简化模型的贝叶斯网络并且可以极快的求解概率分布（因为每个像素都只有一个父节点——图像的标签）。</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220810233105.png" style="zoom: 70%;" /></p>
+
+<h3 id="52-如何运用模型预测">5.2 如何运用模型预测</h3>
+
+<p>对于一张给定的图片，我们把里面的784个像素看成784个随机变量，同时，我们记这个模型的标签为$label$，在这种设定下，一张图片的标签可以这样表示：</p>
+
+\[label = {\underset {label\in [0, 9]}{\operatorname {arg\,max} }}\,(P(label, f_1, f_2, \cdots, f_{784}))\]
+
+<blockquote>
+  <p>对于一幅图片（给定$f_1, f_2, \cdots f_{784}$），我们希望找到一个0 - 9之间的label，使得$P(label, f_1, f_2, \cdots, f_{784})$的值最大</p>
+</blockquote>
+
+<p>使用贝叶斯网络，我们可以发现这个概率$P(label, f_1, f_2, \cdots, f_{784})$可以这么计算：</p>
+
+\[P(label, f_1, f_2, \cdots, f_{784}) = P(label) \cdot P(f_1 \mid label) \cdot P(f_2\mid label)\cdots P(f_{784}\mid label)\]
+
+<p>我们只用完成这样的一个简单运算就可以得到一张照片是label = A的概率了：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">LabelDistribution</span><span class="p">,</span> <span class="n">PixelDistribution</span><span class="p">,</span> <span class="n">THRESHOLD</span>
+    <span class="n">labelProbTable</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">labelProbTable</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="n">LabelDistribution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">pixel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="n">pixel</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">THRESHOLD</span><span class="p">:</span> <span class="n">labelProbTable</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="n">PixelDistribution</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">pixel</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span> <span class="n">labelProbTable</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">PixelDistribution</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">pixel</span><span class="p">])</span>
+
+    <span class="n">MAX_PROB</span><span class="p">,</span> <span class="n">MAX_LABEL</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">labelProbTable</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">MAX_PROB</span><span class="p">:</span>
+            <span class="n">MAX_PROB</span> <span class="o">=</span> <span class="n">labelProbTable</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">MAX_LABEL</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="k">return</span> <span class="n">MAX_LABEL</span>
+</code></pre></div></div>
+
+<h3 id="53-如何训练模型">5.3 如何训练模型</h3>
+
+<p>通过上面的公式，我们知道可以很方便的使用$P(label)$和$P(f_i\mid label)$来预测一张图片的标签，那么我们怎么获得这两种数据呢?答案是：</p>
+
+<p><strong>数数</strong></p>
+
+<p>是的，这个”天真烂漫的朴素贝叶斯网络“的整个训练过程只在做一件事情：数数</p>
+
+<p>我们通过统计训练数据里60000个标签的概率分布来得到$P(label)$，同时我们对每一张图片的每一个像素进行统计，如果像素亮度超过阈值就记+1上去，最后得到每一个标签下所有像素超过阈值的概率，也就是$P(f_i = 1\mid label)$。</p>
+
+<pre><code class="language-Python">Data = [list(map(int, line.strip().split(","))) for line in open("mnist_train.csv").read().strip().split("\n")]
+LabelDistribution = {i: 0 for i in range(10)}
+PixelDistribution = [{i: 0 for i in range(784)} for _ in range(10)]
+THRESHOLD = 100
+
+# Calculate the P(F_i | y)
+def train():
+    global LabelDistribution, PixelDistribution, Data, THRESHOLD
+    for line in Data:
+        label = line[0]
+        pixels = line[1:]
+        LabelDistribution[label] += 1
+        for pixel in range(len(pixels)):
+            if pixels[pixel] &gt;= THRESHOLD:
+                PixelDistribution[label][pixel] += 1
+
+    for i in range(10): normalize(PixelDistribution[i], label=i)
+    normalize(LabelDistribution)
+</code></pre>
+
+<h3 id="54-模型准确率">5.4 模型准确率</h3>
+
+<p>虽然这个模型看上去非常的不靠谱（假设所有feature相互独立），但是竟然可以达到高达84.4%的分类准确率！（当然，比起其他像神经网络一样的fancy方法，这个结果也很<strong>朴素</strong>）</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NO.9999
+predict: 6
+actual: 6
+accumulative precision: 0.844
+</code></pre></div></div>
+
+<h2 id="6-参考资料">6. 参考资料</h2>
+
+<p>[1]  “hgz_dm.” <em>统计学中的频率学派与贝叶斯学派 - hgz_dm - 博客园</em>, www.cnblogs.com/hgz-dm/p/10292949.html.</p>
+
+<p>[2] “Bayes’ Theorem.” <em>Wikipedia</em>, Wikimedia Foundation, 27 Apr. 2020, en.wikipedia.org/wiki/Bayes’_theorem.</p>
+
+<p>[3] Russell, Stuart J. <em>Artificial Intelligence: a Modern Approach</em>. Pearson, 2016.</p>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fa fa-folder-o"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#machine-learning">Machine Learning</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fa fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#machine-learning">machine-learning</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/neural%20network/2020/04/03/What-is-LSTM.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fa fa-arrow-left"></i> 长短期记忆递归网络 LSTM
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/neural%20network/2020/07/31/How-do-Neural-Network-Work.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            神经网络是如何工作的
+ <i class="fa fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

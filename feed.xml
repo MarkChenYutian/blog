@@ -1,0 +1,1447 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.9.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-01-08T23:37:55+00:00</updated><id>/feed.xml</id><title type="html">Yutian’s Blog</title><subtitle>A place for me to Learn, Create and Share</subtitle><author><name>Yutian Chen</name></author><entry><title type="html">Direct Method SLAM - Jacobian Formulation</title><link href="/computer%20vision/2023/08/16/Direct-Method-Jacobian.html" rel="alternate" type="text/html" title="Direct Method SLAM - Jacobian Formulation" /><published>2023-08-16T00:00:00+00:00</published><updated>2023-08-16T00:00:00+00:00</updated><id>/computer%20vision/2023/08/16/Direct-Method-Jacobian</id><content type="html" xml:base="/computer%20vision/2023/08/16/Direct-Method-Jacobian.html"><![CDATA[<!-- # Direct Method SLAM - Jacobian Formulation -->
+
+<blockquote>
+  <p>This post is mainly a re-formulation and detailed expansion for the section 8.4, “Direct Method” in <a href="https://github.com/gaoxiang12/slambook-en">“14 lectures on Visual SLAM”</a>.</p>
+
+  <p>When I was working on direct method SLAM, I found the notations used on the book is hard to understand and many details to derive the final equation are omitted. Hence, I wrote this post as a note and record for my own derivation of the Jacobian in Direct Method of SLAM.</p>
+</blockquote>
+
+<!--more-->
+
+<h2 id="coordinate-system-and-symbol-table">Coordinate System and Symbol Table</h2>
+
+<p><strong>Assumption</strong></p>
+
+<p>Cam1 and Cam2 have same intrinsic matrix $K$ and are pinhole camera with no distortion (or distortion is corrected for resulting image in pre-process step).</p>
+
+<p><strong>Coordinate System</strong></p>
+
+<p>There are two 3D coordinate systems: the camera 1 (where optic center $O_1$ is the same as world coordinate origin) and the camera 2 (with transformation of cam1 → cam2 is $T_1^2 = \xi$)</p>
+
+<p>There are two 2D coordinate systems (pixel coordinates): the image 1 and image 2. I will use uv coordinate when refer to them.</p>
+
+<p><strong>Symbol Table</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Symbol</th>
+      <th>Domain</th>
+      <th>Shape</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$P_i$</td>
+      <td>$\mathbb{R}^3$</td>
+      <td>(1, 3)</td>
+      <td>i-th point in the 3-dimentional space (under cam1 coordinate)</td>
+    </tr>
+    <tr>
+      <td>$p_{1,i}$</td>
+      <td>$\mathbb{R}^2$</td>
+      <td>(1, 2)</td>
+      <td>i-th point’s projection on cam1’s sensor plane</td>
+    </tr>
+    <tr>
+      <td>$p_{2,i}$</td>
+      <td>$\mathbb{R}^2$</td>
+      <td>(1, 2)</td>
+      <td>i-th point’s projection on cam2’s sensor plane</td>
+    </tr>
+    <tr>
+      <td>$K$</td>
+      <td>$\mathbb{R}^{3\times 3}$</td>
+      <td>(3, 3)</td>
+      <td>Camera intrinsic matrix</td>
+    </tr>
+    <tr>
+      <td>$\xi$</td>
+      <td>$\mathfrak{se}(3)$</td>
+      <td>(1, 6)</td>
+      <td>Cam2’s pose w.r.t. world coordinate (cam1)</td>
+    </tr>
+    <tr>
+      <td>$I_1$</td>
+      <td>$\mathbb{R^2} \to \mathbb{R}$</td>
+      <td>-</td>
+      <td>Illuminance map from cam1 (w/ bilinear interpolation)</td>
+    </tr>
+    <tr>
+      <td>$I_2$</td>
+      <td>$\mathbb{R^2} \to \mathbb{R}$</td>
+      <td>-</td>
+      <td>Illuminance map from cam2 (w/ bilinear interpolation)</td>
+    </tr>
+    <tr>
+      <td>$Exp(\cdot)$</td>
+      <td>$\mathfrak{se}(3) \to \mathbb{R}^{4\times 4}$</td>
+      <td>-</td>
+      <td>vector to matrix + Exponential Mapping (Lie Algebra → Transformation Matrix)</td>
+    </tr>
+    <tr>
+      <td>$Log(\cdot)$</td>
+      <td>$\mathbb{R}^{4\times 4} \to \mathfrak{se}(3)$</td>
+      <td>-</td>
+      <td>Logarithm Mapping + Matrix to vector (Transformation Matrix → Lie Algebra)</td>
+    </tr>
+    <tr>
+      <td>$exp(\cdot)$</td>
+      <td>$\mathfrak{se}(3) \to SE(3)$</td>
+      <td>-</td>
+      <td>Exponential Mapping (Lie Algebra → Lie Group)</td>
+    </tr>
+    <tr>
+      <td>$\cdot^\wedge$</td>
+      <td>$\mathbb{R}^{6}\to \mathbb{R}^{4\times 4}$</td>
+      <td>-</td>
+      <td>$\mathfrak{se}(3)$ vector representation to matrix representation</td>
+    </tr>
+    <tr>
+      <td>$\tilde{\cdot}$</td>
+      <td>-</td>
+      <td>-</td>
+      <td>Homogenous coordinate system</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em>Unless explicitly specified, all the coordinates are represented under heterogeneous coordinate.</em></p>
+
+<h2 id="step-1-reprojection-model">Step 1. Reprojection Model</h2>
+
+<p>According to the pinhole camera model, we have $\tilde{p_{1, i}} = KP_i$ and 
+$\tilde{p_{2, i}} = K(Exp(\xi)\tilde{P_i})_{1:3}$.</p>
+
+<p>By converting homogenous coordinate to heterogeneous coordinate, we can retrieve the $p_{1, i}$ and $p_{2, i}$ from $\xi$ and $K$.</p>
+
+<h2 id="step-2-photometric-error-as-model-residual">Step 2. Photometric Error as Model Residual</h2>
+
+<p>In direct method, we <strong>do not</strong> do feature point matching as this process (extracting feature point, convert to feature descriptor, run descriptor matching with or without epipolar geo constraint) is computationally heavy and error-prone.</p>
+
+<p>Instead, we use the “illuminance consistency assumption”. That is, between two camera frames $t$ and $t + 1$, the illuminance of a point in 3D space should be consistent. That is,</p>
+
+\[I_t(P) = I_{t + 1}(P)\]
+
+<p>Naturally, the photometric error is the difference in illuminance between same point in 2 adjacent frames.</p>
+
+\[e_i(\xi) = \left(I_1(p_{1, i}) - I_2(p_{2, i})\right)^2\]
+
+<p>Direct SLAM make use of this assumption heavily. In the bundle adjustment process, we define the total residual of current state estimation as:</p>
+
+\[\mathbf{R}(\xi) = \sum_{i = 1}^N{e_i(\xi)} = \sum_{i = 1}^N{\left(I_1(p_{1, i}) - I_2(p_{2, i})\right)^2}\]
+
+<h2 id="step-3-optimization-problem-formulation">Step 3. Optimization Problem Formulation</h2>
+
+<p>During the (local) bundle adjustment stage, we want to optimize the pose of cam2, namely $\xi \in \mathfrak{se}(3)$, to minimize the residual of state estimation. The mathematical formulation of this optimization problem is:</p>
+
+\[\begin{aligned}
+\xi^\star &amp;= \arg\min_{\xi}{\mathbf{R}(\xi)}\\
+    &amp;= \arg\min_{\xi}{\sum_{i = 1}^N{e_i(\xi)}}\\
+    &amp;= \arg\min_{\xi}{\sum_{i = 1}^N{\|I_1(p_{1, i}) - I_2(p_{2, i})\|_2^2}}\\
+    &amp;= \arg\min_{\xi}{\sum_{i = 1}^N{\|I_1(KP_i) - I_2(K(Exp(\xi)\tilde{P_i})_{1:3}\|_2^2}}
+\end{aligned}\]
+
+<h2 id="step-4-perturbation-model-and-jacobian-for-direct-method">Step 4. Perturbation Model and Jacobian for Direct Method</h2>
+
+<p>To solve this optimization problem, we can use optimizers like Gauss-Newton or Lagrange-Marquadt. These optimizers typically requires us to provide the jacobian of model. Hence, we need to derive the jacobian $\mathbf{J}$ for cam2 pose $\xi$ w.r.t. $\mathbf{R}$. Since $\mathbf{R}$ is a simple summation from $e_i(\xi)$, we will only derive $\partial e_i(\xi) / \partial \xi$ here.</p>
+
+<p>To calculate the jacobian of $\mathbf{R}$ w.r.t. $\xi$, there are two main methods: the direct differentiation and perturbation model.</p>
+
+<p><strong>Direct Differentiation</strong> (which, we will not use)</p>
+
+\[\begin{aligned}
+\frac{\partial e_i(\xi)}{\partial \xi} &amp;= \lim_{\delta\xi \to 0}\frac{e_i(\xi \oplus \delta\xi) - e_i(\xi)}{\delta\xi}\\
+&amp;= \lim_{\delta\xi\to 0}{\frac{\|I(KP_i) - I_2(K(Exp(\xi\oplus\delta\xi)\tilde{P_i})_{1:3})\|_2^2 - e_i(\xi)}{\delta\xi}}
+\end{aligned}\]
+
+<p>However, we have $\xi\oplus\delta\xi \neq Log(Exp(\xi)Exp(\delta\xi))$ in Lie algebra. Instead, we need to follow the <a href="https://en.wikipedia.org/wiki/Baker%E2%80%93Campbell%E2%80%93Hausdorff_formula">BCH formula</a> with first-order approximation (when $\delta\xi$ is sufficiently small)</p>
+
+\[Log(Exp(\delta\xi)Exp(\xi)) \approx \mathbf{J}_l(\xi)^{-1}\delta\xi + \xi\]
+
+<p>However, using BCH formula requires us to calculate the $\mathbf{J}_l$, which is undesired due to its computation complexity. Hence, we will use the perturbation model to calculate the differentiation instead.</p>
+
+<p><strong>Perturbation Model</strong></p>
+
+<p>Comparing to the direct differentiation, where BCH formula is required, perturbation model <em>first</em> add a small perturbation on target function $e_i$, then calculate the derivative of residual w.r.t. <em>the perturbation term</em>.</p>
+
+<p>That is, we will calculate $\frac{\partial e_i(\xi \oplus \delta\xi)}{\partial \delta\xi}$ instead of $\frac{\partial e_i(\xi)}{\partial \xi}$.</p>
+
+<p>First, we will derive $e_i(\xi \oplus \delta\xi)$ (using left-perturbation, the result is different from right-perturbation).</p>
+
+\[\begin{aligned}
+e_i(\xi\oplus\delta\xi) &amp;= I_1(KP_i) - I_2(K(Exp(\delta\xi)Exp(\xi)\tilde{P_i})_{1:3})\\
+\end{aligned}\]
+
+<p>The taylor expansion for $Exp(\delta \xi)$ is of form</p>
+
+\[Exp(\delta\xi) = exp(\delta\xi^\wedge) = \sum_{n = 0}^\infty{\frac{1}{n!}(\delta\xi^\wedge)^n}\]
+
+<p>Using a first-order taylor approximation here (should be accurate as $\delta\xi$ is a minute perturbation term), we have</p>
+
+\[Exp(\delta\xi) \approx 1 + \delta\xi^\wedge\]
+
+<p>Then, we have</p>
+
+\[\begin{aligned}
+e_i(\xi\oplus\delta\xi) &amp;= I_1(KP_i) - I_2(K(Exp(\delta\xi)Exp(\xi)\tilde{P}_i)_{1:3})\\
+    &amp;\approx I_1(KP_i) - I_2(K((1 + \delta\xi^\wedge)Exp(\xi)\tilde{P}_i)_{1:3}) \\
+    &amp;= I_1(KP_i) - I_2(K(Exp(\xi)\tilde{P}_i)_{1:3} + K(\delta\xi^\wedge Exp(\xi)\tilde{P}_i)_{1:3})
+\end{aligned}\]
+
+<p>Then we apply another first-order taylor approximation</p>
+
+\[\begin{aligned}
+&amp;\phantom{\approx}I_2(K(Exp(\xi)\tilde{P}_i)_{1:3} + K(\delta\xi^\wedge Exp(\xi)\tilde{P}_i)_{1:3}) \\
+&amp;\approx I_2(K(Exp(\xi)\tilde{P}_i)_{1:3}) + \frac{\partial I_2(p_2)}{\partial p_2} \frac{\partial p_2}{\partial \xi} \delta\xi
+\end{aligned}\]
+
+<p>And we have the fully expanded form of $e(\xi\oplus\delta\xi)$</p>
+
+\[e(\xi \oplus \delta\xi) = I_1(KP_i) - \left(I_2(K(Exp(\delta\xi)Exp(\xi)P_i)_{1:3}) + \frac{\partial I_2(p_2)}{\partial p_2} \frac{\partial p_2}{\partial \xi} \delta\xi \right)\]
+
+<p>where we can derive the derivative under left perturbation</p>
+
+\[\frac{\partial e(\xi \oplus \delta\xi)}{\partial \delta\xi} \approx -\frac{\partial I_2(p_2)}{\partial p_2}\frac{\partial p_2}{\partial \xi}\]]]></content><author><name>Yutian Chen</name></author><category term="[&quot;Computer Vision&quot;]" /><category term="Machine Learning" /><category term="SLAM" /><summary type="html"><![CDATA[This post is mainly a re-formulation and detailed expansion for the section 8.4, “Direct Method” in “14 lectures on Visual SLAM”. When I was working on direct method SLAM, I found the notations used on the book is hard to understand and many details to derive the final equation are omitted. Hence, I wrote this post as a note and record for my own derivation of the Jacobian in Direct Method of SLAM.]]></summary></entry><entry><title type="html">Optimizers in PyPose - Gauss Newton and Levenberg-Marquadt</title><link href="/machine%20learning/2023/07/14/second-order-optimizer.html" rel="alternate" type="text/html" title="Optimizers in PyPose - Gauss Newton and Levenberg-Marquadt" /><published>2023-07-14T00:00:00+00:00</published><updated>2023-07-14T00:00:00+00:00</updated><id>/machine%20learning/2023/07/14/second-order-optimizer</id><content type="html" xml:base="/machine%20learning/2023/07/14/second-order-optimizer.html"><![CDATA[<p>In deep learning, we usually use first-order optimizers like Stochastic Gradient Descent, Adam, or RMSProp.</p>
+
+<p>However, in SLAM problems, we use Bundle Adjustment to jointly optimize camera pose and landmark coordinate in <strong>real time</strong>. Naive first order optimizers is not efficient enough (requires many iterations to converge) for this situation.</p>
+
+<p>In this post, I will introduce the concept of second order optimizer. However, since the second order optimizer requries us to derive the Hessian matrix for the optimization target, it is usually impractical to use it directly. Therefore, we will use the Gauss-Newton and Levenberg-Marquadt optimizers instead.</p>
+
+<!--more-->
+
+<h2 id="optimization-problem">Optimization Problem</h2>
+
+<p>The optimization problem, in general can be represented in the form of</p>
+
+\[x^* = \arg\min_{x}f(x)\]
+
+<p>That is, we want to find some optimal input $x^*$ s.t. such input can minimize some given expression $f(x)$.</p>
+
+<h3 id="naive-optimization">Naive Optimization</h3>
+
+<p>When function $f$ is simple, we can find its Jacobian matrix (first order derivative) $\mathbf{J}$ and Hessian matrix (second order derivative) $\mathbf{H}$ easily.</p>
+
+\[\mathbf{J} = \begin{bmatrix}
+    \frac{\partial f}{\partial x_0} &amp; \frac{\partial f} {\partial x_1} &amp; \cdots &amp; \frac{\partial f}{\partial x_n}
+\end{bmatrix}
+\quad
+\mathbf{H} = \begin{bmatrix}
+    \frac{\partial^2 f}{\partial x_1^2} &amp; \frac{\partial^2f}{\partial x_1 \partial x_2} &amp; \cdots &amp; \frac{\partial^2 f}{\partial x_1\partial x_n} \\
+    \frac{\partial^2 f}{\partial x_2\partial x_1} &amp; \frac{\partial^2 f}{\partial x_2^2} &amp; &amp; \vdots \\
+    \vdots &amp; &amp; \ddots &amp; \vdots \\
+    \frac{\partial^2 f}{\partial x_n\partial x_1} &amp; \cdots &amp; \cdots &amp; \frac{\partial^2 f}{\partial x_n^2}
+\end{bmatrix}\]
+
+<p>We can then solve for $\mathbf{J}x = \mathbf{0}$. For every solution $x$, if the hessian matrix is positive definite, then a local minimum is found.</p>
+
+<h3 id="iterative-optimization">Iterative Optimization</h3>
+
+<p>However, when the function $f$ is complex or $x$ lives in very high dimension (~10k in sparse 3D reconstruction problem, or ~10M in usual neural network models), it is practically impossible to solve for analytical solution of $\mathbf{J}$ and $\mathbf{H}$.</p>
+
+<p>In this case, we need to use iterative optimization. The general algorithm for such approach can be summarized as following:</p>
+
+<ol>
+  <li>For some initial guess value $x_0$, we have $x \gets x_0$</li>
+  <li>While true
+    <ol>
+      <li>
+        <p>Use the Taylor expansion of $f$ around $x$,</p>
+
+        <p>If using second-order optimizer, we have
+\(\hat{f}(x + \Delta x) = f(x) + \mathbf{J}(x)\Delta x + \frac{1}{2}\Delta x^T\mathbf{H}(x) \Delta x\)
+If using first-order optimizer, we have
+\(\hat{f}(x + \Delta x) = f(x) + \mathbf{J}(x)\Delta x\)</p>
+      </li>
+      <li>
+        <p>Solve for $\Delta x^*$ such that</p>
+      </li>
+    </ol>
+
+\[\Delta x^* = \arg\min_{\Delta x}{\hat{f}(x + \Delta x)}\]
+
+    <ol>
+      <li>Update $x \gets x + \Delta x^*$</li>
+      <li>If $|\Delta x^*|_2 &lt; \varepsilon$, the solution “converges” and break out the loop</li>
+    </ol>
+  </li>
+  <li>Return $x$</li>
+</ol>
+
+<h2 id="first-order-optimizers">First Order Optimizers</h2>
+
+<p>When using first order optimizer, we only use the first order derivative of $f$ to calculate $\Delta x^*$. Then, we have</p>
+
+\[\Delta x^* = \arg\min_{\Delta x} f(x) + \mathbf{J}(x) \Delta x = \arg\min_{\Delta x} \mathbf{J}(x) \Delta x = -\arg\max_{\Delta x}{\mathbf{J}(x) \Delta x}\]
+
+<p>Obviously, the solution will be $\Delta x^* = -\mathbf{J}(x)$. This is aligned with the definition of naive Stochastic Gradient Descent (SGD).</p>
+
+<p>Intuitively, we can interpret first order optimization as locally approximate the optimization target $f$ as a plane with form of $\mathbf{J}x$.</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20230723164733.png" alt="20230723164733" /></p>
+
+<blockquote>
+  <p>First order Taylor approximation of $\sin(x) + \cos(y) + 2$ at $(2, 2)$. <em>Generated by GPT-4 with code interpreter.</em></p>
+</blockquote>
+
+<p>Such optimizer and its variants like Adam, AdamW, RMSProp are widely used in the field of deep learning and is supported by popular libraries like PyTorch.</p>
+
+<h3 id="why-not-first-order-optimizer">Why not First Order Optimizer?</h3>
+
+<p>While first order optimizers can support large scale optimization problem, it generally requires more iterations to converge since linearization (first order Taylor expansion) is not a good approximation.</p>
+
+<p>In applications like SLAM where bundle adjustments need to run in real-time, first order optimizer cannot fulfill our need.</p>
+
+<p>Therefore, we have the second order optimizers.</p>
+
+<h2 id="second-order-optimizers">Second Order Optimizers</h2>
+
+<p>The second order optimizers, specifically the <strong>Newton method</strong> uses second order Taylor expansion as the local approximation for optimization target:</p>
+
+\[\hat{f}(x + \Delta x) = f(x) + \mathbf{J}(x)\Delta x + \frac{1}{2}\Delta x^T \mathbf{H}(x) \Delta x\]
+
+<p>Then we have</p>
+
+\[\Delta x^* = \arg\min_{\Delta x}{\hat{f}(x + \Delta x)} = \arg\min_{\Delta x}\mathbf{J}(x)\Delta x + \frac{1}{2}\Delta x^T\mathbf{H}\Delta x\]
+
+<p>Solving</p>
+
+\[\frac{\partial }{\partial\Delta x} {\left(\mathbf{J}(x)\Delta x + \frac{1}{2}\Delta x^T\mathbf{H}\Delta x\right)} = \mathbf{0}\]
+
+<p>We have $\mathbf{H}(x)\Delta x^* = -\mathbf{J}(x)$.</p>
+
+<p>Intuitively, the second order optimizers like Newton method is using a paraboloid to locally approximate the function surface.</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20230723164919.png" alt="20230723164919" /></p>
+
+<blockquote>
+  <p>Second order Taylor approximation of $\sin(x) + \cos(y) + 2$ at $(2, 2)$. <em>Generated by GPT4 with code interpreter</em>.</p>
+</blockquote>
+
+<h3 id="why-not-second-order-optimizer">Why not Second Order Optimizer?</h3>
+
+<p>Second order optimizer provides a much better approximation to the original function. Hence, solver with second order optimizer can converge much faster than first order optimizer.</p>
+
+<p>However, it is often not practical to calculate the $\mathbf{H}$ of $f$. If $x \in \mathbf{R}^d$, then $\mathbf{H}$ will have $d^2$ elements.</p>
+
+<h2 id="pseudo-second-order-optimizers">Pseudo-second-order Optimizers</h2>
+
+<h3 id="gauss-newton-optimizer">Gauss-Newton Optimizer</h3>
+
+<p>Gauss-Newton optimizers requires the expression to be optimized to be in the form of sum-of-square. That is, the optimization target must have form of</p>
+
+\[\mathbf{R}(x) = \sum{f(x)^2}\]
+
+<p>Then, consider the first order approximation for $f$ at $x$:</p>
+
+\[\hat{f}(x + \Delta x) \approx f(x) + \mathbf{J}(x) \Delta x\]
+
+\[\begin{aligned}
+\Delta x^* &amp;= \arg\min_{\Delta x} \mathbf{R}(x + \Delta x)\\
+  &amp;\approx \arg\min_{\Delta x}{(f(x) + \mathbf{J}(x)\Delta x)^2}\\
+  &amp;= \arg\min_{\Delta x}{f^2(x) + 2f(x)\mathbf{J}(x)\Delta x + (\mathbf{J}(x)\Delta x)^\top (\mathbf{J}(x) \Delta x)}\\
+\end{aligned}\]
+
+<p>Since the term in $\arg\min$ is convex (is a square), we know the optimization target must be convex. Hence, we have $\Delta x = \Delta x^*$ when $\frac{\partial (f(x) + \mathbf{J}\Delta x)^2}{\partial \Delta x} = 0$.</p>
+
+<p>Hence, we have</p>
+
+\[\mathbf{J}^\top(x) \mathbf{J}(x) \Delta x^* = -f(x)\mathbf{J}(x)\]
+
+<p>where we can solve for $\Delta x^*$.</p>
+
+<p><strong>Problem of Gauss-Newton Optimizer</strong></p>
+
+<p>In production environment, we may have $\mathbf{J}$ not full-ranked. This will cause the coefficient matrix $\mathbf{J}^\top \mathbf{J}$ on the left hand side being positive <strong>semi-definite</strong> (not full-ranked). In this case, the equation system is in singular condition and we can’t solve for $\Delta x^*$ reliably.</p>
+
+<p>Also, in Gauss-Newton method, the $\Delta x^*$ we solved for may be very large. Since we only use the first order Taylor expansion, large $\Delta x^* $ usually indicates a poor approximation for $f(x + \Delta x^*)$. In these cases, the residual $\mathbf{R}$ may even increase as we update $x \gets x + \Delta x$.</p>
+
+<h3 id="levenberg-marquadt-optimizer">Levenberg-Marquadt Optimizer</h3>
+
+<p>Levenberg-Marquadt optimizer is a modified version of Gauss-Newton optimizer.</p>
+
+<p>The LM optimizer use a metric $\rho$ to evaluate the quality of approximation:</p>
+
+\[\rho(\Delta x) = \frac{f(x + \Delta x)}{f(x) + \mathbf{J}(x)\Delta x}\]
+
+<p>When the approximation is accurate, we have $\rho(\Delta x) = 1$.</p>
+
+<p>LM optimizer will then use this measure of approximation quality to control the “trusted region”. The “trusted region” represents a domain where the first order approximation for $f(x)$ is acceptable.</p>
+
+<p>The update vector $\Delta x$ must be in the trusted region. Hence, the entire optimization problem is formulated as</p>
+
+\[\arg\min_{\Delta x}{(f(x) + \mathbf{J}(x)\Delta x)^2} \quad \text{s.t. }D\Delta x \leq \mu\]
+
+<p>where $D$ is a diagonal matrix constraining the $\Delta x$ in an ellipsoid domain.</p>
+
+<p>Usually, the $D$ is configured as $diag(\mathbf{J}^\top(x)\mathbf{J}(x))$. This allows the update step to move more on the direction with lower gradient.</p>]]></content><author><name>Yutian Chen</name></author><category term="[&quot;Machine Learning&quot;]" /><category term="Machine Learning" /><category term="SLAM" /><summary type="html"><![CDATA[In deep learning, we usually use first-order optimizers like Stochastic Gradient Descent, Adam, or RMSProp. However, in SLAM problems, we use Bundle Adjustment to jointly optimize camera pose and landmark coordinate in real time. Naive first order optimizers is not efficient enough (requires many iterations to converge) for this situation. In this post, I will introduce the concept of second order optimizer. However, since the second order optimizer requries us to derive the Hessian matrix for the optimization target, it is usually impractical to use it directly. Therefore, we will use the Gauss-Newton and Levenberg-Marquadt optimizers instead.]]></summary></entry><entry><title type="html">C0VM.ts: C0 Visualizer on the cloud</title><link href="/frontend/2022/12/06/c0vm-embeddable.html" rel="alternate" type="text/html" title="C0VM.ts: C0 Visualizer on the cloud" /><published>2022-12-06T00:00:00+00:00</published><updated>2022-12-06T00:00:00+00:00</updated><id>/frontend/2022/12/06/c0vm-embeddable</id><content type="html" xml:base="/frontend/2022/12/06/c0vm-embeddable.html"><![CDATA[<h2 id="what-is-c0-language">What is C0 Language</h2>
+
+<p>The programming language C0 is a carefully crafted subset of the C aimed at teaching introductory algorithms and imperative programming. It is used in <strong>15-122 Principles of Imperative Programming</strong> and <strong>15-411 Compiler Design</strong> by more than 600 students each semester.</p>
+
+<!--more-->
+
+<h2 id="about-this-project">About This Project</h2>
+
+<p>This project is my project for Summer Undergraduate Research Fellowship (SURF) in CMU. More importantly, it’s an attempt to improve students’ 15-122 learning experience.</p>
+
+<p>By employing various visualization and front-end technology, we make it possible to execute and visualize C0 Language on any device with modern browser. This project also allows instructors of 15-122 to embed runnable code exerciese in Learning Material System (LMS) like Canvas or Diderot thus creating a more interactive learning environment.</p>
+
+<h2 id="live-demo">Live Demo</h2>
+
+<p>Try copy the following C0 code segment into the <em>Code Editor</em> then hit Compile &amp; Run to see the result!</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#use &lt;conio&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span><span class="o">*</span><span class="p">[]</span> <span class="n">A</span> <span class="o">=</span> <span class="n">alloc_array</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+    <span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">alloc</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+    <span class="o">*</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"The value @ A[1] is a pointer pointing to %d"</span><span class="p">,</span> <span class="o">*</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You can also set breakpoint on <strong>Line 8</strong> by clicking on the left of line number. A red dot 🔴 will appear if the breakpoint is set successfully.</p>
+
+<iframe src="https://visualc0.tk" width="100%" style="border:1px solid silver; height:80vh; border-radius: .3rem;" title="C0 Visualizer Demo">
+</iframe>
+
+<h2 id="main-features">Main Features</h2>
+
+<p><img src="https://user-images.githubusercontent.com/47029019/188786107-2c936dd6-f0c8-4102-9e97-f93d9c37dd39.png" alt="Slide2" />
+<img src="https://user-images.githubusercontent.com/47029019/188786109-3a2f0b60-d1ed-4edd-a8c8-74effcd206e2.png" alt="Slide3" />
+<img src="https://user-images.githubusercontent.com/47029019/188786411-43c66821-0f21-434f-a270-c0f500c5f5d2.png" alt="Slide4" />
+<img src="https://user-images.githubusercontent.com/47029019/188787516-47821a85-5cd3-4394-9b8a-318138442aa0.png" alt="Slide5" /></p>]]></content><author><name>Yutian Chen</name></author><category term="[&quot;Frontend&quot;]" /><category term="Web" /><category term="React" /><summary type="html"><![CDATA[What is C0 Language The programming language C0 is a carefully crafted subset of the C aimed at teaching introductory algorithms and imperative programming. It is used in 15-122 Principles of Imperative Programming and 15-411 Compiler Design by more than 600 students each semester.]]></summary></entry><entry><title type="html">AirDOS: Dynamic SLAM Benefits from Articulated Objects</title><link href="/computer%20vision/2022/12/01/AirDOS-Dynamic_SLAM_Benefits_from_Articulated_Objects.html" rel="alternate" type="text/html" title="AirDOS: Dynamic SLAM Benefits from Articulated Objects" /><published>2022-12-01T00:00:00+00:00</published><updated>2022-12-01T00:00:00+00:00</updated><id>/computer%20vision/2022/12/01/AirDOS-Dynamic_SLAM_Benefits_from_Articulated_Objects</id><content type="html" xml:base="/computer%20vision/2022/12/01/AirDOS-Dynamic_SLAM_Benefits_from_Articulated_Objects.html"><![CDATA[<h2 id="existing-problem">Existing Problem</h2>
+
+<p>“Traditional” SLAM model assumes the world is (mostly) static: <strong>Performance degradation and lack of robustness in dynamic world</strong></p>
+
+<p>The actual world contains dynamic objects.</p>
+
+<!--more-->
+
+<h2 id="related-work">Related Work</h2>
+
+<ol>
+  <li>
+    <p><em>Elimination Strategy</em> - Most work treated feature points on dynamic objects as outliers in pose estimation</p>
+
+    <p>:+1: Fast and easy to implement</p>
+
+    <p>:-1: Lost track easily in highly dynamic scene - can’t get enough static feature points to reconstruct motion / perform localization</p>
+  </li>
+  <li>
+    <p><em>Motion Constraint</em> - Some work tried to estimate the pose/motion model for simple rigid objects</p>
+
+    <p>:+1: Filters out the dynamic objects more accurately</p>
+
+    <p>:-1: Can only keep track of simple rigid objects such as cubes, etc.</p>
+
+    <p>:-1: Does not utilize the estimated pose/motion model of objects to improve SLAM quality</p>
+  </li>
+</ol>
+
+<h2 id="innovation-in-this-work">Innovation in This Work</h2>
+
+<ol>
+  <li>Utilize the motion model of dynamic objects in scene to <strong>improve</strong> the performance of SLAM</li>
+  <li>Extend the simple rigid body to <strong>articulated rigid object</strong></li>
+</ol>
+
+<h3 id="new-constraints-on-articulated-rigid-object">New Constraints on Articulated Rigid Object</h3>
+
+<ol>
+  <li>
+    <p>Rigidity Constraint</p>
+
+    <p>Given a rigid body $R$, the distance between some arbitrary feature point pairs $(_Rx_i, _Rx_j)$ must be constant over time.</p>
+  </li>
+  <li>
+    <p>Motion Constraint</p>
+
+    <p>Given a rigid body $R$ and its motion model $T \in SE(3)$, then we should have $_Rx’_i = T (_Rx_i)$ for all feature point $_Rx_i$ on $R$.</p>
+  </li>
+</ol>
+
+<h3 id="modeling-rigidity-constraint--motion-constraint">Modeling Rigidity Constraint &amp; Motion Constraint</h3>
+
+<p>Graph Optimization - we represent the whole optimization problem as a graph:</p>
+
+<ul>
+  <li>Each node (vertex) represents a variable to be estimated / optimized</li>
+  <li>Each edge represents a measurement / constraint to be satisfied</li>
+</ul>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/202211171533300.jpg" alt="IMG_3286" style="zoom: 33%;" /></p>
+
+<blockquote>
+  <p>Note: The author uses the “constant velocity assumption” on each rigid body - each rigid body $R$ will have exactly the same transformation $T$ in time period $\Delta t$ .</p>
+</blockquote>
+
+<h2 id="system-structure">System Structure</h2>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20221118111139.png" alt="image-20221118111132690" /></p>
+
+<h3 id="preprocess">Preprocess</h3>
+
+<ol>
+  <li><strong>Image segmentation</strong> - semantic segmentation + distinguish objects with same label</li>
+  <li><strong>Human Pose Detection</strong> - use Alpha-Pose to extract key points on human (joints in articulated rigid body model of human instance)</li>
+  <li><strong>Optical Flow Estimation</strong> - use PWC-net estimate the movement of each human instance to obtain/verify motion model</li>
+</ol>
+
+<h3 id="tracking">Tracking</h3>
+
+<ol>
+  <li>Ego-motion estimation based on Static feature (rough estimation of new camera pose)</li>
+  <li>Use rough estimation of camera pose and stereo triangulation to reconstruct the human pose (rough)</li>
+  <li>Refine <em>Camera Pose</em> and <em>Object Pose</em> and <em>Static Features</em> jointly using Bundle Adjustment, with constraints
+    <ol>
+      <li>Reprojection error</li>
+      <li>Motion Constraint under Constant Motion Assumption</li>
+      <li>Rigidity Constraint</li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="ablation-study">Ablation Study</h2>
+
+<p>Motion Constraint and Rigidity Constraint do work.</p>
+
+<p>Basic SLAM + both Constraints &gt; Basic SLAM + Motion Constraint &gt; Basic SLAM + Rigidity Constraint</p>
+
+<blockquote>
+  <p>Explanation: Motion Constraint implies Rigidity Constraint</p>
+
+  <p><strong>Question: Why do we need extra rigidity constraint then?</strong></p>
+
+  <p><strong>If $x_i, x_j$ are on same object, and we apply the motion model $T$ to both of them, then the distance between $Tx_i$ and $Tx_j$ must be the same (?).</strong></p>
+</blockquote>]]></content><author><name>Yutian Chen</name></author><category term="[&quot;Computer Vision&quot;]" /><category term="Computer Vision" /><category term="SLAM" /><summary type="html"><![CDATA[Existing Problem “Traditional” SLAM model assumes the world is (mostly) static: Performance degradation and lack of robustness in dynamic world The actual world contains dynamic objects.]]></summary></entry><entry><title type="html">CubeSLAM: Monocular 3D Object SLAM</title><link href="/computer%20vision/2022/12/01/Cube-SLAM_Monocular_3D_Object_SLAM.html" rel="alternate" type="text/html" title="CubeSLAM: Monocular 3D Object SLAM" /><published>2022-12-01T00:00:00+00:00</published><updated>2022-12-01T00:00:00+00:00</updated><id>/computer%20vision/2022/12/01/Cube-SLAM_Monocular_3D_Object_SLAM</id><content type="html" xml:base="/computer%20vision/2022/12/01/Cube-SLAM_Monocular_3D_Object_SLAM.html"><![CDATA[<h2 id="existing-problem">Existing Problem</h2>
+
+<p><strong>[Object SLAM]</strong> Most existing monocular SLAM solves object detection and SLAM separately and depend on the prior object models.</p>
+
+<p>Classic approach of SLAM and SfM is to track geometric features like points, lines, planes etc. Object as an important element in scene, is not well explored in SLAM.</p>
+
+<p><strong>[Dynamic SLAM]</strong> Dynamic features are generally discarded as outlier. However in many scene it is important to recognize &amp; predict dynamic object’s trajectory (motion model).</p>
+
+<!--more-->
+
+<h2 id="related-work">Related Work</h2>
+
+<p><strong>[3D Object Detection]</strong></p>
+
+<ul>
+  <li>w/ shape prior (e.g. CAD model of object to detect) - Align object by Perspective n-Point (PnP) matching</li>
+  <li>w/o shape prior - combination of geometry &amp; learning.</li>
+</ul>
+
+<p><strong>[Object SLAM]</strong></p>
+
+<ul>
+  <li>Decoupled - Object detection build upon SLAM system - only use the result point cloud generated by SLAM - May fail if SLAM can’t produce high-quality map</li>
+  <li>Coupled - Jointly optimize camera pose, objects, points and planes</li>
+</ul>
+
+<p><strong>[Dynamic SLAM]</strong></p>
+
+<ul>
+  <li>Most SLAM system eliminate the dynamic feature points and see them as “outlier” and relies on static background</li>
+  <li>Some SLAM will try to detect, track, and optimize trajectory of dynamic objects to build a complete 3D map - but didn’t utilize these information</li>
+</ul>
+
+<h2 id="innovation-in-this-work">Innovation in This Work</h2>
+
+<ol>
+  <li>Efficient, accurate and robust 3D box generation w/o prior object models</li>
+  <li>New method to measure cameras, objects and points</li>
+  <li>Showing that object detection and SLAM benefits each other</li>
+  <li>Utilize dynamic objects in scene to improve pose estimation</li>
+</ol>
+
+<h3 id="3d-box-proposal-generating--scoring">3D Box Proposal Generating &amp; Scoring</h3>
+
+<p>Generate 3D Box proposal based on vanishing points, omitted.</p>
+
+<h3 id="object-in-slam---ba-formulation--measurement-error">Object in SLAM - BA Formulation &amp; Measurement Error</h3>
+
+<p>Each box is represented as a $\mathbb{R}^9$ vector - representing the rotation matrix, center position, and dimension of the box.</p>
+
+\[C^\star, O^\star, P^\star = argmin_{C, O, P} \sum{|e(c_i, o_j)|^2_{\sum_{ij}} + |e(c_i, p_k)|^2_{\sum_{ik}} + |e(o_j, p_k)|^2_{\sum_{jk}}}\]
+
+<p>The graph optimization problem is solved by Gauss-newton or L-M algorithm.</p>
+
+<p><strong>[Camera-Object Measurement]</strong>  - <em>3D Mode</em> Suppose we already have some estimation of object’s pose $(T_{om}, d_m)$ and an <strong>accurate</strong> measurement to current object (e.g. with RGBD cam), we can measure the error by defining error as a $\mathbb{R}^9$ vector containing the difference between measured object &amp; previously estimated object’s pose. ($T\in SE(3)$ is transformed into a vector in $\mathbb{R}^6$ in Lie-Algebra)</p>
+
+<p><em>2D Measurement</em> - Otherwise (e.g. with monocular camera), Given the 2D bounding box of objects, the error is defined as the difference between center ($\mathbb{R}^2$ vector) and difference between dimension (of 2D box, $\mathbb{R}^2$ vector).</p>
+
+<blockquote>
+  <p><strong><em>Why there are two ways to measure Camera-Object error?</em></strong></p>
+</blockquote>
+
+<p><strong>[Object-Point Measurement]</strong> - All points on object $O$ must stay in $O$’s 3D bounding box</p>
+
+<p><strong>[Camera-Point Measurement]</strong> - Reprojection error as usual SLAM system</p>
+
+<h3 id="data-association-featureobject-matching">Data Association (Feature/Object Matching)</h3>
+
+<p>A feature point is considered “on an object” if it is in 2D bounding box and &lt; 1m from center of 3D bounding box.</p>
+
+<p>Two objects are matched across frames if they have the most number of shared feature points between each other.</p>
+
+<p>Points in overlapping area are not associated with any object.</p>
+
+<h3 id="dynamic-object">Dynamic Object</h3>
+
+<p>Dynamic feature points are “anchored” on a dynamic object. The object is modeled using “nonholonomic wheel model” - roll/pitch = 0 and we can represent car’s motion using only velocity and yaw.</p>
+
+<p>When matching features across dynamic objects, we predict where we expect to see the feature point and do local search around the expected position.</p>]]></content><author><name>Yutian Chen</name></author><category term="[&quot;Computer Vision&quot;]" /><category term="Computer Vision" /><category term="SLAM" /><summary type="html"><![CDATA[Existing Problem [Object SLAM] Most existing monocular SLAM solves object detection and SLAM separately and depend on the prior object models. Classic approach of SLAM and SfM is to track geometric features like points, lines, planes etc. Object as an important element in scene, is not well explored in SLAM. [Dynamic SLAM] Dynamic features are generally discarded as outlier. However in many scene it is important to recognize &amp; predict dynamic object’s trajectory (motion model).]]></summary></entry><entry><title type="html">On the principles of Parsimony and Self-consistency for the Emergence of Intelligence</title><link href="/machine%20learning/2022/07/31/Principle-of-Parsimony-and-Self-consistency.html" rel="alternate" type="text/html" title="On the principles of Parsimony and Self-consistency for the Emergence of Intelligence" /><published>2022-07-31T00:00:00+00:00</published><updated>2022-07-31T00:00:00+00:00</updated><id>/machine%20learning/2022/07/31/Principle-of-Parsimony-and-Self-consistency</id><content type="html" xml:base="/machine%20learning/2022/07/31/Principle-of-Parsimony-and-Self-consistency.html"><![CDATA[<blockquote>
+  <p>This post is the notes I wrote when reading paper <em>On the principle of Parsimony and Self-consistency for the Emergence of Intelligence</em> <a href="https://arxiv.org/abs/2207.04630">arXiv Link</a>.</p>
+</blockquote>
+
+<h2 id="context-and-motivation">Context and Motivation</h2>
+
+<h3 id="key-features-of-intelligence-agent">Key features of Intelligence Agent</h3>
+
+<p>For an autonomous intelligence agent to survive and function in complex world, it must <strong>efficiently</strong> and <strong>effectively</strong> learn models that reflect both its past experience and the current environment being perceived.</p>
+
+<p>That is, it must be able to:</p>
+
+<ol>
+  <li>Utilize knowledge from past experience</li>
+  <li>Reflect on immediate sensory inputs (new perception)</li>
+</ol>
+
+<!--more-->
+
+<h3 id="problem-with-brute-force-machine-learning">Problem with “Brute-force” Machine Learning</h3>
+
+<p>Research in neural science suggests that <strong>structured model</strong><sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> is the key for brain’s efficiency and effectiveness in perceiving, predicting and making intelligent decisions.</p>
+
+<p>However, currently most artificial intelligence relies on training “tried-and-tested” models with largely <strong>homogeneous structures</strong> using <strong>brute-force engineering approach</strong>. Such approach has lead to many problems in current machine learning systems:</p>
+
+<ol>
+  <li>
+    <p>Lack of richness in final learned representations due to <strong>Neural Collapse</strong><sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup></p>
+
+    <p>Specifically, Neural Collapse refers to a series of phenomenon occurs in the <em>Terminal Phase of Training</em> (TPT)<sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup> of neural network:</p>
+
+    <ul>
+      <li>Variability Collapse: Within-class variation of activations become negligible - the activation value neurons on last layer converges to their class-means</li>
+      <li>Simplification to Nearest Class-Center: The network classifier converges to choosing whichever class has the nearest train class-mean in Euclidean distance.</li>
+      <li>… (see original paper<sup id="fnref:2:1" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup> for the other two Neural Collapse phenomenon)</li>
+    </ul>
+  </li>
+  <li>
+    <p>Lack of stability in training due to <strong>Mode Collapse</strong><sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup></p>
+  </li>
+  <li>
+    <p>Lack of adaptiveness and susceptibility due to <strong>Catastrophic Forgetting</strong><sup id="fnref:5" role="doc-noteref"><a href="#fn:5" class="footnote" rel="footnote">5</a></sup></p>
+  </li>
+  <li>
+    <p>Lack of robustness to deformations or adversarial attacks</p>
+  </li>
+</ol>
+
+<h3 id="two-fundamental-principles-in-intelligent-system">Two Fundamental Principles in Intelligent System</h3>
+
+<p>This paper introduce two fundamental principles: <em>Parsimony</em> and <em>Self-consistency</em> that can govern the function of any intelligent system, artificial or natural.</p>
+
+<p>These two principles respectively aim to answer two fundamental questions about following:</p>
+
+<ol>
+  <li>What to learn - what is the objective for learning from data and how can it be measured</li>
+  <li>How to learn - how can we achieve such an objective via efficient and effective computation.</li>
+</ol>
+
+<figure>
+    <img src="https://markdown-img-1304853431.file.myqcloud.com/20220731225118.jpg" />
+    <figcaption>Fig 1. How Two Principles of Intelligent System Interact</figcaption>
+</figure>
+
+<p>The answers of these two questions are somehow straight forward:</p>
+
+<ol>
+  <li>
+    <p>What to learn</p>
+
+    <p>The answer to this question fall into <strong>information/coding theory</strong>. We want to accurately quantify and measure the information of data and then seek the most compact representations of the information.</p>
+  </li>
+  <li>
+    <p>How to learn</p>
+
+    <p>The answer to this question falls into <strong>Control/game theory</strong>. These theories provides universal effective computational framework (i.e. closed-loop feedback system) for achieving any measurable objective consistently.</p>
+  </li>
+</ol>
+
+<h2 id="principle-of-parsimony">Principle of Parsimony</h2>
+
+<blockquote>
+  <p><strong>The Principle of Parsimony</strong>: The objective of learning for an intelligent system is to identify low-dimensional structures in observations of the external world and reorganize them in the most <em>compact and structured</em> way.</p>
+</blockquote>
+
+<p>Intelligence would be impossible without this principle: If observations of the external world had no low-dimensional structures, there would be nothing worth learning or memorizing!</p>
+
+<h3 id="parsimony--most-compressed-representation">Parsimony != Most Compressed Representation</h3>
+
+<p>While the principle of parsimony do mention the importance of extracting low-dimensional, compact structure from external world, this does not mean the intelligent system should ever achieve the “best possible compression”.</p>
+
+<p>There is no point of an intelligent system to achieve the Shannon compression limit for internal representation of external world data. Such compression itself will be extremely expensive (if it is ever possible) and doesn’t bring any benefit for the intelligent agent itself.</p>
+
+<p>Instead, intelligent agents should pursue a <strong>compact and structured</strong> internal representation.</p>
+
+<ul>
+  <li>Compact - means economic to store</li>
+  <li>Structured - means efficient to access</li>
+</ul>
+
+<h3 id="modeling-parsimony-in-machine-learning">Modeling Parsimony in Machine Learning</h3>
+
+<p>Let $x$ denote the input sensory data (say an image), and $z$ as its internal representation. The sensory data sample $x$ is typically high-dimensional<sup id="fnref:6" role="doc-noteref"><a href="#fn:6" class="footnote" rel="footnote">6</a></sup> but has low-dimensional intrinsic structures.</p>
+
+<p>Under this perspective, the purpose of learning is to establish a mapping $f$ with parameter $\theta$ in parametric family $\Theta$, from $\mathbb{R}^D$ to a much lower dimensional representation $z\in \mathbb{R}^d$, that is:</p>
+
+\[x\in \mathbb{R}^D \xrightarrow{f(x, \theta)} z\in \mathbb{R}^d\]
+
+<p>In previous paragraph (<em>Parsimony != Most compressed representation</em>), we mentioned that the goal of learning is to learn the mapping between external world data and compact and structured internal representation. A formal definition to this principle of parsimony can be summarized as:</p>
+
+<ul>
+  <li>
+    <p><strong>Compression</strong>: Map high-dimensional sensory data $x$ to low dimensional representation $z$</p>
+
+    <p>Otherwise, the model (even the learning process) will be meaningless.</p>
+  </li>
+  <li>
+    <p><strong>Linearization</strong>: Map each class of object distributed on <em>nonlinear</em> submanifold to <em>linear</em> subspace.</p>
+
+    <p>Since linear model are easier to extrapolate than non-linear model.</p>
+  </li>
+  <li>
+    <p><strong>Sparsification</strong>: Map different classes into subspaces with independent or maximally incoherent bases</p>
+
+    <p>Sparsity of internal representation help us classify input sensory data better.</p>
+  </li>
+</ul>
+
+<figure>
+    <img src="https://markdown-img-1304853431.file.myqcloud.com/20220802231946.jpg" />
+    <figcaption>Fig 2. Learning, as a process of mapping high-dimensional sensory data to low-dimensional and structured internal representation</figcaption>
+</figure>
+
+<p>Such model is called a <strong>linear discriminative representation</strong> (LDR).</p>
+
+<p>A classification model that maps input data into one-hot vectors can be seen as an LDR where target subspace is one-dimensional and orthogonal to each other.</p>
+
+<h3 id="quantifying-parsimony-with-information-theorem">Quantifying Parsimony with Information Theorem</h3>
+
+<p>Given an LDR, we can compute the total “volume” spanned by all features on all subspaces and the sum of volumes spanned by features of each class.</p>
+
+<p>The ratio between these two volumes suggests how good the LDR model is - the larger, the better. That is, we want “<strong>The whole is maximally greater than the sum of its parts</strong>”.</p>
+
+<figure>
+    <img src="https://markdown-img-1304853431.file.myqcloud.com/20220806112604.jpg" />
+    <figcaption>Fig 3. The higher the ratio between "total volume" and "sum of volume on each subspace" is, the sparser (better) the LDR model is.</figcaption>
+</figure>
+
+<p>However, since subspace $S_n$ of class $n$ may not (in fact, almost certainly) have different dimension with feature space $Z$, we will need some method to compare their “volume” under same dimension.</p>
+
+<p>Suppose the feature space $Z$ is filled with spheres with radius of $\varepsilon$ (these spheres are called $\varepsilon$-spheres), each with a volume of $V$. Then we can count the volume of each subspace by this method:</p>
+
+<blockquote>
+  <p>For each $\varepsilon$-sphere $P$ in $Z$</p>
+
+  <ul>
+    <li>If $P \cap S_n \neq \emptyset$, then volume of $S_n$ will increment by $V$ (the volume of sphere is counted as the volume of $S_n$)</li>
+  </ul>
+</blockquote>
+
+<p>With this method, we can calculate the ratio between sum of subspaces and the feature space as a whole in this way:</p>
+
+\[\frac{\sum_n{\mathrm{vol}(S_n)}}{\mathrm{vol}(Z)} = 
+\frac{\sum_n{\left(\text{#}\mathrm{sphere\;in\;}S_n\right)}}{\text{#}\mathrm{sphere\;in\;}Z}\]
+
+<p>Suppose we want to encode a random sample drawn from feature space $Z$ with precision $\varepsilon$, then we can encode all points in an $\varepsilon$-sphere as  same information. Then, to represent arbitrary sample drawn from $Z$ with precision of $\varepsilon$, we will need $\log_{2}{(\text{#}\mathrm{sphere\;in\;}Z)}$ bits. This value is called the “description length” of $Z$.</p>
+
+<p>Similarly, we can calculate the description length of each feature space.</p>
+
+<p>The description length can also be called as the <strong>“rate distortion”</strong>.</p>
+
+<h3 id="rate-reduction-of-resulted-feature-space">Rate Reduction of Resulted Feature Space</h3>
+
+<p>Let $R$ be the rate distortion of the joint distribution of all features, $Z = \langle z_1, z_2, \cdots, z_n\rangle$ of sampled data $X = \langle x^1, \cdots, x^n \rangle$ from $k$ classes. Let $R^C$ be the average rate distortion for $k$ classes.</p>
+
+<p>For each class, we have a set of feature $Z_i \subseteq Z$, where $Z_1 \cup \cdots Z_k = Z$.</p>
+
+<p>Then, denote $R^C$ as the average rate distortion among $k$ classes,</p>
+
+\[R^C(Z) = \frac{1}{k}\left(
+    R(Z_1) + R(Z_2) + \cdots + R(Z_k)
+\right)\]
+
+<p>Let $R(Z)$ denote the rate distortion of all features - $Z$.</p>
+
+<p>Then, we can define the <em>rate reduction</em> of resulted feature space of a neural network as</p>
+
+\[\Delta R(Z) = R(Z) - R^C(Z)\]
+
+<p>The larger $\Delta R(Z)$ is, the better the feature representation $Z$ is since larger $\Delta R(Z)$ means subspaces (classes) in this feature representation is more sparse (in the best case, all subspaces should be orthogonal to each other).</p>
+
+<blockquote>
+  <p>For principle of self-consistency, see the post <strong>On the principles of Parsimony and Self-consistency for the Emergence of Intelligence (2)</strong>!</p>
+</blockquote>
+
+<hr />
+
+<h2 id="footnotes">Footnotes</h2>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>Study reveals that brain’s world model is highly structured anatomically, that is, there are modular brain areas and <a href="https://neuronaldynamics.epfl.ch/online/Ch12.S1.html">columnar organizations</a> in brain’s biological structure. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:2" role="doc-endnote">
+      <p>See <a href="https://arxiv.org/abs/2008.08186"><em>Prevalence of Neural Collapse during the terminal phase of deep learning training</em></a> by Papyan et al. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:2:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a></p>
+    </li>
+    <li id="fn:3" role="doc-endnote">
+      <p>Terminal Phase of Training: The training process trying to pursue zero-loss after model achieves zero-error. <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:4" role="doc-endnote">
+      <p>Mode Collapse: In GAN training process, the generator network constantly generate very similar or even identical output to the discriminator in order to ensure it is able to “fool” the discriminator network. (<a href="https://machinelearning.wtf/terms/mode-collapse/">source</a>) <a href="#fnref:4" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:5" role="doc-endnote">
+      <p>Catastrophic Forgetting: Neural network completely and abruptly forget previously learned information upon learning new information (<a href="https://en.wikipedia.org/wiki/Catastrophic_interference">source</a>) <a href="#fnref:5" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:6" role="doc-endnote">
+      <p>An image usually have millions of pixels, meaning that $x \in \mathbb{R}^D$ where $D$ has magnitude of $10^6$. <a href="#fnref:6" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>]]></content><author><name>Yutian Chen</name></author><category term="[&quot;Machine Learning&quot;]" /><category term="Machine Learning" /><category term="Notes" /><summary type="html"><![CDATA[This post is the notes I wrote when reading paper On the principle of Parsimony and Self-consistency for the Emergence of Intelligence arXiv Link. Context and Motivation Key features of Intelligence Agent For an autonomous intelligence agent to survive and function in complex world, it must efficiently and effectively learn models that reflect both its past experience and the current environment being perceived. That is, it must be able to: Utilize knowledge from past experience Reflect on immediate sensory inputs (new perception)]]></summary></entry><entry><title type="html">Why Functional Programming Matters</title><link href="/notes/2022/07/26/why-fp-matters.html" rel="alternate" type="text/html" title="Why Functional Programming Matters" /><published>2022-07-26T00:00:00+00:00</published><updated>2022-07-26T00:00:00+00:00</updated><id>/notes/2022/07/26/why-fp-matters</id><content type="html" xml:base="/notes/2022/07/26/why-fp-matters.html"><![CDATA[<blockquote>
+  <p>This is the notes I wrote when reading paper - <em>Why Functional Programming Matters</em>, John Hughes, “<em>Research Topics in Functional Programming</em>”, pp 17-42.</p>
+</blockquote>
+
+<p>Functional Programming is so called because its fundamental operation is the application of functions to arguments.</p>
+
+<h2 id="characteristics-of-functional-programs">Characteristics of Functional Programs</h2>
+
+<!--more-->
+
+<ul>
+  <li>There’s no assignment statements, so variables will never change once given a value.</li>
+  <li>Functional programs contain no side-effects at all.
+    <ul>
+      <li>Order of execution does not matter.</li>
+      <li>Therefore, one can replace variables by their values and vice versa - that is, programs are “referentially transparent”.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Yet, the argument above only mentions what functional program “is <em>not</em>”. Below of this paper will focus on <strong>what good can function programming actually provides to programmers</strong>.</p>
+
+<h2 id="programming-better-modularity">Programming Better: Modularity</h2>
+
+<p>Making program in a modular way have two straight-forward benefits:</p>
+
+<ol>
+  <li>Small modules can be coded quickly and nicely</li>
+  <li>General-purpose modules can be reused, leading to faster development of subsequent programs.</li>
+  <li>Modules of a program can be tested independently, reducing the work of testing</li>
+</ol>
+
+<p>When writing a modular program to solve problem, people first divide problem into subproblems, then solve them saparately, then combine the solutions.</p>
+
+<blockquote>
+  <p>The ways in which one can divide up the original problem depend directly on the ways in which one can glue solutions together.</p>
+</blockquote>
+
+<p><strong>Functional Programming provides two new kinds of glue</strong>, thus making it easier to write modular programs.</p>
+
+<h2 id="how-functional-programming-provides-better-support-to-modularity">How Functional Programming Provides Better Support to Modularity?</h2>
+
+<h3 id="gluing-functions-together---higher-order-function">Gluing Functions Together - Higher Order Function</h3>
+
+<p>To show how higher order functions works, we begin a simple example of adding up all elements in a <code class="language-plaintext highlighter-rouge">list</code>. Suppose we have a <code class="language-plaintext highlighter-rouge">listof *</code> datatype defined as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>listof * ::= Nil | Cons * (listof *)
+</code></pre></div></div>
+
+<ul>
+  <li>An empty list is defined as <code class="language-plaintext highlighter-rouge">Nil</code></li>
+  <li>A list is defined by the first element of type <code class="language-plaintext highlighter-rouge">*</code> and its subsequent elements in another <code class="language-plaintext highlighter-rouge">list</code>.</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[] =&gt; Nil
+[1] =&gt; Cons(1, Nil)
+[1, 2] =&gt; Cons(1, Cons(2, Nil))
+...
+</code></pre></div></div>
+
+<p>Then we can have function <code class="language-plaintext highlighter-rouge">sum</code> defined as follow:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sum (Nil) = 0
+sum (Cons(n, list)) = n + sum(list)
+</code></pre></div></div>
+
+<p>In the definition above, only the constant <code class="language-plaintext highlighter-rouge">0</code> and <code class="language-plaintext highlighter-rouge">+</code> operators are specific to computing a sum.</p>
+
+<p>Therefore, we can abstract the action to traverse through the list as a new function called <code class="language-plaintext highlighter-rouge">foldr</code>. In this way, we can express the <code class="language-plaintext highlighter-rouge">sum</code> as</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sum = foldr(+, 0)
+</code></pre></div></div>
+
+<p>Where <code class="language-plaintext highlighter-rouge">foldr</code> is defined as</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>foldr(f, x)(Nil) = x
+foldr(f, x)(Cons(a, l)) = f(a, foldr(f, x)(l))
+</code></pre></div></div>
+
+<p>Using similar way, we can quickly construct other functions that need to traverse the list:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>product = foldr(*, 1)
+anytrue = foldr(or, False)
+alltrue = foldr(and, True)
+</code></pre></div></div>
+
+<p>All these can be achieved since functional language allow functions that are indivisible in conventional programming languages to be expressed as a combination of parts - <strong>a general higher-order function and some particular specializing functions</strong>.</p>
+
+<p>Once the higher-order function is defined, many specific operations can be programmeed very easily.</p>
+
+<h3 id="gluing-programs-together---lazy-evaluation">Gluing Programs Together - Lazy Evaluation</h3>
+
+<p>As described before, a complete functional program is just a function from its input to its output. If $f$ and $g$ are such programs, then $g\cdot f$ is a program that when applied with some input $input$, computes
+\(g(f(input))\)
+In conventional language, this can be done by storing the results of $f$ into temporary files. In some situation, tramendous amount of temporary files will be created, making it impossible to combine programs in this way.</p>
+
+<p>The functional programming, however, provides a solution to this problem</p>
+
+<p>$f$ and $g$ will run in strict synchronization, $f$ will be executed only when $g$ tries to read some input, and runs only long enough to deliver the output $g$ is trying to read. Then, $f$ suspends until $g$ requires next input.</p>
+
+<p>Since this method of evaluation executes $f$ as little as possible, it is also called <strong>lazy evaluation</strong>.</p>
+
+<p>This feature can’t be implemented in other non-functional langauges, since lazy evaluation need programmers give up the direct control over the order in which parts the program are executed.</p>]]></content><author><name>Yutian Chen</name></author><category term="[&quot;Notes&quot;]" /><category term="Notes" /><category term="Random" /><summary type="html"><![CDATA[This is the notes I wrote when reading paper - Why Functional Programming Matters, John Hughes, “Research Topics in Functional Programming”, pp 17-42. Functional Programming is so called because its fundamental operation is the application of functions to arguments. Characteristics of Functional Programs]]></summary></entry><entry><title type="html">Embeddable Clac Execution Environment</title><link href="/frontend/2022/04/05/clac-embeddable.html" rel="alternate" type="text/html" title="Embeddable Clac Execution Environment" /><published>2022-04-05T00:00:00+00:00</published><updated>2022-04-05T00:00:00+00:00</updated><id>/frontend/2022/04/05/clac-embeddable</id><content type="html" xml:base="/frontend/2022/04/05/clac-embeddable.html"><![CDATA[<h2 id="demo">Demo</h2>
+
+<p>An open-to-use, embeddable clac execution implemented with <code class="language-plaintext highlighter-rouge">React</code> and <code class="language-plaintext highlighter-rouge">TypeScript</code>. You can try it below!</p>
+
+<p>For example, try to input the instruction <code class="language-plaintext highlighter-rouge">: square 1 pick * ; 2 square print</code> into the wedget below and see what will happen!</p>
+
+<div id="claculator-interactive" data-mode="embeddable"></div>
+
+<!--more-->
+
+<h2 id="about-this-project">About This Project</h2>
+
+<p>This is an attempt to build interactive web-based runtimes of a toy language used in <em>15-122 Principle of Imperative Computation</em>, <code class="language-plaintext highlighter-rouge">Clac</code>, with TypeScript and React. You can find the built result at <a href="https://github.com/MarkChenYutian/claculator">https://github.com/MarkChenYutian/claculator</a>.</p>
+
+<p>Due to the AIV (Academic Integrity Violation) policy, I cannot release the source code publicly. However, if you are interested in the source code and is not enrolled in 15-122 currently / will not enroll in 15-122 in the future, feel free to contact me for the source code.</p>
+
+<h2 id="so-cool-how-can-i-deploy-it-on-my-site">So Cool! How Can I deploy it on my site?</h2>
+
+<p>Download the <code class="language-plaintext highlighter-rouge">index.min.js</code> file from <a href="/apps/clac/index.min.js">Here</a>, link it to your webpage with</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- Place this line at the end of your page --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"&lt;your-installation-dir&gt;/index.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div></div>
+
+<p>Then, at where you want to insert the widget, insert this line:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"claculator-interactive"</span> <span class="na">data-mode=</span><span class="s">"embeddable"</span><span class="nt">&gt;&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<h2 id="about-the-clac-language">About The Clac Language</h2>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/Screen%20Shot%202022-04-05%20at%2021.10.44.png" alt="Screen Shot 2022-04-05 at 21.10.44" /></p>
+
+<p>Notes*:</p>
+
+<ol>
+  <li>The <code class="language-plaintext highlighter-rouge">print</code> token causes 𝑛n to be printed, followed by a newline.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">quit</code> token causes the interpreter to stop.</li>
+  <li>This is a 32 bit, two’s complement language, so addition, subtraction, multiplication, and exponentiation should behave just as in C0 without raising any overflow errors.</li>
+  <li>Division or modulus by 0, or division/modulus of <code class="language-plaintext highlighter-rouge">int_min()</code> by -1, which would result in an arithmetic error according to the definition of C0 (see page 4 of the <a href="https://c0.cs.cmu.edu/docs/c0-reference.pdf">C0 Reference</a>), should raise an error in Clac. Negative exponents are undefined and should also raise an error.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">pick</code> token should raise an error if 𝑛n, the value on the top of the stack, is not strictly positive. The <code class="language-plaintext highlighter-rouge">skip</code> token should raise an error if 𝑛n is negative; 0 is acceptable.</li>
+</ol>
+
+<p><strong>* Notes of Notes: Since we are implementing its core with <code class="language-plaintext highlighter-rouge">JavaScript</code>, some specific numerical calculation may not match the original, <code class="language-plaintext highlighter-rouge">C0</code> version’s result.</strong></p>
+
+<script src="/apps/clac/index.min.js"></script>]]></content><author><name>Yutian Chen</name></author><category term="[&quot;Frontend&quot;]" /><category term="Web" /><category term="React" /><summary type="html"><![CDATA[Demo An open-to-use, embeddable clac execution implemented with React and TypeScript. You can try it below! For example, try to input the instruction : square 1 pick * ; 2 square print into the wedget below and see what will happen!]]></summary></entry><entry><title type="html">How to Type LaTeX Fast &amp;amp; Elegant - A Guide from &amp;amp; for Beginner</title><link href="/notes/2022/02/16/type-LaTeX-fast.html" rel="alternate" type="text/html" title="How to Type LaTeX Fast &amp;amp; Elegant - A Guide from &amp;amp; for Beginner" /><published>2022-02-16T00:00:00+00:00</published><updated>2022-02-16T00:00:00+00:00</updated><id>/notes/2022/02/16/type-LaTeX-fast</id><content type="html" xml:base="/notes/2022/02/16/type-LaTeX-fast.html"><![CDATA[<h2 id="1-用-latex-而不是与-latex-搏斗">1 用 LaTeX, 而不是与 LaTeX 搏斗</h2>
+
+<blockquote>
+  <p>LaTeX 的设计哲学是：让使用者付出最少的努力就能得到工整美观的排版</p>
+</blockquote>
+
+<p>然而，讽刺的是，大部分人（至少一开始）的体验似乎都与这个设计哲学正好相反。这是因为我们都习惯了使用 Word 这样“所见即所得”的排版软件/文字编辑器。当我们按下空格的时候，屏幕上就一定会出现一个空格。</p>
+
+<p>在 LaTeX 中，因为使用的是“编辑 - 编译 - 排版”的流程，我们不能直观的立刻看到我们在<code class="language-plaintext highlighter-rouge">TeX</code>文件中做出的改变。当我们在单词之间输入好几个空格却发现排版结果中只有一个空格时，自然会感觉非常奇怪和不适应。</p>
+
+<!--more-->
+
+<blockquote>
+  <p>实际上，很多时候在使用 LaTeX 时如果发现打起来非常麻烦/结果特别丑，大部分时候都是我们在作茧自缚，下面举几个常见的例子 （点击展开）：</p>
+</blockquote>
+
+<ol>
+  <li>
+    <details>
+      <summary>
+        <p><strong>通过 <code class="language-plaintext highlighter-rouge">//</code> 或者 <code class="language-plaintext highlighter-rouge">\newline</code> 来打“回车”，抱怨行和行都“挤在一起”</strong></p>
+      </summary>
+
+      <p>在 LaTeX 中，<code class="language-plaintext highlighter-rouge">//</code> 代表“断行” - 也就是说，下一行的内容与当前在同一段中，但是强制进行一次换行。所以 LaTeX 不会在这两行之间添加额外的空位。</p>
+
+      <p>大部分情况下，你可以将一整段话连续的写在同一行中。LaTeX 会自动根据页面宽度处理换行问题。如果你需要开启一个新的段落，在行和行之间添加一个空行即可。</p>
+
+      <p>正确的段落：</p>
+
+      <blockquote>
+        <pre><code class="tex"> [Paragraph 1] , random text with correct paragraph Pellentesque interdum sapien sed nulla. Proin tincidunt. 
+Aliquam volutpat est vel massa. Sed dolor lacus, imperdiet non, ornare non, commodo eu, neque. Integer pretium semper justo. Proin risus. Nullam id quam. Nam neque. 
+
+[Paragraph 2] , random text with correct paragraph Duis vitae wisi ullamcorper diam congue ultricies. Quisque ligula. Mauris vehicula.</code></pre>
+        <p><img src="https://markdown-img-1304853431.file.myqcloud.com/Screen Shot 2022-02-17 at 12.51.14 AM.png" alt="Screen Shot 2022-02-17 at 12.51.14 AM" /></p>
+      </blockquote>
+
+      <p>错误的段落（用断行，而不是新段落）：</p>
+
+      <blockquote>
+        <pre><code class="tex"> \textbf{[Paragraph 1]} , random text with line break Pellentesque interdum sapien sed nulla. Proin tincidunt. 
+Aliquam volutpat est vel massa. Sed dolor lacus, imperdiet non, ornare non, commodo eu, neque. Integer pretium semper justo. Proin risus. Nullam id quam. Nam neque. \\
+\textbf{[Paragraph 2]} , random text with line break Duis vitae wisi ullamcorper diam congue ultricies. Quisque ligula. Mauris vehicula.</code></pre>
+        <p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217005251.png" alt="20220217005251" />
+经典错上加错：在断行的基础上强行用 <code class="language-plaintext highlighter-rouge">\vspace</code> 等指令拉大行之间的空白，营造一种“分段”的感觉</p>
+      </blockquote>
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <p><strong>通过 <code class="language-plaintext highlighter-rouge">$...$</code> 写公式，抱怨公式都堆到左边，并且挤成一团</strong></p>
+      </summary>
+
+      <p>用 <code class="language-plaintext highlighter-rouge">$...$</code> 符号括起来写的公式是“行内公式” - 也就是说，LaTeX 认为这些公式是跟普通文字写在同一行上的，所以会尽可能的压缩这些公式的高度，并且不会在行和行之间留下额外的空位</p>
+
+      <blockquote>
+        <p>行内公式：</p>
+        <pre><code class="tex">$-\frac{2a \pm \sqrt{b^2 - 4ac}}{b}$</code></pre>
+        <p>结果：$-\frac{2a \pm \sqrt{b^2 - 4ac}}{b}$</p>
+      </blockquote>
+
+      <p>如果需要打大公式，需要使用 <code class="language-plaintext highlighter-rouge">$$...$$</code>（或者 <code class="language-plaintext highlighter-rouge">\begin{equation}...\end{equation}</code>） 打一个“公式块” - 这样渲染出来的公式会自动居中并且占用一个段落的空间</p>
+
+      <blockquote>
+        <p>多行公式：</p>
+
+        <pre><code class="tex">\begin{equation*}
+    -\frac{2a \pm \sqrt{b^2 - 4ac}}{b}
+\end{equation*} </code></pre>
+
+        <p>结果：\(-\frac{2a \pm \sqrt{b^2 - 4ac}}{b}\)</p>
+      </blockquote>
+
+      <p>如果你需要对齐多行公式（比如推导/化简长式子），使用 <code class="language-plaintext highlighter-rouge">\begin{equation}\begin{aligned}</code>…<code class="language-plaintext highlighter-rouge">\end{aligned}\end{equation}</code>。</p>
+
+      <blockquote>
+        <p>带对齐的多行公式：</p>
+        <pre><code class="tex">\begin{equation*}
+    \begin{aligned}
+           E[X + Y] &amp;= \sum_{j = 1}{s_j\cdot P[X + Y = s_j]}\\
+                    &amp;= \sum_{j = 1}{s_j\cdot \sum_{k, l \text{ s.t. } x_k + y_l = s_j}{P[X = x_k, Y = y_l]}}\\
+                    &amp;= \sum_{j}{\sum_{k, l \text{ s.t. } x_k + y_l = s_j}{(x_k + y_l)\cdot P[X = x_k, Y = y_l]}}\\
+                    &amp;= \sum_{k, l}{(x_k + y_l)\cdot P[X = x_k, Y = y_l]}\\
+                    &amp;= \sum_{k, l}{x_k\cdot P[X = x_k, Y = y_l]} + \sum_{k, l}{y_l\cdot P[X = x_k, Y = y_l]}\\
+                    &amp;= \sum_{k}x_k \cdot \sum_{l}{P[X = x_k, Y = y_l]} + \cdots \\
+                    &amp;= E[X] + E[Y]
+    \end{aligned}
+\end{equation*}</code></pre>
+        <p>结果：</p>
+
+        <p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217124654.png" alt="20220217124654" /></p>
+      </blockquote>
+    </details>
+  </li>
+  <li>类似的例子还有很多…… 比如疯狂用 <code class="language-plaintext highlighter-rouge">\;</code> 来代替word里的“空格”， etc.</li>
+</ol>
+
+<p>实际上，对于排版时遇到的大部分场景，LaTeX 都有提供对应的指令或环境，如果不知道对应的指令用 <code class="language-plaintext highlighter-rouge">\vspace</code>或者<code class="language-plaintext highlighter-rouge">\;</code> 来 “蛮干”，“硬干”，相当于是在和 $\LaTeX$ 搏斗，而不是使用它。</p>
+
+<p>当然，也有一些情况，$\LaTeX$ 自带的排版没法满足我们的需求，这种时候，我们应该创建自己的环境/模版/样式，或者找合适的 Package与template，而不是强行拉扯 $\LaTeX$ 提供的默认排版。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>命令/环境/语法</th>
+      <th>解释</th>
+      <th>效果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217124421.png" alt="20220217124421" /></td>
+      <td>多行公式</td>
+      <td><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217124434.png" alt="20220217124434" /></td>
+    </tr>
+    <tr>
+      <td><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217124547.png" alt="20220217124547" /></td>
+      <td>行内公式</td>
+      <td><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217124604.png" alt="20220217124604" /></td>
+    </tr>
+    <tr>
+      <td><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217125002.png" alt="20220217125002" /></td>
+      <td>多行对齐公式</td>
+      <td><img src="https://markdown-img-1304853431.file.myqcloud.com/Screen Shot 2022-02-17 at 12.50.19 PM.png" alt="Screen Shot 2022-02-17 at 12.50.19 PM" /></td>
+    </tr>
+    <tr>
+      <td><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217124317.png" alt="20220217124317" /></td>
+      <td>分页</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217125308.png" alt="20220217125308" /></td>
+      <td>无序列表</td>
+      <td><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217125319.png" alt="20220217125319" /></td>
+    </tr>
+    <tr>
+      <td><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217125340.png" alt="20220217125340" /></td>
+      <td>有序列表</td>
+      <td><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217125357.png" alt="20220217125357" /></td>
+    </tr>
+    <tr>
+      <td><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217125456.png" alt="20220217125456" /></td>
+      <td>无序列表（自定义编号）</td>
+      <td><img src="https://markdown-img-1304853431.file.myqcloud.com/20220217125511.png" alt="20220217125511" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="2-创建快捷指令">2 创建快捷指令</h2>
+
+<h3 id="21-基础快捷指令">2.1 基础快捷指令</h3>
+
+<p>但是这又带来了新的问题</p>
+
+<blockquote>
+  <p>“是啊，LaTeX 有这些默认的模版，但是用起来麻烦死了，你看输入一个多行公式前前后后加起来要打四行，太浪费时间了”</p>
+</blockquote>
+
+<blockquote>
+  <p>“虽然 LaTeX 打的公式很好看，但是真的好麻烦，打一个自然数的符号 $\mathbb{N}$ 要 <code class="language-plaintext highlighter-rouge">\mathbb{N}</code> 这么多个字符！”</p>
+</blockquote>
+
+<p>对于这个问题，LaTeX 自然也有对应的解决方法，我们可以使用 <code class="language-plaintext highlighter-rouge">\setnewcommand</code> 命令为自己常用的符号设置“快捷键”。比如下面的<code class="language-plaintext highlighter-rouge">TeX</code>指令允许我们在接下来的 LaTeX 中使用 <code class="language-plaintext highlighter-rouge">\N</code> 替代 <code class="language-plaintext highlighter-rouge">\mathbb{N}</code>。</p>
+
+<div class="language-tex highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">\newcommand</span><span class="p">{</span><span class="k">\N</span><span class="p">}</span>[0]<span class="p">{</span><span class="k">\mathbb</span><span class="p">{</span>N<span class="p">}}</span>
+</code></pre></div></div>
+
+<p>实际上，你可以将任何常用，但是很麻烦的指令用这种快捷键的形式简化，创建快捷键的语法是</p>
+
+<div class="language-tex highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">\newcommand</span><span class="p">{</span>你想用的快捷指令<span class="p">}</span>[0]<span class="p">{</span>实际上的复杂长指令<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="notification">
+  <p>注意：这些命令应该放在 <code class="language-plaintext highlighter-rouge">\begin{document}</code> 前， <code class="language-plaintext highlighter-rouge">\usepackage{...}</code> 后的位置</p>
+</div>
+
+<div class="notification">
+  <p>:warning: 每新建完一个指令以后，最好<strong>马上尝试重新编译一下文件</strong>，因为有时候新创建的快捷键会和 LaTeX 原有指令冲突，这种时候就会出现一些奇怪的编译错误。（比如 <code class="language-plaintext highlighter-rouge">\and</code> 就是一个TeX的关键字，所以还是乖乖打 <code class="language-plaintext highlighter-rouge">\wedge</code> 吧（狗头））</p>
+</div>
+
+<h3 id="22-带参数的快捷指令">2.2 带参数的快捷指令</h3>
+
+<p>使用一些其它命令，你还可以创建有参数（甚至可以设定可选参数和其缺省值）的快捷指令。比如下面的 TeX 命令会创建一个叫 <code class="language-plaintext highlighter-rouge">\pic</code> 的快捷指令</p>
+
+<div class="language-tex highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">\usepackage</span><span class="p">{</span>xparse<span class="p">}</span>   <span class="c">% 这个包让我们能够生成带“可选参数”的快捷指令</span>
+<span class="c">% ...</span>
+<span class="k">\NewDocumentCommand</span><span class="p">{</span><span class="k">\pic</span><span class="p">}{</span> O<span class="p">{</span><span class="k">\textwidth</span><span class="p">}</span> m <span class="p">}</span>    <span class="c">% O = 可选参数，大括号内为缺省值，m = 必须参数</span>
+<span class="p">{</span>
+  <span class="nt">\begin{center}</span>
+    <span class="nt">\begin{figure}</span>[ht]
+      <span class="k">\centering\includegraphics</span><span class="na">[width=#1]</span><span class="p">{</span>assets/#2<span class="p">}</span>   <span class="c">% 将参数1填到 #1 的位置，参数2填到 #2 的位置</span>
+    <span class="nt">\end{figure}</span>
+  <span class="nt">\end{center}</span><span class="k">\FloatBarrier</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>在这个定义之前，在 LaTeX 中插入与页面等宽的图片 <code class="language-plaintext highlighter-rouge">assets/1.jpeg</code> 要用这么长一段：</p>
+
+<div class="language-tex highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">\begin{center}</span>
+    <span class="nt">\begin{figure}</span>[ht]
+      <span class="k">\centering\includegraphics</span><span class="na">[width=\textwidth]</span><span class="p">{</span>assets/1.jpeg<span class="p">}</span>
+    <span class="nt">\end{figure}</span>
+<span class="nt">\end{center}</span>
+<span class="k">\FloatBarrier</span>
+</code></pre></div></div>
+
+<p>现在，我们只需要 <code class="language-plaintext highlighter-rouge">\pic{1.jpeg}</code> 就可以做到一样的事情。如果我们想指定图片宽度为<code class="language-plaintext highlighter-rouge">300pt</code>，使用定义的可选参数 <code class="language-plaintext highlighter-rouge">\pic[300pt]{1.jpeg}</code> 即可。</p>
+
+<h2 id="3-使用-vs-code-插件-latex-workshop">3 使用 VS Code 插件 LaTeX Workshop</h2>
+
+<div class="info">
+
+  <p><a href="https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop">LaTeX Workshop 插件链接</a></p>
+
+  <p>在 VS Code 上配置和使用 LaTeX 的方法详见插件 Latex Workshop 的安装说明</p>
+</div>
+
+<h3 id="31-创建代码片段">3.1 创建代码片段</h3>
+
+<p>使用自定义的快捷指令可以大幅提高写 LaTeX 速度，但是会降低代码的可读性和灵活性（比如，在刚刚 <code class="language-plaintext highlighter-rouge">\pic</code> 的命令中，如果我想读取的照片不在 <code class="language-plaintext highlighter-rouge">assets</code> 文件夹中，就不能使用这个命令了）。同时，如果别人要读我的 <code class="language-plaintext highlighter-rouge">TeX</code> 文件，他看到 <code class="language-plaintext highlighter-rouge">\pic</code> 这个命令可能会一头雾水，因为这不是标准指令。</p>
+
+<p>这种时候，我们就可以使用 VS Code 的 “Code Snippet” 功能，创建一个“代码模版”。输入特定指令后，在自动补全选项中选择对应的选项，VS Code 会自动向光标位置插入预制好的模版代码。这样，在保证输入效率的前提下，我们可以兼得灵活性和可读性。</p>
+
+<ol>
+  <li>
+    <p>输入设置好的模版简写，在自动补全列表中选中模版</p>
+
+    <p><img src="https://markdown-img-1304853431.file.myqcloud.com/Screen Shot 2022-02-17 at 2.04.53 AM.png" alt="Screen Shot 2022-02-17 at 2.04.53 AM" /></p>
+  </li>
+  <li>
+    <p>按回车，模版被自动插入到文件中，光标自动移动到指定的位置</p>
+
+    <p><img src="https://markdown-img-1304853431.file.myqcloud.com/Screen Shot 2022-02-17 at 2.04.59 AM.png" alt="Screen Shot 2022-02-17 at 2.04.59 AM" /></p>
+  </li>
+</ol>
+
+<p>要设置这样的模版，在 VSCode 打开的 LaTeX 文件夹中（workspace）新建一个叫 <code class="language-plaintext highlighter-rouge">.vscode</code> 的文件夹，在其中新建 <code class="language-plaintext highlighter-rouge">tex_snippet.code-snippets</code> 文件，并使用这样的格式（JSON格式）书写：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+	</span><span class="nl">"Clean Equation Block"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+		</span><span class="nl">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"latex"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EQ*"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"body"</span><span class="p">:[</span><span class="w">
+			</span><span class="s2">"</span><span class="se">\\</span><span class="s2">begin{equation*}"</span><span class="p">,</span><span class="w">
+			</span><span class="s2">"    $1"</span><span class="p">,</span><span class="w">
+			</span><span class="s2">"</span><span class="se">\\</span><span class="s2">end{equation*}"</span><span class="w">
+		</span><span class="p">]</span><span class="w">
+	</span><span class="p">},</span><span class="w">
+    </span><span class="nl">"新的模版描述"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"latex"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">我们的模版只在</span><span class="w"> </span><span class="err">LaTeX</span><span class="w"> </span><span class="err">文件中生效</span><span class="w">
+        </span><span class="nl">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WHATEVER"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">模版的简写，一般用全大写字母，减小误触发可能</span><span class="w">
+        </span><span class="nl">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"first line of template"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"    $1 &lt;- cursor will stop here after applying template"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"end the template"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="32-使用插件内置的快捷键模版">3.2 使用插件内置的快捷键/模版</h3>
+
+<p>LaTeX workshop 插件内置了许多非常常用的快捷键和代码模版，这里提供其中一些常用的快捷键：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>模版简写</th>
+      <th>解释</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BEN</code></td>
+      <td>有序列表（enumerate 环境）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BIT</code></td>
+      <td>无序列表（itemize 环境）</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th>指令</th>
+      <th>内容</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">@a</code></td>
+      <td><code class="language-plaintext highlighter-rouge">\alpha</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">@A</code></td>
+      <td><code class="language-plaintext highlighter-rouge">\Alpha</code></td>
+    </tr>
+    <tr>
+      <td>…</td>
+      <td>…（大部分希腊字母都可以用 @ + 对应英文字母打出来）</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">@6</code></td>
+      <td><code class="language-plaintext highlighter-rouge">\partial</code> 偏微分符号</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">@/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">\frac{}{}</code> 分数</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- <div class="notification">本指南仅供参考，本人无义务也不保证帮任何人解决 LaTeX 环境配置等问题。</div> -->]]></content><author><name>Yutian Chen</name></author><category term="[&quot;Notes&quot;]" /><category term="Notes" /><category term="Random" /><summary type="html"><![CDATA[1 用 LaTeX, 而不是与 LaTeX 搏斗 LaTeX 的设计哲学是：让使用者付出最少的努力就能得到工整美观的排版 然而，讽刺的是，大部分人（至少一开始）的体验似乎都与这个设计哲学正好相反。这是因为我们都习惯了使用 Word 这样“所见即所得”的排版软件/文字编辑器。当我们按下空格的时候，屏幕上就一定会出现一个空格。 在 LaTeX 中，因为使用的是“编辑 - 编译 - 排版”的流程，我们不能直观的立刻看到我们在TeX文件中做出的改变。当我们在单词之间输入好几个空格却发现排版结果中只有一个空格时，自然会感觉非常奇怪和不适应。]]></summary></entry><entry><title type="html">The Fences | AR Web Application</title><link href="/frontend/2022/02/11/the-fences.html" rel="alternate" type="text/html" title="The Fences | AR Web Application" /><published>2022-02-11T00:00:00+00:00</published><updated>2022-02-11T00:00:00+00:00</updated><id>/frontend/2022/02/11/the-fences</id><content type="html" xml:base="/frontend/2022/02/11/the-fences.html"><![CDATA[<h2 id="in-a-sentence-what-is-it">In a Sentence, What is It?</h2>
+
+<p>Our inspiration came from The Fence at CMU:</p>
+
+<p>By providing a synchronized, immersive AR experience across different platforms, we aim to build a bond between virtual space and physical world, allowing people to share their ideas openly, just like role of The Fence.</p>
+
+<!--more-->
+
+<h2 id="short-demo">Short Demo</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>iOS Application</th>
+      <th>Web Application</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="https://user-images.githubusercontent.com/47029019/152687716-21fb26b1-a8f5-4d14-b952-7df44f0b2eaa.gif" style="height: 25rem" /></td>
+      <td><img src="https://user-images.githubusercontent.com/47029019/152687732-d309165a-c033-444b-8bb8-8011d533efcf.gif" alt="web-demo-min" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>You can experience the web application here: <a href="https://the-fence-340405.web.app/frontend/viewer/">https://the-fence-340405.web.app/frontend/viewer/</a>.</p>
+
+<div class="notification">
+  <p>However, since the application requires specific QR-code to detect a board, you will not see any AR content unless you print the QR code denoting <code class="language-plaintext highlighter-rouge">UL-6d44ae39</code> and <code class="language-plaintext highlighter-rouge">DR-6d44ae39</code> and stick them on the wall.</p>
+
+  <p>:warning: Our application relies on the QR-detector built in browser. However, it is known that <strong>QR-detector in Chrome on MacOS has a memory leak problem</strong>. So the webpage may use up to 7GB of memory if you leave it on for 2hrs.</p>
+</div>
+
+<h2 id="how-we-implement-these-magical-apps-brief-version">How We Implement These Magical Apps? (Brief Version)</h2>
+
+<h3 id="mobile-application">Mobile Application</h3>
+
+<p>For mobile application, we build upon <code class="language-plaintext highlighter-rouge">AR Kit</code>, <code class="language-plaintext highlighter-rouge">ML Core</code> and <code class="language-plaintext highlighter-rouge">Scene Kit</code>. With <code class="language-plaintext highlighter-rouge">ML Core</code> recognizing physical environment, <code class="language-plaintext highlighter-rouge">AR Kit</code> initializing AR space, and <code class="language-plaintext highlighter-rouge">Scene Kit</code> rendering AR content, our app provide user with a fluent and immersive AR experience.</p>
+
+<p><img src="https://markdown-img-1304853431.cos.ap-guangzhou.myqcloud.com/152685412-22d75f03-0385-4552-8917-f785381ffb69.jpg" alt="Mobile Application" /></p>
+
+<h3 id="web-application">Web Application</h3>
+
+<p>For web application, we use the <code class="language-plaintext highlighter-rouge">WebRTC</code>, <code class="language-plaintext highlighter-rouge">OpenCV</code> and <code class="language-plaintext highlighter-rouge">WebAssembly</code> to create a chance to view experience for all mobile users without any need of installing application.</p>
+
+<p><img src="https://markdown-img-1304853431.cos.ap-guangzhou.myqcloud.com/152671055-229ad26c-dadf-4f90-a28b-d92802374c21.jpg" alt="Web Application" /></p>
+
+<p>Specifically, we use the QR Code not only to identify the current board’s ID, but also calculate the perspective matrix of current frame and use it to draw AR overlay on browser.</p>
+
+<h3 id="serverless-backend">Serverless Backend</h3>
+
+<p>For backend support, we deploy our product on <code class="language-plaintext highlighter-rouge">Firebase</code> and <code class="language-plaintext highlighter-rouge">Cloud Run</code> from Google Cloud Platform. The nature of cloud service allow our app to have low latency and high availability across different splatforms.</p>
+
+<p><img src="https://markdown-img-1304853431.cos.ap-guangzhou.myqcloud.com/152683764-030f614c-e7c3-4dc1-8f72-7833ac1443a5.jpg" alt="Serverless Backend" /></p>
+
+<h2 id="technical-details---ar-web-application">Technical Details - AR Web Application</h2>
+
+<h3 id="why-we-call-this-pseudo-ar-experience">Why we call this <em>Pseudo-AR Experience</em>?</h3>
+
+<p>The special nature of this project (showing AR-like content boards on the wall) makes it possible to create a real-time renderer purely through web technical stack (Javascript and WebAssembly).</p>
+
+<p>Unlike the broad definition of AR objects (which may float in the 3D space around user or some “anchor”), the content we need to render is ensured to stay on a plane.</p>
+
+<h3 id="how-we-render-actually">How We Render, Actually?</h3>
+
+<p>Since we have an QR Code as anchor (Up-Left corner of content), we can calculate the <strong>perspective transform matrix</strong> using original dimension of QR code and detected contour of QR Code.</p>
+
+<p>As the content is on the same plane as the QR Code, it’s safe for us to assume that they share the same perspective transform matrix. Therefore, we can re-apply the resulted transformation on raw image to render it.</p>
+
+<p><img src="https://markdown-img-1304853431.cos.ap-guangzhou.myqcloud.com/152671125-abfa8e38-0c09-423e-8637-7a2328dd5443.jpg" alt="Untitled Notebook-33" /></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">getPerspectiveMatrix</span><span class="p">(</span><span class="nx">p1</span><span class="p">,</span> <span class="nx">p2</span><span class="p">,</span> <span class="nx">p3</span><span class="p">,</span> <span class="nx">p4</span><span class="p">,</span> <span class="nx">bboxW</span><span class="p">,</span> <span class="nx">bboxH</span><span class="p">)</span>
+<span class="c1">// Originally p1, p2, p3, p4 in QR detected.</span>
+<span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">corner1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Point</span><span class="p">(</span><span class="nx">p1</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">p1</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">corner2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Point</span><span class="p">(</span><span class="nx">p2</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">p2</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">corner3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Point</span><span class="p">(</span><span class="nx">p3</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">p3</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">corner4</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Point</span><span class="p">(</span><span class="nx">p4</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">p4</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">perspectiveArray</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nx">corner1</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">corner1</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span> 
+        <span class="nx">corner2</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">corner2</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
+        <span class="nx">corner3</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">corner3</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
+        <span class="nx">corner4</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">corner4</span><span class="p">.</span><span class="nx">y</span>
+    <span class="p">];</span>
+    <span class="kd">let</span> <span class="nx">srcArray</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">bboxW</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">bboxW</span><span class="p">,</span> <span class="nx">bboxH</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="nx">bboxH</span>
+    <span class="p">];</span>
+    <span class="kd">let</span> <span class="nx">perspectiveMat</span> <span class="o">=</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">matFromArray</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">CV_32FC2</span><span class="p">,</span> <span class="nx">perspectiveArray</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">srcMat</span> <span class="o">=</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">matFromArray</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">CV_32FC2</span><span class="p">,</span> <span class="nx">srcArray</span><span class="p">);</span>
+    <span class="nx">T</span> <span class="o">=</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">getPerspectiveTransform</span><span class="p">(</span><span class="nx">srcMat</span><span class="p">,</span> <span class="nx">perspectiveMat</span><span class="p">);</span>
+    <span class="nx">srcMat</span><span class="p">.</span><span class="k">delete</span><span class="p">();</span> <span class="nx">perspectiveMat</span><span class="p">.</span><span class="k">delete</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nx">T</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">renderPerspective</span><span class="p">(</span><span class="nx">p0</span><span class="p">,</span> <span class="nx">p1</span><span class="p">,</span> <span class="nx">p2</span><span class="p">,</span> <span class="nx">p3</span><span class="p">,</span> <span class="nx">bboxW</span><span class="p">,</span> <span class="nx">bboxH</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">boardMat</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">isLoaded</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">board-src</span><span class="dl">"</span><span class="p">))){</span>
+        <span class="nx">boardMat</span> <span class="o">=</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">imread</span><span class="p">(</span><span class="dl">"</span><span class="s2">board-src</span><span class="dl">"</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">boardMat</span> <span class="o">=</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">imread</span><span class="p">(</span><span class="dl">"</span><span class="s2">loading</span><span class="dl">"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nx">T</span> <span class="o">=</span> <span class="nx">getPerspectiveMatrix</span><span class="p">(</span><span class="nx">p0</span><span class="p">,</span> <span class="nx">p1</span><span class="p">,</span> <span class="nx">p2</span><span class="p">,</span> <span class="nx">p3</span><span class="p">,</span> <span class="nx">bboxW</span><span class="p">,</span> <span class="nx">bboxH</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">perspectiveMat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Mat</span><span class="p">(</span><span class="nx">boardElem</span><span class="p">.</span><span class="nx">height</span><span class="p">,</span> <span class="nx">boardElem</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">CV_8UC4</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">dsize</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Size</span><span class="p">(</span><span class="nx">overlayElem</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="nx">overlayElem</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
+    <span class="nx">cv</span><span class="p">.</span><span class="nx">warpPerspective</span><span class="p">(</span>
+        <span class="nx">boardMat</span><span class="p">,</span> <span class="nx">perspectiveMat</span><span class="p">,</span> <span class="nx">T</span><span class="p">,</span> <span class="nx">dsize</span><span class="p">,</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">INTER_LINEAR</span><span class="p">,</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">BORDER_CONSTANT</span><span class="p">,</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Scalar</span><span class="p">()</span>
+    <span class="p">);</span>
+    <span class="nx">cv</span><span class="p">.</span><span class="nx">imshow</span><span class="p">(</span><span class="nx">overlayElemID</span><span class="p">,</span> <span class="nx">perspectiveMat</span><span class="p">);</span>
+    <span class="nx">boardMat</span><span class="p">.</span><span class="k">delete</span><span class="p">();</span> <span class="nx">T</span><span class="p">.</span><span class="k">delete</span><span class="p">();</span> <span class="nx">perspectiveMat</span><span class="p">.</span><span class="k">delete</span><span class="p">();</span>
+    <span class="nx">calculateRatio</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>By laying the original video, rendered output canvas, and HTML Document Elements in a stack, we can create a <em>pseudo-AR</em> experience for users, <strong>even when their device does not support standard WebXR APIs</strong>.</p>
+
+<p><img src="https://markdown-img-1304853431.cos.ap-guangzhou.myqcloud.com/152671154-8bd10367-223d-455e-b1f5-823ea3a3d4d0.jpg" alt="Untitled Notebook-27" /></p>
+
+<p>When a new detection result arrives, in two cases we don’t need to update our render result:</p>
+
+<ol>
+  <li>No QR Code is detected at this frame (the QR Detector occationally miss QR codes in view) <strong>Countinuity Enhancement Intervened</strong></li>
+  <li>The new perspective matrix is almost the same as previous one <strong>Stability Enhancement Intervened</strong></li>
+</ol>
+
+<h3 id="continuity-enhancement">Continuity Enhancement</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">barcodeDetector</code> provided by Chrome is fast, but also unstable. Minor change in perspective or camera position may lead to a loss of 1-2 frames of detection result.</p>
+
+<p>When there are only 1-2 frames with no QR code is detected, the renderer will Not clear the canvas at once. Instead, it will begin to count the number of frame without QR detection result. If the counter reach 10, the canvas will then be cleared. This can greatly relief the flickering problem in AR Content.</p>
+
+<h3 id="stability-enhancement">Stability Enhancement</h3>
+
+<p>If we render every frame based on the result of QR Scanner directly, the content will be highly unstable and have poor user experience.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Before Stabilization</th>
+      <th>After Stabilization</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="https://user-images.githubusercontent.com/47029019/152672103-b7260f7c-171b-4b82-894c-69c18187a250.gif" alt="BadExample-min" /></td>
+      <td><img src="https://user-images.githubusercontent.com/47029019/152672171-288b6b09-8fe7-4a75-8b52-c317f3769cdb.gif" alt="GoodExample-min" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>When the new QR Code <code class="language-plaintext highlighter-rouge">P1</code> is within three pixels away from previos detection result (<code class="language-plaintext highlighter-rouge">P1'</code>), we will NOT update the AR Render. This can minimize the “shaking” of AR content, and provide a better user experience.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Illustration</th>
+      <th>Explaination</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="https://user-images.githubusercontent.com/47029019/152673584-0124049d-506e-456f-802f-09d08c06fbe7.jpeg" alt="illustration" /></td>
+      <td>If the black square is detection result at frame <code class="language-plaintext highlighter-rouge">t</code>, the AR content will be re-rendered only in case of green frames. If the detection result at <code class="language-plaintext highlighter-rouge">t + 1</code> is the red bounding box, then AR content will NOT be re-rendered.</td>
+    </tr>
+  </tbody>
+</table>]]></content><author><name>Yutian Chen</name></author><category term="[&quot;Frontend&quot;]" /><category term="Web" /><summary type="html"><![CDATA[In a Sentence, What is It? Our inspiration came from The Fence at CMU: By providing a synchronized, immersive AR experience across different platforms, we aim to build a bond between virtual space and physical world, allowing people to share their ideas openly, just like role of The Fence.]]></summary></entry></feed>

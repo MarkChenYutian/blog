@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>The Fences AR Web Application | Yutian’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="The Fences AR Web Application" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="In a Sentence, What is It? Our inspiration came from The Fence at CMU: By providing a synchronized, immersive AR experience across different platforms, we aim to build a bond between virtual space and physical world, allowing people to share their ideas openly, just like role of The Fence." />
+<meta property="og:description" content="In a Sentence, What is It? Our inspiration came from The Fence at CMU: By providing a synchronized, immersive AR experience across different platforms, we aim to build a bond between virtual space and physical world, allowing people to share their ideas openly, just like role of The Fence." />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-02-11T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="The Fences AR Web Application" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yutian Chen"},"dateModified":"2022-02-11T00:00:00+00:00","datePublished":"2022-02-11T00:00:00+00:00","description":"In a Sentence, What is It? Our inspiration came from The Fence at CMU: By providing a synchronized, immersive AR experience across different platforms, we aim to build a bond between virtual space and physical world, allowing people to share their ideas openly, just like role of The Fence.","headline":"The Fences AR Web Application","mainEntityOfPage":{"@type":"WebPage","@id":"/frontend/2022/02/11/the-fences.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"url":"/frontend/2022/02/11/the-fences.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#in-a-sentence-what-is-it">In a Sentence, What is It?</a></li>
+  <li><a href="#short-demo">Short Demo</a></li>
+  <li><a href="#how-we-implement-these-magical-apps-brief-version">How We Implement These Magical Apps? (Brief Version)</a>
+    <ul>
+      <li><a href="#mobile-application">Mobile Application</a></li>
+      <li><a href="#web-application">Web Application</a></li>
+      <li><a href="#serverless-backend">Serverless Backend</a></li>
+    </ul>
+  </li>
+  <li><a href="#technical-details---ar-web-application">Technical Details - AR Web Application</a>
+    <ul>
+      <li><a href="#why-we-call-this-pseudo-ar-experience">Why we call this Pseudo-AR Experience?</a></li>
+      <li><a href="#how-we-render-actually">How We Render, Actually?</a></li>
+      <li><a href="#continuity-enhancement">Continuity Enhancement</a></li>
+      <li><a href="#stability-enhancement">Stability Enhancement</a></li>
+    </ul>
+  </li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">The Fences | AR Web Application</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2022-02-11T00:00:00+00:00" itemprop="datePublished">
+        Feb 11, 2022
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="in-a-sentence-what-is-it">In a Sentence, What is It?</h2>
+
+<p>Our inspiration came from The Fence at CMU:</p>
+
+<p>By providing a synchronized, immersive AR experience across different platforms, we aim to build a bond between virtual space and physical world, allowing people to share their ideas openly, just like role of The Fence.</p>
+
+<!--more-->
+
+<h2 id="short-demo">Short Demo</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>iOS Application</th>
+      <th>Web Application</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="https://user-images.githubusercontent.com/47029019/152687716-21fb26b1-a8f5-4d14-b952-7df44f0b2eaa.gif" style="height: 25rem" /></td>
+      <td><img src="https://user-images.githubusercontent.com/47029019/152687732-d309165a-c033-444b-8bb8-8011d533efcf.gif" alt="web-demo-min" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>You can experience the web application here: <a href="https://the-fence-340405.web.app/frontend/viewer/">https://the-fence-340405.web.app/frontend/viewer/</a>.</p>
+
+<div class="notification">
+  <p>However, since the application requires specific QR-code to detect a board, you will not see any AR content unless you print the QR code denoting <code class="language-plaintext highlighter-rouge">UL-6d44ae39</code> and <code class="language-plaintext highlighter-rouge">DR-6d44ae39</code> and stick them on the wall.</p>
+
+  <p>:warning: Our application relies on the QR-detector built in browser. However, it is known that <strong>QR-detector in Chrome on MacOS has a memory leak problem</strong>. So the webpage may use up to 7GB of memory if you leave it on for 2hrs.</p>
+</div>
+
+<h2 id="how-we-implement-these-magical-apps-brief-version">How We Implement These Magical Apps? (Brief Version)</h2>
+
+<h3 id="mobile-application">Mobile Application</h3>
+
+<p>For mobile application, we build upon <code class="language-plaintext highlighter-rouge">AR Kit</code>, <code class="language-plaintext highlighter-rouge">ML Core</code> and <code class="language-plaintext highlighter-rouge">Scene Kit</code>. With <code class="language-plaintext highlighter-rouge">ML Core</code> recognizing physical environment, <code class="language-plaintext highlighter-rouge">AR Kit</code> initializing AR space, and <code class="language-plaintext highlighter-rouge">Scene Kit</code> rendering AR content, our app provide user with a fluent and immersive AR experience.</p>
+
+<p><img src="https://markdown-img-1304853431.cos.ap-guangzhou.myqcloud.com/152685412-22d75f03-0385-4552-8917-f785381ffb69.jpg" alt="Mobile Application" /></p>
+
+<h3 id="web-application">Web Application</h3>
+
+<p>For web application, we use the <code class="language-plaintext highlighter-rouge">WebRTC</code>, <code class="language-plaintext highlighter-rouge">OpenCV</code> and <code class="language-plaintext highlighter-rouge">WebAssembly</code> to create a chance to view experience for all mobile users without any need of installing application.</p>
+
+<p><img src="https://markdown-img-1304853431.cos.ap-guangzhou.myqcloud.com/152671055-229ad26c-dadf-4f90-a28b-d92802374c21.jpg" alt="Web Application" /></p>
+
+<p>Specifically, we use the QR Code not only to identify the current board’s ID, but also calculate the perspective matrix of current frame and use it to draw AR overlay on browser.</p>
+
+<h3 id="serverless-backend">Serverless Backend</h3>
+
+<p>For backend support, we deploy our product on <code class="language-plaintext highlighter-rouge">Firebase</code> and <code class="language-plaintext highlighter-rouge">Cloud Run</code> from Google Cloud Platform. The nature of cloud service allow our app to have low latency and high availability across different splatforms.</p>
+
+<p><img src="https://markdown-img-1304853431.cos.ap-guangzhou.myqcloud.com/152683764-030f614c-e7c3-4dc1-8f72-7833ac1443a5.jpg" alt="Serverless Backend" /></p>
+
+<h2 id="technical-details---ar-web-application">Technical Details - AR Web Application</h2>
+
+<h3 id="why-we-call-this-pseudo-ar-experience">Why we call this <em>Pseudo-AR Experience</em>?</h3>
+
+<p>The special nature of this project (showing AR-like content boards on the wall) makes it possible to create a real-time renderer purely through web technical stack (Javascript and WebAssembly).</p>
+
+<p>Unlike the broad definition of AR objects (which may float in the 3D space around user or some “anchor”), the content we need to render is ensured to stay on a plane.</p>
+
+<h3 id="how-we-render-actually">How We Render, Actually?</h3>
+
+<p>Since we have an QR Code as anchor (Up-Left corner of content), we can calculate the <strong>perspective transform matrix</strong> using original dimension of QR code and detected contour of QR Code.</p>
+
+<p>As the content is on the same plane as the QR Code, it’s safe for us to assume that they share the same perspective transform matrix. Therefore, we can re-apply the resulted transformation on raw image to render it.</p>
+
+<p><img src="https://markdown-img-1304853431.cos.ap-guangzhou.myqcloud.com/152671125-abfa8e38-0c09-423e-8637-7a2328dd5443.jpg" alt="Untitled Notebook-33" /></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">getPerspectiveMatrix</span><span class="p">(</span><span class="nx">p1</span><span class="p">,</span> <span class="nx">p2</span><span class="p">,</span> <span class="nx">p3</span><span class="p">,</span> <span class="nx">p4</span><span class="p">,</span> <span class="nx">bboxW</span><span class="p">,</span> <span class="nx">bboxH</span><span class="p">)</span>
+<span class="c1">// Originally p1, p2, p3, p4 in QR detected.</span>
+<span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">corner1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Point</span><span class="p">(</span><span class="nx">p1</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">p1</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">corner2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Point</span><span class="p">(</span><span class="nx">p2</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">p2</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">corner3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Point</span><span class="p">(</span><span class="nx">p3</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">p3</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">corner4</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Point</span><span class="p">(</span><span class="nx">p4</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">p4</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">perspectiveArray</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nx">corner1</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">corner1</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span> 
+        <span class="nx">corner2</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">corner2</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
+        <span class="nx">corner3</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">corner3</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
+        <span class="nx">corner4</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">corner4</span><span class="p">.</span><span class="nx">y</span>
+    <span class="p">];</span>
+    <span class="kd">let</span> <span class="nx">srcArray</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">bboxW</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">bboxW</span><span class="p">,</span> <span class="nx">bboxH</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="nx">bboxH</span>
+    <span class="p">];</span>
+    <span class="kd">let</span> <span class="nx">perspectiveMat</span> <span class="o">=</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">matFromArray</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">CV_32FC2</span><span class="p">,</span> <span class="nx">perspectiveArray</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">srcMat</span> <span class="o">=</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">matFromArray</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">CV_32FC2</span><span class="p">,</span> <span class="nx">srcArray</span><span class="p">);</span>
+    <span class="nx">T</span> <span class="o">=</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">getPerspectiveTransform</span><span class="p">(</span><span class="nx">srcMat</span><span class="p">,</span> <span class="nx">perspectiveMat</span><span class="p">);</span>
+    <span class="nx">srcMat</span><span class="p">.</span><span class="k">delete</span><span class="p">();</span> <span class="nx">perspectiveMat</span><span class="p">.</span><span class="k">delete</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nx">T</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">renderPerspective</span><span class="p">(</span><span class="nx">p0</span><span class="p">,</span> <span class="nx">p1</span><span class="p">,</span> <span class="nx">p2</span><span class="p">,</span> <span class="nx">p3</span><span class="p">,</span> <span class="nx">bboxW</span><span class="p">,</span> <span class="nx">bboxH</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">boardMat</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">isLoaded</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">board-src</span><span class="dl">"</span><span class="p">))){</span>
+        <span class="nx">boardMat</span> <span class="o">=</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">imread</span><span class="p">(</span><span class="dl">"</span><span class="s2">board-src</span><span class="dl">"</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">boardMat</span> <span class="o">=</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">imread</span><span class="p">(</span><span class="dl">"</span><span class="s2">loading</span><span class="dl">"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nx">T</span> <span class="o">=</span> <span class="nx">getPerspectiveMatrix</span><span class="p">(</span><span class="nx">p0</span><span class="p">,</span> <span class="nx">p1</span><span class="p">,</span> <span class="nx">p2</span><span class="p">,</span> <span class="nx">p3</span><span class="p">,</span> <span class="nx">bboxW</span><span class="p">,</span> <span class="nx">bboxH</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">perspectiveMat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Mat</span><span class="p">(</span><span class="nx">boardElem</span><span class="p">.</span><span class="nx">height</span><span class="p">,</span> <span class="nx">boardElem</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">CV_8UC4</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">dsize</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Size</span><span class="p">(</span><span class="nx">overlayElem</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="nx">overlayElem</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
+    <span class="nx">cv</span><span class="p">.</span><span class="nx">warpPerspective</span><span class="p">(</span>
+        <span class="nx">boardMat</span><span class="p">,</span> <span class="nx">perspectiveMat</span><span class="p">,</span> <span class="nx">T</span><span class="p">,</span> <span class="nx">dsize</span><span class="p">,</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">INTER_LINEAR</span><span class="p">,</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">BORDER_CONSTANT</span><span class="p">,</span> <span class="k">new</span> <span class="nx">cv</span><span class="p">.</span><span class="nx">Scalar</span><span class="p">()</span>
+    <span class="p">);</span>
+    <span class="nx">cv</span><span class="p">.</span><span class="nx">imshow</span><span class="p">(</span><span class="nx">overlayElemID</span><span class="p">,</span> <span class="nx">perspectiveMat</span><span class="p">);</span>
+    <span class="nx">boardMat</span><span class="p">.</span><span class="k">delete</span><span class="p">();</span> <span class="nx">T</span><span class="p">.</span><span class="k">delete</span><span class="p">();</span> <span class="nx">perspectiveMat</span><span class="p">.</span><span class="k">delete</span><span class="p">();</span>
+    <span class="nx">calculateRatio</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>By laying the original video, rendered output canvas, and HTML Document Elements in a stack, we can create a <em>pseudo-AR</em> experience for users, <strong>even when their device does not support standard WebXR APIs</strong>.</p>
+
+<p><img src="https://markdown-img-1304853431.cos.ap-guangzhou.myqcloud.com/152671154-8bd10367-223d-455e-b1f5-823ea3a3d4d0.jpg" alt="Untitled Notebook-27" /></p>
+
+<p>When a new detection result arrives, in two cases we don’t need to update our render result:</p>
+
+<ol>
+  <li>No QR Code is detected at this frame (the QR Detector occationally miss QR codes in view) <strong>Countinuity Enhancement Intervened</strong></li>
+  <li>The new perspective matrix is almost the same as previous one <strong>Stability Enhancement Intervened</strong></li>
+</ol>
+
+<h3 id="continuity-enhancement">Continuity Enhancement</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">barcodeDetector</code> provided by Chrome is fast, but also unstable. Minor change in perspective or camera position may lead to a loss of 1-2 frames of detection result.</p>
+
+<p>When there are only 1-2 frames with no QR code is detected, the renderer will Not clear the canvas at once. Instead, it will begin to count the number of frame without QR detection result. If the counter reach 10, the canvas will then be cleared. This can greatly relief the flickering problem in AR Content.</p>
+
+<h3 id="stability-enhancement">Stability Enhancement</h3>
+
+<p>If we render every frame based on the result of QR Scanner directly, the content will be highly unstable and have poor user experience.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Before Stabilization</th>
+      <th>After Stabilization</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="https://user-images.githubusercontent.com/47029019/152672103-b7260f7c-171b-4b82-894c-69c18187a250.gif" alt="BadExample-min" /></td>
+      <td><img src="https://user-images.githubusercontent.com/47029019/152672171-288b6b09-8fe7-4a75-8b52-c317f3769cdb.gif" alt="GoodExample-min" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>When the new QR Code <code class="language-plaintext highlighter-rouge">P1</code> is within three pixels away from previos detection result (<code class="language-plaintext highlighter-rouge">P1'</code>), we will NOT update the AR Render. This can minimize the “shaking” of AR content, and provide a better user experience.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Illustration</th>
+      <th>Explaination</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="https://user-images.githubusercontent.com/47029019/152673584-0124049d-506e-456f-802f-09d08c06fbe7.jpeg" alt="illustration" /></td>
+      <td>If the black square is detection result at frame <code class="language-plaintext highlighter-rouge">t</code>, the AR content will be re-rendered only in case of green frames. If the detection result at <code class="language-plaintext highlighter-rouge">t + 1</code> is the red bounding box, then AR content will NOT be re-rendered.</td>
+    </tr>
+  </tbody>
+</table>
+
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fa fa-folder-o"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#frontend">Frontend</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fa fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#web">web</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/frontend/2022/01/19/serverless-file-system.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fa fa-arrow-left"></i> Serverless File System based on AWS S3
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/notes/2022/02/16/type-LaTeX-fast.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            How to Type LaTeX Fast &amp; Elegant - A Guide from &amp; for Beginner
+ <i class="fa fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

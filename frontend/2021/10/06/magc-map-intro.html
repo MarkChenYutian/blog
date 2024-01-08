@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>MAGC Map Structural Design | Yutian’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="MAGC Map Structural Design" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="About This project is one of the HackCMU 2021 projects. The MAGC Map won the 3rd prize in HackCMU 2021. DevPost Link What is MAGC Map The MAGC Map is a non-linear structured knowledge map that support real-time collaboration." />
+<meta property="og:description" content="About This project is one of the HackCMU 2021 projects. The MAGC Map won the 3rd prize in HackCMU 2021. DevPost Link What is MAGC Map The MAGC Map is a non-linear structured knowledge map that support real-time collaboration." />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-10-06T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="MAGC Map Structural Design" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yutian Chen"},"dateModified":"2021-10-06T00:00:00+00:00","datePublished":"2021-10-06T00:00:00+00:00","description":"About This project is one of the HackCMU 2021 projects. The MAGC Map won the 3rd prize in HackCMU 2021. DevPost Link What is MAGC Map The MAGC Map is a non-linear structured knowledge map that support real-time collaboration.","headline":"MAGC Map Structural Design","mainEntityOfPage":{"@type":"WebPage","@id":"/frontend/2021/10/06/magc-map-intro.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"url":"/frontend/2021/10/06/magc-map-intro.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#about">About</a></li>
+  <li><a href="#what-is-magc-map">What is MAGC Map</a></li>
+  <li><a href="#technical-details">Technical Details</a>
+    <ul>
+      <li><a href="#page-structure">Page Structure</a></li>
+      <li><a href="#data-structure">Data Structure</a></li>
+      <li><a href="#update-protocol-v2">Update Protocol v2</a></li>
+    </ul>
+  </li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">MAGC Map Structural Design</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2021-10-06T00:00:00+00:00" itemprop="datePublished">
+        Oct 6, 2021
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="about">About</h2>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/561633232066_.pic_hd.jpg" alt="561633232066" /></p>
+
+<p>This project is one of the HackCMU 2021 projects. The MAGC Map won the <strong>3rd prize</strong> in HackCMU 2021. <a href="https://devpost.com/software/magc-map?ref_content=my-projects-tab&amp;ref_feature=my_projects">DevPost Link</a></p>
+
+<h2 id="what-is-magc-map">What is MAGC Map</h2>
+
+<p>The MAGC Map is a non-linear structured knowledge map that support real-time collaboration.</p>
+
+<!--more-->
+
+<h2 id="technical-details">Technical Details</h2>
+
+<p>We use the traditional client/server structure for this project.</p>
+
+<p>The client will run directly on the browser through JavaScript and maintain the GUI and animation.</p>
+
+<p>The server is written in Flask (Python 3) and store the data</p>
+
+<h3 id="page-structure">Page Structure</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Home Page
+  |
+  |-- Board 1
+  |     |-- Node 1
+  |     |-- Node 2
+  |     |     |-- Message Block 1
+  |     |     |-- Message Block 2
+  |     |-- Node 3
+  |-- Board 2
+  |     |
+  ...
+</code></pre></div></div>
+
+<h3 id="data-structure">Data Structure</h3>
+
+<p>Each board is stored as a <code class="language-plaintext highlighter-rouge">json</code> file in format</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"nodes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string (uuid4)"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Label Of Node"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"styles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CSS-like color string"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"block"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"content_id1"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"content_id2"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"edges"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string (uuid4)"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"from"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nodeID1"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nodeID2"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string (uuid4)"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"from"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nodeID1"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nodeID2"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"contents"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"content_id1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"markdown"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This is an **Example**."</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"content_id2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"markdown"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Another $</span><span class="se">\L</span><span class="s2">aTeX$ Example."</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="update-protocol-v2">Update Protocol v2</h3>
+
+<p>This protocol defines how the client (browser) communicate with the server.</p>
+
+<h4 id="protocol-format">Protocol Format</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string (uuid)"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"operation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string {ADD, DEL, MOD, SYC, NOP, NEW}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"property"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string {node, edge, content}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+   	</span><span class="nl">"src"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string [Board Name]"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="protocol-operation-definition">Protocol Operation Definition</h4>
+
+<p>In the following passage, we call <code class="language-plaintext highlighter-rouge">node</code>, <code class="language-plaintext highlighter-rouge">edge</code>, <code class="language-plaintext highlighter-rouge">content</code></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Operation</th>
+      <th>Client to Server</th>
+      <th>Server to Client</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ADD</code></td>
+      <td>Ask server to add a new entity</td>
+      <td>Server require Client add new entity</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DEL</code></td>
+      <td>Remove an entity from server storage</td>
+      <td>Remove an expired entity from Client</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MOD</code></td>
+      <td>Modify (overwrite) an entity in Server</td>
+      <td>Modify (overwrite) an entity in Client</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SYC</code></td>
+      <td>Request sync from Server</td>
+      <td>Provide later versions to client</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">NOP</code></td>
+      <td>–</td>
+      <td>Do nothing, client is already up-to-date</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">NEW</code></td>
+      <td>Create a new Board</td>
+      <td>Completely Reload the JSON File and refresh all (since client is 100+ version behind server)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="lock-system-conflict-avoiding-and-access-control">Lock System (Conflict Avoiding and Access Control)</h4>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/IMG_5725.JPG" alt="IMG_5725" /></p>
+
+<p>To synchronize the changes between users and resolve conflicts in a relatively simple way, we use <strong>Mutex Locks</strong> on the message block.</p>
+
+<p>This means that each block can have at most one user editing at the same time.</p>
+
+<p><strong>Step1</strong>   - When user click to ‘edit’ a block, the client will try to acquire a lock from the server through POST method on route <code class="language-plaintext highlighter-rouge">\lock</code>.</p>
+
+<p><strong>Step 1a</strong> - If the lock is successfully acquired, the client will call the function and enable editing that block.</p>
+
+<p><strong>Step 1b</strong> - If the lock is already occupied, the client will deny the request to edit current message block.</p>
+
+<p><strong>Step 2</strong>  - When editing, the status of locks are stored on the server. At this time, other other client that tried to acquire the lock will be denied.</p>
+
+<p><strong>Step 2a</strong> - While editing, the client will send XML Request to ‘renew’ the lock for every three minutes. The reason to design a ‘renew system’ is described in detail in step 3a.</p>
+
+<p><strong>Step 3</strong>  - When the user click ‘Finish Edit’, the client will update the data to server using Update Protocol. After receiving the update protocol, the server will release the lock of corresponding content block automatically.</p>
+
+<p><strong>Step 3a</strong> - To avoid the dead lock in case that the user gets off-line before hitting ‘Finish Edit’. We specially designed a series of ‘renew policy’ for lock. For each 5 minutes, the server will scan over all the locks. If any of the lock is not renewed for more than 5 minutes, the lock is released automatically.</p>
+
+<h4 id="synchronize-system">Synchronize System</h4>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/IMG_5731.JPG" alt="IMG_5731" /></p>
+
+<p>To synchronize the client with the server, we developed a synchronize system that allows <strong>Incremental Update</strong>.</p>
+
+<p>Each time a client send update info to the server through Update Protocol v2, the server will implement the update on server and push the Update Protocol payload into a stack called <code class="language-plaintext highlighter-rouge">cacheStack</code> with size <code class="language-plaintext highlighter-rouge">100</code>.</p>
+
+<p>Every minute, the client will send an Update Protocol v2 content to server with operation <code class="language-plaintext highlighter-rouge">SYN</code>. The current version number is also included in the Update Protocol. The server will have three reactions:</p>
+
+<ol>
+  <li>
+    <p>If the version number equals to the latest version number on server, the server will return a update protocol with operation <code class="language-plaintext highlighter-rouge">NOP</code>. This means that the client is already up-to-date and no further action is required.</p>
+  </li>
+  <li>
+    <p>If the version number is smaller than the latest version number on server but bigger than the oldest version number in the <code class="language-plaintext highlighter-rouge">cacheStack</code>. The server will return a list of Update Protocols in the sequence from old to new. The client will then execute update by processing the Update Protocols sequentially. After all protocols are processed, the client is in sync with the server.</p>
+  </li>
+  <li>
+    <p>If the version number is smaller than the oldest version number in the <code class="language-plaintext highlighter-rouge">cacheStack</code>, the server will directly return a update protocol with operation <code class="language-plaintext highlighter-rouge">NEW</code>. In this case, the client will automatically reload the whole window to fetch the whole new <code class="language-plaintext highlighter-rouge">json</code> file from server.</p>
+  </li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fa fa-folder-o"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#frontend">Frontend</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fa fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#web">web</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/neural%20network/2021/09/14/2048-Project.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fa fa-arrow-left"></i> 2048 Project
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/neural%20network/2021/11/24/Word-Embedding.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            NLP 101: Word Embedding 词嵌入
+ <i class="fa fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

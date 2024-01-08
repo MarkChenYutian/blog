@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Arc-consistency in Constraint Satisfaction Problem | Yutian’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="Arc-consistency in Constraint Satisfaction Problem" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="zh" />
+<meta name="description" content="约束满足问题(Constraint Satisfaction Problem, CSP)是一类在工程上非常常见的问题，问题由值域，变量和约束构成。求解约束满足问题指的是找到一组变量的赋值，使得网络中所有约束都被满足。在求解约束满足问题的研究中，弧一致性算法是重中之重，因为问题中的一切多元约束都可以被转化为若干个二元约束。这篇文章介绍了多种弧一致性算法，包括各种版本的时间复杂度，空间复杂度和特点 Part I What is CSP CSP: 约束满足问题" />
+<meta property="og:description" content="约束满足问题(Constraint Satisfaction Problem, CSP)是一类在工程上非常常见的问题，问题由值域，变量和约束构成。求解约束满足问题指的是找到一组变量的赋值，使得网络中所有约束都被满足。在求解约束满足问题的研究中，弧一致性算法是重中之重，因为问题中的一切多元约束都可以被转化为若干个二元约束。这篇文章介绍了多种弧一致性算法，包括各种版本的时间复杂度，空间复杂度和特点 Part I What is CSP CSP: 约束满足问题" />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-10-09T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Arc-consistency in Constraint Satisfaction Problem" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yutian Chen"},"dateModified":"2020-10-09T00:00:00+00:00","datePublished":"2020-10-09T00:00:00+00:00","description":"约束满足问题(Constraint Satisfaction Problem, CSP)是一类在工程上非常常见的问题，问题由值域，变量和约束构成。求解约束满足问题指的是找到一组变量的赋值，使得网络中所有约束都被满足。在求解约束满足问题的研究中，弧一致性算法是重中之重，因为问题中的一切多元约束都可以被转化为若干个二元约束。这篇文章介绍了多种弧一致性算法，包括各种版本的时间复杂度，空间复杂度和特点 Part I What is CSP CSP: 约束满足问题","headline":"Arc-consistency in Constraint Satisfaction Problem","mainEntityOfPage":{"@type":"WebPage","@id":"/machine%20learning/2020/10/09/Constraint-Satisfaction-Problem.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"url":"/machine%20learning/2020/10/09/Constraint-Satisfaction-Problem.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#part-i-what-is-csp">Part I What is CSP</a></li>
+  <li><a href="#part-ii-backtracking">Part II Backtracking</a></li>
+  <li><a href="#part-iii-arc-consistency-algorithm">Part III Arc Consistency Algorithm</a>
+    <ul>
+      <li><a href="#ac3">AC3</a></li>
+      <li><a href="#ac4">AC4</a></li>
+      <li><a href="#ac6">AC6</a></li>
+      <li><a href="#ac7">AC7</a></li>
+      <li><a href="#ac2001">AC2001</a></li>
+      <li><a href="#ac33">AC3.3</a></li>
+      <li><a href="#ac-算法的时间复杂度与版本树总结">AC 算法的时间复杂度与版本树总结</a></li>
+    </ul>
+  </li>
+  <li><a href="#part-iv-other-methods-for-csp">Part IV Other Methods for CSP1</a>
+    <ul>
+      <li><a href="#启发式算法解决csp问题">启发式算法解决CSP问题</a></li>
+      <li><a href="#局部搜索方法解决csp问题">局部搜索方法解决CSP问题</a></li>
+      <li><a href="#结构优化法解决csp问题">结构优化法解决CSP问题</a></li>
+    </ul>
+  </li>
+  <li><a href="#part-v-csp问题在实际生活中的应用例子">Part V CSP问题在实际生活中的应用例子</a></li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">Arc-consistency in Constraint Satisfaction Problem</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2020-10-09T00:00:00+00:00" itemprop="datePublished">
+        Oct 9, 2020
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>约束满足问题(Constraint Satisfaction Problem, CSP)是一类在工程上非常常见的问题，问题由值域，变量和约束构成。求解约束满足问题指的是找到一组变量的赋值，使得网络中所有约束都被满足。在求解约束满足问题的研究中，弧一致性算法是重中之重，因为问题中的一切多元约束都可以被转化为若干个二元约束。这篇文章介绍了多种弧一致性算法，包括各种版本的时间复杂度，空间复杂度和特点</p>
+
+<h2 id="part-i-what-is-csp">Part I What is CSP</h2>
+
+<blockquote>
+  <p>CSP: 约束满足问题</p>
+</blockquote>
+
+<!--more-->
+
+<ul>
+  <li>一个CSP问题由三个主要部分组成： <strong>变量，约束与值域</strong>，任何一个CSP问题都可以正则化为这三个集合</li>
+  <li>CSP 问题是Search Problem的一个较为特殊的子集，不难发现，<strong>我们完全可以使用Breath First Search, Depth First Search 或者其他一般的搜索方法解决CSP问题</strong>。然而，由于CSP问题中的约束要求的复杂性，大量的变量空间和有时无穷大的状态空间，使用这些传统算法解决CSP问题不但会占用大量的计算时间，使用的内存消耗也会非常高。</li>
+  <li>目前大家普遍认为CSP问题是一种NP-Complete问题，也就是说<strong>一般普遍认为没有普适的，能够在多项式时间内解决CSP问题的算法存在</strong></li>
+</ul>
+
+<h2 id="part-ii-backtracking">Part II Backtracking</h2>
+
+<ul>
+  <li>目前所有的解决CSP问题的算法的根本原理都是基于“回溯算法”，这种方法是一种完备的，可以解决任何有解的CSP问题的算法。然而，为了提高解决速度，目前普遍使用的工具都会集成一些<strong>启发式方法和局部搜索方法</strong></li>
+  <li>这种方法通过<strong>尽可能的保证已赋值的变量不改变赋值</strong>来最大化解决问题的速度</li>
+</ul>
+
+<h2 id="part-iii-arc-consistency-algorithm">Part III Arc Consistency Algorithm</h2>
+
+<ul>
+  <li>为了简化CSP问题，人们提出了很多种CSP约束传播算法；这些算法有以下两个主要功能：</li>
+  <li>验证CSP是否有解，注意<strong>任何单一的CSP约束传播算法都不能证明CSP有解，但是可以证明CSP问题无解</strong></li>
+  <li><strong>简化CSP模型</strong>，通过检测变量间的约束来减少每一个变量的可取值值域</li>
+</ul>
+
+<p>在这些算法中<strong>检测CSP问题中的Arc-Consistency的AC系列及其延伸算法被的研究最多</strong>，因为一般研究Arc Consistency时发现的算法可以有效的推广到更高等级的Path-Consistency 和 k-consistency 问题上，而且Arc Consistency 问题相对容易解决</p>
+
+<h3 id="ac3">AC3</h3>
+
+<ul>
+  <li>在AC系列中，第一个被提出并且广为接受的算法是AC3（AC1 和 AC2 在作者的论文中也有呈现，但是仅仅是作为迭代出AC3的步骤存在）AC3通过寻找一个变量的某个赋值是否能与周边的变量相容（不威胁约束）来减小值域，<em>当找不到能够使得这个赋值与周边变量相容的情况时，从变量的值域中删去这一变量</em></li>
+</ul>
+
+<h3 id="ac4">AC4</h3>
+
+<ul>
+  <li>AC4算法是一种非常激进的算法，使用了非常多的方法试图降低时间复杂度</li>
+  <li>AC4算法致力于降低AC3的时间复杂度，<strong>使用了以空间换时间的策略</strong>，AC4通过大量的存储来降低时间复杂度</li>
+</ul>
+
+<p>AC4使用二维数组来存储两个变量之间的约束可以支持这两个变量取的值，通过这些存储，AC4可以避免重复检查变量间的约束关系</p>
+
+<p><strong>AC4 算法的时间复杂度是最佳的</strong></p>
+
+<ul>
+  <li>然而，AC4算法的<strong>初始化非常耗时</strong>，而且其空间复杂度非常高昂，这使得它与AC3对比并没有理论上预测的巨大优势</li>
+  <li>AC4算法也是AC系列的第一个“细粒度算法”，也就是说它的约束检测是基于变量的取值，而非基于变量间的弧约束，这可以避免一些重复的约束检测</li>
+</ul>
+
+<h3 id="ac6">AC6</h3>
+
+<ul>
+  <li>AC6算法意在保持AC4的最坏情况时间复杂度的同时降低空间复杂度的开销，并且像AC3一样，当遇到第一个满足Arc Consistency的赋值方法是就停止寻找其他方法</li>
+</ul>
+
+<h3 id="ac7">AC7</h3>
+
+<ul>
+  <li>AC7通过利用弧约束的双向性来进一步简化约束满足过程</li>
+</ul>
+
+<h3 id="ac2001">AC2001</h3>
+
+<ul>
+  <li>AC2001 是一个粗粒度的算法，也就是说它对约束的检测是基于两个变量之间的约束进行的，这样的算法更为轻量而且更加容易维护，AC2001通过使用指针存储每个约束上的最低满足限度的支持约束的赋值来运行（而不是像AC6，使用二维数组，因此它的空间占用实际上比AC6低一些）</li>
+  <li>AC2001<strong>是第一种达到最优复杂度的粗粒度算法</strong></li>
+</ul>
+
+<h3 id="ac33">AC3.3</h3>
+
+<ul>
+  <li>AC3.3是人们基于AC3的基本架构，增加了对弧约束的双向性支持得到的算法，<strong>在日常情况中，AC3.3一般拥有最好的实际表现</strong></li>
+</ul>
+
+<h3 id="ac-算法的时间复杂度与版本树总结">AC 算法的时间复杂度与版本树总结</h3>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220810233744.jpeg" alt="img" /></p>
+
+<h2 id="part-iv-other-methods-for-csp">Part IV Other Methods for CSP<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></h2>
+
+<h3 id="启发式算法解决csp问题">启发式算法解决CSP问题</h3>
+
+<p>简而概之，使用启发式算法解决CSP问题的一种常用启发式算法是<strong>“找到威胁弧相容性最多的变量，在不改变其他任何变量的条件下，将一个在变量值域内的，威胁弧相容性最少的值赋给这个变量”</strong>，通过重复这个操作达到找到一个CSP完整的，满足相容性的解集</p>
+
+<h3 id="局部搜索方法解决csp问题">局部搜索方法解决CSP问题</h3>
+
+<h3 id="结构优化法解决csp问题">结构优化法解决CSP问题</h3>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220810233754.jpeg" alt="img" /></p>
+
+<p>树形的CSP约束问题可以在<strong>线性时间内解决</strong>，（例如使用“拓补排序”方法）将树<strong>线性化</strong>；一种CSP解决方法是<strong>割集条件设置</strong>，这种方法通过去掉图中产生环的关键节点来将有环的CSP约束图转化为若干个无环的CSP约束图，然后将每一个无环的CSP解加上之前删掉的关键节点后再次求解</p>
+
+<h2 id="part-v-csp问题在实际生活中的应用例子">Part V CSP问题在实际生活中的应用例子</h2>
+
+<p>使用CSP求解器预测蛋白质折叠结构</p>
+
+<p>蛋白折叠结构问题 - 使用CSP正则化</p>
+
+<p><strong>变量：</strong>蛋白质中每个基团的方向 / 位置（三维向量）</p>
+
+<p><strong>约束：</strong></p>
+
+<ol>
+  <li>蛋白质侧链之间的静电力 / 洛伦兹力 / 亲（疏）水性</li>
+  <li>空间结构不可重叠（一个位置不能有两个原子） *如下图所示</li>
+  <li>蛋白质的激活位置 / 活性位置不能太大，不然无法实现酶催化的专一性 *如下图所示</li>
+</ol>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220810233838.jpeg" alt="img" /></p>
+
+<p><strong>值域：</strong>三维空间内（可以离散化三维空间，使其转化为有限值域的CSP问题）</p>
+
+<hr />
+
+<p>脚注：</p>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>以下基于一个只有二元约束的CSP图（任意多元CSP问题都可以被转化为二元CSP问题） <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fa fa-folder-o"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#machine-learning">Machine Learning</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fa fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#machine-learning">machine-learning</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/algorithm/2020/10/08/USACO-2016-Feb-Gold-Analysis.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fa fa-arrow-left"></i> USACO 2016 Feb Gold Analysis
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/neural%20network/2020/10/11/Residual-Network.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            深度残差网络 Res-net
+ <i class="fa fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

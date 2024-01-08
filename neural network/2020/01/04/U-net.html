@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>医学图像分割模型 U-net | Yutian’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="医学图像分割模型 U-net" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="ch" />
+<meta name="description" content="U-net是一种前馈神经网络模型，与传统卷积神经网络不同的是，U-net通过直接拼接相同分辨率的图像在网络中创造“短路”，从而使得梯度可以更好的在网络中传播。与此同时，通过将下卷积前的图像分割结果拼接到上卷积过程中的分割结果上，下卷积结果中的高分辨率细节也可以被传递到上卷积过程中，从而提高模型分割准确率。" />
+<meta property="og:description" content="U-net是一种前馈神经网络模型，与传统卷积神经网络不同的是，U-net通过直接拼接相同分辨率的图像在网络中创造“短路”，从而使得梯度可以更好的在网络中传播。与此同时，通过将下卷积前的图像分割结果拼接到上卷积过程中的分割结果上，下卷积结果中的高分辨率细节也可以被传递到上卷积过程中，从而提高模型分割准确率。" />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-01-04T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="医学图像分割模型 U-net" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yutian Chen"},"dateModified":"2020-01-04T00:00:00+00:00","datePublished":"2020-01-04T00:00:00+00:00","description":"U-net是一种前馈神经网络模型，与传统卷积神经网络不同的是，U-net通过直接拼接相同分辨率的图像在网络中创造“短路”，从而使得梯度可以更好的在网络中传播。与此同时，通过将下卷积前的图像分割结果拼接到上卷积过程中的分割结果上，下卷积结果中的高分辨率细节也可以被传递到上卷积过程中，从而提高模型分割准确率。","headline":"医学图像分割模型 U-net","mainEntityOfPage":{"@type":"WebPage","@id":"/neural%20network/2020/01/04/U-net.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"url":"/neural%20network/2020/01/04/U-net.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#1-introduction">1. Introduction</a></li>
+  <li><a href="#2-network-architecture">2 Network Architecture</a></li>
+  <li><a href="#3-training">3 Training</a></li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">医学图像分割模型 U-net</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2020-01-04T00:00:00+00:00" itemprop="datePublished">
+        Jan 4, 2020
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>U-net是一种前馈神经网络模型，与传统卷积神经网络不同的是，U-net通过直接拼接相同分辨率的图像在网络中创造“短路”，从而使得梯度可以更好的在网络中传播。与此同时，通过将下卷积前的图像分割结果拼接到上卷积过程中的分割结果上，下卷积结果中的高分辨率细节也可以被传递到上卷积过程中，从而提高模型分割准确率。</p>
+
+<!--more-->
+
+<h2 id="1-introduction">1. Introduction</h2>
+
+<p>U-net与其他机器视觉神经网络的根本区别：</p>
+
+<ul>
+  <li><strong>一般的神经网络执行分类操作，输入一张图片，输出一个向量，其中每一项对应该图片属于对应标签的概率</strong></li>
+</ul>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220810232121.jpeg" alt="img" width="75%" /></p>
+
+<ul>
+  <li><strong>U-net 对图片进行“语义分割”，输出的信息不但包括对图片中属性特征的识别，还包括对于指定物体位置的识别</strong></li>
+</ul>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220810232132.jpeg" alt="img" /></p>
+
+<p>过去进行对图像进行语义分割的一种尝试是：通过提供一个像素周边的环境，训练网络识别这个像素属于的物体的类型。</p>
+
+<p>这种方法确实可行，因为可以对图片中的每一个像素进行同样的操作来逐个识别每个像素属于什么物体。但是这个方法有两个不足之处:</p>
+
+<ul>
+  <li>
+    <p><strong>处理速度太慢</strong> 因为神经网络每次要单独训练，而且划分的Patch之间有很大的冗余重复</p>
+
+    <p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220810232142.jpeg" alt="img" width="30%" /></p>
+  </li>
+  <li>
+    <p><strong>网络的设计需要在确定位置和更大的感受野之间权衡</strong> 当使用尺寸更大的Patch时，需要使用更多的池化层，会降低网络确定像素位置的能力；当网络使用尺寸较小的Patch时，神经网络的感受野（对周边特征的“视野”）会变小。</p>
+  </li>
+</ul>
+
+<p>与之前方法相比，U-net有以下几点特征：</p>
+
+<ul>
+  <li>我们的网络在上采样部分依然有大量的特征通道，这使得网络可以将空间上下文信息向更高的分辨率层传播。结果是，上采样路径基本对称于下采样路径，并呈现出一个U型。</li>
+  <li>网络不存在任何全连接层，并且，只使用每个卷积的valid部分，例如，分割图只包含这样一些像素点，这些像素点的完整上下文都出现在输入图像中。这种策略允许使用Overlap-tile策略无缝地分割任意大小的图像(参见下图)。</li>
+  <li>为了预测图像边界区域的像素点，我们采用镜像图像的方式补全缺失的环境像素。这个tiling方法在使用网络分割大图像时是非常有用的，因为如果不这么做，GPU显存会限制图像分辨率。</li>
+  <li>此外，为了使得U-net可以在小批量数据的情况下顺利训练，我们使用了弹性形变处理训练图像（因为生物材料经常发生形变），通过这种方法，我们可以极大地增加训练图像的数量。</li>
+  <li>为了应对细胞分割任务中的一个挑战是如何将同类别的相互接触的目标分开，为了解决这个问题，我们改进了网络的损失函数，提出了使用一种带权重的损失(weighted loss)；在新的损失函数中，分割相互接触的细胞会获得更大的权重。</li>
+</ul>
+
+<h2 id="2-network-architecture">2 Network Architecture</h2>
+
+<p>因此，本文作者基于“完全卷积网络”设计了 U-net 神经网络架构（如下图），用以处理图像的语义分割问题</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220810232154.jpeg" alt="img" /></p>
+
+<p>在这个网络中，图片首先通过最大池化层进行“下采样”，减小图片分辨率的同时使用3<em>3卷积核提取图片的特征，每一层中，提取的特征通道数量是输入特征通道数量的两倍。通过这种方法，最后将输入图片转化为大小28</em>28，具有1024个特征通道状态。</p>
+
+<p>接着，网络通过2<em>2的卷积核对图片进行上采样（如下图所示，但下图中使用的是3</em>3卷积核）</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220810232205.jpeg" alt="img" /></p>
+
+<p>需要注意的是在上采样的过程中，图片依然保存了大量的特征通道，这有助于网络将图片周边的环境向上传播</p>
+
+<p>与此同时，为了提高图片的分辨率，网络还会将池化前的特征通道<strong>经过裁剪后（裁剪是由于无填充像素下卷积操作带来的无法避免的尺寸减小导致的，如下图所示）</strong>复制到上采样时的状态中，再使用一个3*3卷积核将这些特征通道进一步整合起来。</p>
+
+<p><img src="https://markdown-img-1304853431.file.myqcloud.com/20220810232214.jpeg" alt="img" /></p>
+
+<p>如此重复此步骤直到图片的尺寸重新被放大至392*392 pixel （作为对比，输入是572*572像素，大小的减少是由于重复卷积操作导致的），此时图片依然有多达64个特征通道。</p>
+
+<p>此时，我们可以看到上采样的通道与下采样的通道基本对称，整个神经网络呈现为“U形”</p>
+
+<p>这时候再用3*3卷积核与1*1卷积核将这些特征通道重新整合起来即可。</p>
+
+<blockquote>
+  <p>需要注意的一点是，再U-net中，作者使用的所有激活函数都是线性修正单元（ReLU, rectified linear unit）。由于使用这种函数的一阶导数是常数，与带权输入无关，可以有效避免深度网络训练时的梯度消失问题与梯度爆炸问题（与之相对应，Sigmoid函数有严重的梯度消失问题，这会极大的降低神经元的学习速度，同时使得神经网络靠近输出的层级更加容易达到饱和状态）。</p>
+</blockquote>
+
+<h2 id="3-training">3 Training</h2>
+
+<p>U-net使用随机梯度下降的方法进行训练，每批次中只有一幅图片。为了减少使用单个图片计算损失函数梯度带来的，每次梯度下降方向由于图片之间差异带来的过大变化，作者使用了很大的动量值(momentum = 0.99) ，这意味着每一次梯度下降的方向更多的根据过去的图片的损失函数梯度来决定。</p>
+
+<p>同时，为了使得神经网络可以区分开相邻的两个细胞，作者改进了交叉熵函数。作者通过在交叉熵函数中增加了单个像素的权重值使得网络更加注重细胞之间的分割（这里看不懂具体实现方法）</p>
+
+<p>U-net使用了输入图片每一个像素的经过改进的交叉熵函数的柔性最大值作为整幅图片的损失函数。</p>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fa fa-folder-o"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#neural-network">Neural Network</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fa fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#computer-vision">computer-vision</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#neural-network">neural-network</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/algorithm/2019/09/01/Time-Complexity.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fa fa-arrow-left"></i> 
+  
+    
+      算法的时间复杂度
+      Time Complexity and Asymptotic Notation
+    
+  
+
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/neural%20network/2020/04/03/What-is-LSTM.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            长短期记忆递归网络 LSTM
+ <i class="fa fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

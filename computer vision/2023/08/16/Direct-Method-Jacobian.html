@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Direct Method SLAM - Jacobian Formulation | Yutian’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="Direct Method SLAM - Jacobian Formulation" />
+<meta name="author" content="Yutian Chen" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="This post is mainly a re-formulation and detailed expansion for the section 8.4, “Direct Method” in “14 lectures on Visual SLAM”. When I was working on direct method SLAM, I found the notations used on the book is hard to understand and many details to derive the final equation are omitted. Hence, I wrote this post as a note and record for my own derivation of the Jacobian in Direct Method of SLAM." />
+<meta property="og:description" content="This post is mainly a re-formulation and detailed expansion for the section 8.4, “Direct Method” in “14 lectures on Visual SLAM”. When I was working on direct method SLAM, I found the notations used on the book is hard to understand and many details to derive the final equation are omitted. Hence, I wrote this post as a note and record for my own derivation of the Jacobian in Direct Method of SLAM." />
+<meta property="og:site_name" content="Yutian’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-08-16T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Direct Method SLAM - Jacobian Formulation" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yutian Chen"},"dateModified":"2023-08-16T00:00:00+00:00","datePublished":"2023-08-16T00:00:00+00:00","description":"This post is mainly a re-formulation and detailed expansion for the section 8.4, “Direct Method” in “14 lectures on Visual SLAM”. When I was working on direct method SLAM, I found the notations used on the book is hard to understand and many details to derive the final equation are omitted. Hence, I wrote this post as a note and record for my own derivation of the Jacobian in Direct Method of SLAM.","headline":"Direct Method SLAM - Jacobian Formulation","mainEntityOfPage":{"@type":"WebPage","@id":"/computer%20vision/2023/08/16/Direct-Method-Jacobian.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Yutian Chen"},"url":"/computer%20vision/2023/08/16/Direct-Method-Jacobian.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Yutian's Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 20) {
+      filename = "/assets/css/skin-daylight.css";
+    } else {
+      filename = "/assets/css/skin-daylight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<!-- <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<!-- MathJax used to render math equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<!-- MS Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "eo4n22qg7z");
+</script>
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="fa fa-user-circle"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Yutian&#39;s Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Posts</a></li>
+            
+              <li><a class="" href="/files/">Files</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/tags/">Tags</a>
+                    <a class="" href="/years/">Years</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <div class="sidebar-section"><img src="/avatar.jpg" class="author-avatar u-photo align-center" alt="Yutian Chen">
+  </div>
+
+<div class="sidebar-section">
+  <ul class="contact-list">
+    <li>
+        <i class="sidebar-icon fa fa-at"></i>
+        <span class="contact-info p-name">Yutian Chen</span>
+      </li>
+    <li>
+        <i class="sidebar-icon fa fa-envelope-o"></i>
+        <a class="contact-info u-email" href="mailto:yutianch@andrew.cmu.edu">yutianch@andrew.cmu.edu</a>
+      </li>
+    <li>
+        <i class="sidebar-icon fa fa-location-arrow"></i>
+        <a class="contact-info u-location" href="https://www.google.com/maps/search/Pittsburgh, PA">Pittsburgh, PA</a>
+      </li>
+  </ul>
+</div>
+
+<div class="sidebar-section feed-subscribe">
+  <a href="feed.xml">
+    <i class="sidebar-icon fa fa-rss"></i><span>Subscribe</span>
+  </a>
+</div>
+
+<div class="sidebar-section">
+    <ul class="social-icons">
+      <li>
+          <a class="social-icon" href="https://www.linkedin.com/in/yutian-chen-469602223/"><i class="fa fa-linkedin-square fa-2x" title="LinkedIn"></i></a>
+        </li><li>
+          <a class="social-icon" href="https://github.com/MarkChenYutian"><i class="fa fa-github-square fa-2x" title="GitHub"></i></a>
+        </li>
+    </ul>
+  </div>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">Direct Method SLAM - Jacobian Formulation</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2023-08-16T00:00:00+00:00" itemprop="datePublished">
+        Aug 16, 2023
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!-- # Direct Method SLAM - Jacobian Formulation -->
+
+<blockquote>
+  <p>This post is mainly a re-formulation and detailed expansion for the section 8.4, “Direct Method” in <a href="https://github.com/gaoxiang12/slambook-en">“14 lectures on Visual SLAM”</a>.</p>
+
+  <p>When I was working on direct method SLAM, I found the notations used on the book is hard to understand and many details to derive the final equation are omitted. Hence, I wrote this post as a note and record for my own derivation of the Jacobian in Direct Method of SLAM.</p>
+</blockquote>
+
+<!--more-->
+
+<h2 id="coordinate-system-and-symbol-table">Coordinate System and Symbol Table</h2>
+
+<p><strong>Assumption</strong></p>
+
+<p>Cam1 and Cam2 have same intrinsic matrix $K$ and are pinhole camera with no distortion (or distortion is corrected for resulting image in pre-process step).</p>
+
+<p><strong>Coordinate System</strong></p>
+
+<p>There are two 3D coordinate systems: the camera 1 (where optic center $O_1$ is the same as world coordinate origin) and the camera 2 (with transformation of cam1 → cam2 is $T_1^2 = \xi$)</p>
+
+<p>There are two 2D coordinate systems (pixel coordinates): the image 1 and image 2. I will use uv coordinate when refer to them.</p>
+
+<p><strong>Symbol Table</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Symbol</th>
+      <th>Domain</th>
+      <th>Shape</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$P_i$</td>
+      <td>$\mathbb{R}^3$</td>
+      <td>(1, 3)</td>
+      <td>i-th point in the 3-dimentional space (under cam1 coordinate)</td>
+    </tr>
+    <tr>
+      <td>$p_{1,i}$</td>
+      <td>$\mathbb{R}^2$</td>
+      <td>(1, 2)</td>
+      <td>i-th point’s projection on cam1’s sensor plane</td>
+    </tr>
+    <tr>
+      <td>$p_{2,i}$</td>
+      <td>$\mathbb{R}^2$</td>
+      <td>(1, 2)</td>
+      <td>i-th point’s projection on cam2’s sensor plane</td>
+    </tr>
+    <tr>
+      <td>$K$</td>
+      <td>$\mathbb{R}^{3\times 3}$</td>
+      <td>(3, 3)</td>
+      <td>Camera intrinsic matrix</td>
+    </tr>
+    <tr>
+      <td>$\xi$</td>
+      <td>$\mathfrak{se}(3)$</td>
+      <td>(1, 6)</td>
+      <td>Cam2’s pose w.r.t. world coordinate (cam1)</td>
+    </tr>
+    <tr>
+      <td>$I_1$</td>
+      <td>$\mathbb{R^2} \to \mathbb{R}$</td>
+      <td>-</td>
+      <td>Illuminance map from cam1 (w/ bilinear interpolation)</td>
+    </tr>
+    <tr>
+      <td>$I_2$</td>
+      <td>$\mathbb{R^2} \to \mathbb{R}$</td>
+      <td>-</td>
+      <td>Illuminance map from cam2 (w/ bilinear interpolation)</td>
+    </tr>
+    <tr>
+      <td>$Exp(\cdot)$</td>
+      <td>$\mathfrak{se}(3) \to \mathbb{R}^{4\times 4}$</td>
+      <td>-</td>
+      <td>vector to matrix + Exponential Mapping (Lie Algebra → Transformation Matrix)</td>
+    </tr>
+    <tr>
+      <td>$Log(\cdot)$</td>
+      <td>$\mathbb{R}^{4\times 4} \to \mathfrak{se}(3)$</td>
+      <td>-</td>
+      <td>Logarithm Mapping + Matrix to vector (Transformation Matrix → Lie Algebra)</td>
+    </tr>
+    <tr>
+      <td>$exp(\cdot)$</td>
+      <td>$\mathfrak{se}(3) \to SE(3)$</td>
+      <td>-</td>
+      <td>Exponential Mapping (Lie Algebra → Lie Group)</td>
+    </tr>
+    <tr>
+      <td>$\cdot^\wedge$</td>
+      <td>$\mathbb{R}^{6}\to \mathbb{R}^{4\times 4}$</td>
+      <td>-</td>
+      <td>$\mathfrak{se}(3)$ vector representation to matrix representation</td>
+    </tr>
+    <tr>
+      <td>$\tilde{\cdot}$</td>
+      <td>-</td>
+      <td>-</td>
+      <td>Homogenous coordinate system</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em>Unless explicitly specified, all the coordinates are represented under heterogeneous coordinate.</em></p>
+
+<h2 id="step-1-reprojection-model">Step 1. Reprojection Model</h2>
+
+<p>According to the pinhole camera model, we have $\tilde{p_{1, i}} = KP_i$ and 
+$\tilde{p_{2, i}} = K(Exp(\xi)\tilde{P_i})_{1:3}$.</p>
+
+<p>By converting homogenous coordinate to heterogeneous coordinate, we can retrieve the $p_{1, i}$ and $p_{2, i}$ from $\xi$ and $K$.</p>
+
+<h2 id="step-2-photometric-error-as-model-residual">Step 2. Photometric Error as Model Residual</h2>
+
+<p>In direct method, we <strong>do not</strong> do feature point matching as this process (extracting feature point, convert to feature descriptor, run descriptor matching with or without epipolar geo constraint) is computationally heavy and error-prone.</p>
+
+<p>Instead, we use the “illuminance consistency assumption”. That is, between two camera frames $t$ and $t + 1$, the illuminance of a point in 3D space should be consistent. That is,</p>
+
+\[I_t(P) = I_{t + 1}(P)\]
+
+<p>Naturally, the photometric error is the difference in illuminance between same point in 2 adjacent frames.</p>
+
+\[e_i(\xi) = \left(I_1(p_{1, i}) - I_2(p_{2, i})\right)^2\]
+
+<p>Direct SLAM make use of this assumption heavily. In the bundle adjustment process, we define the total residual of current state estimation as:</p>
+
+\[\mathbf{R}(\xi) = \sum_{i = 1}^N{e_i(\xi)} = \sum_{i = 1}^N{\left(I_1(p_{1, i}) - I_2(p_{2, i})\right)^2}\]
+
+<h2 id="step-3-optimization-problem-formulation">Step 3. Optimization Problem Formulation</h2>
+
+<p>During the (local) bundle adjustment stage, we want to optimize the pose of cam2, namely $\xi \in \mathfrak{se}(3)$, to minimize the residual of state estimation. The mathematical formulation of this optimization problem is:</p>
+
+\[\begin{aligned}
+\xi^\star &amp;= \arg\min_{\xi}{\mathbf{R}(\xi)}\\
+    &amp;= \arg\min_{\xi}{\sum_{i = 1}^N{e_i(\xi)}}\\
+    &amp;= \arg\min_{\xi}{\sum_{i = 1}^N{\|I_1(p_{1, i}) - I_2(p_{2, i})\|_2^2}}\\
+    &amp;= \arg\min_{\xi}{\sum_{i = 1}^N{\|I_1(KP_i) - I_2(K(Exp(\xi)\tilde{P_i})_{1:3}\|_2^2}}
+\end{aligned}\]
+
+<h2 id="step-4-perturbation-model-and-jacobian-for-direct-method">Step 4. Perturbation Model and Jacobian for Direct Method</h2>
+
+<p>To solve this optimization problem, we can use optimizers like Gauss-Newton or Lagrange-Marquadt. These optimizers typically requires us to provide the jacobian of model. Hence, we need to derive the jacobian $\mathbf{J}$ for cam2 pose $\xi$ w.r.t. $\mathbf{R}$. Since $\mathbf{R}$ is a simple summation from $e_i(\xi)$, we will only derive $\partial e_i(\xi) / \partial \xi$ here.</p>
+
+<p>To calculate the jacobian of $\mathbf{R}$ w.r.t. $\xi$, there are two main methods: the direct differentiation and perturbation model.</p>
+
+<p><strong>Direct Differentiation</strong> (which, we will not use)</p>
+
+\[\begin{aligned}
+\frac{\partial e_i(\xi)}{\partial \xi} &amp;= \lim_{\delta\xi \to 0}\frac{e_i(\xi \oplus \delta\xi) - e_i(\xi)}{\delta\xi}\\
+&amp;= \lim_{\delta\xi\to 0}{\frac{\|I(KP_i) - I_2(K(Exp(\xi\oplus\delta\xi)\tilde{P_i})_{1:3})\|_2^2 - e_i(\xi)}{\delta\xi}}
+\end{aligned}\]
+
+<p>However, we have $\xi\oplus\delta\xi \neq Log(Exp(\xi)Exp(\delta\xi))$ in Lie algebra. Instead, we need to follow the <a href="https://en.wikipedia.org/wiki/Baker%E2%80%93Campbell%E2%80%93Hausdorff_formula">BCH formula</a> with first-order approximation (when $\delta\xi$ is sufficiently small)</p>
+
+\[Log(Exp(\delta\xi)Exp(\xi)) \approx \mathbf{J}_l(\xi)^{-1}\delta\xi + \xi\]
+
+<p>However, using BCH formula requires us to calculate the $\mathbf{J}_l$, which is undesired due to its computation complexity. Hence, we will use the perturbation model to calculate the differentiation instead.</p>
+
+<p><strong>Perturbation Model</strong></p>
+
+<p>Comparing to the direct differentiation, where BCH formula is required, perturbation model <em>first</em> add a small perturbation on target function $e_i$, then calculate the derivative of residual w.r.t. <em>the perturbation term</em>.</p>
+
+<p>That is, we will calculate $\frac{\partial e_i(\xi \oplus \delta\xi)}{\partial \delta\xi}$ instead of $\frac{\partial e_i(\xi)}{\partial \xi}$.</p>
+
+<p>First, we will derive $e_i(\xi \oplus \delta\xi)$ (using left-perturbation, the result is different from right-perturbation).</p>
+
+\[\begin{aligned}
+e_i(\xi\oplus\delta\xi) &amp;= I_1(KP_i) - I_2(K(Exp(\delta\xi)Exp(\xi)\tilde{P_i})_{1:3})\\
+\end{aligned}\]
+
+<p>The taylor expansion for $Exp(\delta \xi)$ is of form</p>
+
+\[Exp(\delta\xi) = exp(\delta\xi^\wedge) = \sum_{n = 0}^\infty{\frac{1}{n!}(\delta\xi^\wedge)^n}\]
+
+<p>Using a first-order taylor approximation here (should be accurate as $\delta\xi$ is a minute perturbation term), we have</p>
+
+\[Exp(\delta\xi) \approx 1 + \delta\xi^\wedge\]
+
+<p>Then, we have</p>
+
+\[\begin{aligned}
+e_i(\xi\oplus\delta\xi) &amp;= I_1(KP_i) - I_2(K(Exp(\delta\xi)Exp(\xi)\tilde{P}_i)_{1:3})\\
+    &amp;\approx I_1(KP_i) - I_2(K((1 + \delta\xi^\wedge)Exp(\xi)\tilde{P}_i)_{1:3}) \\
+    &amp;= I_1(KP_i) - I_2(K(Exp(\xi)\tilde{P}_i)_{1:3} + K(\delta\xi^\wedge Exp(\xi)\tilde{P}_i)_{1:3})
+\end{aligned}\]
+
+<p>Then we apply another first-order taylor approximation</p>
+
+\[\begin{aligned}
+&amp;\phantom{\approx}I_2(K(Exp(\xi)\tilde{P}_i)_{1:3} + K(\delta\xi^\wedge Exp(\xi)\tilde{P}_i)_{1:3}) \\
+&amp;\approx I_2(K(Exp(\xi)\tilde{P}_i)_{1:3}) + \frac{\partial I_2(p_2)}{\partial p_2} \frac{\partial p_2}{\partial \xi} \delta\xi
+\end{aligned}\]
+
+<p>And we have the fully expanded form of $e(\xi\oplus\delta\xi)$</p>
+
+\[e(\xi \oplus \delta\xi) = I_1(KP_i) - \left(I_2(K(Exp(\delta\xi)Exp(\xi)P_i)_{1:3}) + \frac{\partial I_2(p_2)}{\partial p_2} \frac{\partial p_2}{\partial \xi} \delta\xi \right)\]
+
+<p>where we can derive the derivative under left perturbation</p>
+
+\[\frac{\partial e(\xi \oplus \delta\xi)}{\partial \delta\xi} \approx -\frac{\partial I_2(p_2)}{\partial p_2}\frac{\partial p_2}{\partial \xi}\]
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fa fa-folder-o"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#computer-vision">Computer Vision</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fa fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#machine-learning">machine-learning</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#slam">slam</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/machine%20learning/2023/07/14/second-order-optimizer.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fa fa-arrow-left"></i> Optimizers in PyPose - Gauss Newton and Levenberg-Marquadt
+
+          </span>
+        </a>
+      
+
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2019&nbsp;-&nbsp;2024 Yutian Chen</p>
+      
+    </div>
+    <p>
+      Build Version: 08 Jan 2024
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A place for me to Learn, Create and Share</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>
