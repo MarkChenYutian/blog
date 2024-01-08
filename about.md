@@ -4,13 +4,13 @@ title: About Me
 permalink: /about/
 ---
 
-I'm Yutian Chen (陈昱天), currently a junior in Carnegie Mellon University majoring in Computer Science. My academic interest lies in the fields of *deep learning*, *computer vision* and *frontend technology*. If you'd like to learn more about me, please take a look at my <a href="{{site.baseurl}}/files/">resume</a>.
+I'm Yutian Chen (陈昱天), currently a junior in Carnegie Mellon University majoring in Computer Science. My academic interest lies in the fields of *deep learning*, *computer vision* and *frontend technology*. If you'd like to learn more about me, please take a look at my <a href="/files/">resume</a>.
 
 ## Research Experience
 
 {% 
     include fn/research-exp.html 
-        avatar='/assets/image/airlab.png' 
+        avatar='assets/image/airlab.png' 
         topic='Differentiable Visual-Inertial SLAM'
         institute='AirLab, Robotics Institute'
         date='Sep 2022 - Now'
@@ -25,7 +25,7 @@ I'm Yutian Chen (陈昱天), currently a junior in Carnegie Mellon University ma
 
 {%
     include fn/research-exp.html
-        avatar='/assets/image/lti.png' 
+        avatar='assets/image/lti.png' 
         topic='Generated Text Detection'
         institute='Language Technology Institute'
         date='Mar 2023 - Aug 2023'
@@ -36,7 +36,7 @@ I'm Yutian Chen (陈昱天), currently a junior in Carnegie Mellon University ma
 
 {% 
     include fn/research-exp.html 
-        avatar='/assets/image/guangdong_cardiovescular_inst.jpg' 
+        avatar='assets/image/guangdong_cardiovescular_inst.jpg' 
         topic='Medical Image Segmentation'
         institute=' Guangdong Cardiovascular Institute'
         date='Dec 2018 - Jan 2020'
@@ -53,8 +53,8 @@ I'm Yutian Chen (陈昱天), currently a junior in Carnegie Mellon University ma
         pubto='EMNLP'
         year='2023'
         authors='<b>Yutian Chen</b>, Hao Kang, Vivian Zhai, Liangze Li, Rita Singh, Bhiksha Raj'
-        tag='Comming Soon'
         firstauthor='true'
+        arxiv='https://arxiv.org/abs/2311.08723'
 %}
 
 {%
