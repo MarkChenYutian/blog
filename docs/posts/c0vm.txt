@@ -1,0 +1,59 @@
+3:I[242,[],""]
+5:I[3562,[],""]
+6:I[3154,["407","static/chunks/1727213d-ed770260b52092c7.js","192","static/chunks/192-63f0035328ebab3b.js","601","static/chunks/app/error-06967b165f29cafe.js"],"default"]
+4:["slug","c0vm","d"]
+0:["_Zy1ezcUCrJ-Ca1gJeg6X",[[["",{"children":["posts",{"children":[["slug","c0vm","d"],{"children":["__PAGE__?{\"slug\":\"c0vm\"}",{}]}]}]},"$undefined","$undefined",true],["",{"children":["posts",{"children":[["slug","c0vm","d"],{"children":["__PAGE__",{},[["$L1","$L2",null],null],null]},[null,["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","posts","children","$4","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]],null]},[null,["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","posts","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/99c43fdd14327af2.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/736bd5ba25105f3a.css","precedence":"next","crossOrigin":"$undefined"}]],["$","html",null,{"lang":"en","children":["$","body",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$6","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":["$","main",null,{"children":["$","section",null,{"className":"bg-white","children":["$","div",null,{"className":"layout flex min-h-screen flex-col items-center justify-center text-center text-black","children":[["$","svg",null,{"stroke":"currentColor","fill":"currentColor","strokeWidth":"0","viewBox":"0 0 24 24","className":"drop-shadow-glow animate-flicker text-red-500","children":["$undefined",[["$","path","0",{"d":"M4.00001 20V14C4.00001 9.58172 7.58173 6 12 6C16.4183 6 20 9.58172 20 14V20H21V22H3.00001V20H4.00001ZM6.00001 14H8.00001C8.00001 11.7909 9.79087 10 12 10V8C8.6863 8 6.00001 10.6863 6.00001 14ZM11 2H13V5H11V2ZM19.7782 4.80761L21.1924 6.22183L19.0711 8.34315L17.6569 6.92893L19.7782 4.80761ZM2.80762 6.22183L4.22183 4.80761L6.34315 6.92893L4.92894 8.34315L2.80762 6.22183Z","children":[]}]]],"style":{"color":"$undefined"},"height":60,"width":60,"xmlns":"http://www.w3.org/2000/svg"}],["$","h1",null,{"className":"mt-8 text-4xl md:text-6xl","children":"Page Not Found"}],["$","a",null,{"href":"/","children":"Back to home"}]]}]}]}],"notFoundStyles":[]}]}]}]],null],null],["$L7",null]]]]
+8:I[9913,["988","static/chunks/34ba9a00-8ebd521ae784f68d.js","574","static/chunks/b2e9d811-b5814f97a31d63ea.js","386","static/chunks/386-12980df3d0e2e1b1.js","192","static/chunks/192-63f0035328ebab3b.js","898","static/chunks/898-c173b3dbe263bab1.js","855","static/chunks/855-2a2351bab943c4e8.js","333","static/chunks/app/posts/%5Bslug%5D/page-1919972ba9ee31de.js"],"default"]
+9:T815,---
+title: "C0VM.ts: C0 Visualizer on the cloud"
+date : 2022-12-06
+tags : ["Frontend"]
+---
+
+## What is C0 Language
+
+The programming language C0 is a carefully crafted subset of the C aimed at teaching introductory algorithms and imperative programming. It is used in **15-122 Principles of Imperative Programming** and **15-411 Compiler Design** by more than 600 students each semester.
+
+<!--more-->
+
+## About This Project
+
+This project is my project for Summer Undergraduate Research Fellowship (SURF) in CMU. More importantly, it's an attempt to improve students' 15-122 learning experience.
+
+By employing various visualization and front-end technology, we make it possible to execute and visualize C0 Language on any device with modern browser. This project also allows instructors of 15-122 to embed runnable code exerciese in Learning Material System (LMS) like Canvas or Diderot thus creating a more interactive learning environment.
+
+## Live Demo
+
+Try copy the following C0 code segment into the *Code Editor* then hit Compile & Run to see the result!
+
+```c
+#use <conio>
+
+int main() {
+    int*[] A = alloc_array(int*, 4);
+    A[1] = alloc(int);
+    *A[1] = 2;
+    printf("The value @ A[1] is a pointer pointing to %d", *A[1]);
+    return 0;
+}
+```
+
+You can also set breakpoint on **Line 8** by clicking on the left of line number. A red dot 🔴 will appear if the breakpoint is set successfully.
+
+<iframe 
+    src  ="https://cs122.andrew.cmu.edu/visualc0/" 
+    width="100%" 
+    style="border:1px solid silver; height:80vh; border-radius: .3rem;"
+    title="C0 Visualizer Demo"
+>
+</iframe>
+
+## Main Features
+
+![Slide2](https://user-images.githubusercontent.com/47029019/188786107-2c936dd6-f0c8-4102-9e97-f93d9c37dd39.png)
+![Slide3](https://user-images.githubusercontent.com/47029019/188786109-3a2f0b60-d1ed-4edd-a8c8-74effcd206e2.png)
+![Slide4](https://user-images.githubusercontent.com/47029019/188786411-43c66821-0f21-434f-a270-c0f500c5f5d2.png)
+![Slide5](https://user-images.githubusercontent.com/47029019/188787516-47821a85-5cd3-4394-9b8a-318138442aa0.png)
+2:["$","article",null,{"className":"rendered-markdown","children":["$","$L8",null,{"content":"$9"}]}]
+7:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","1",{"charSet":"utf-8"}],["$","title","2",{"children":"Yutian's Blog"}],["$","meta","3",{"name":"description","content":"A place for me to create and share"}],["$","link","4",{"rel":"manifest","href":"/favicon/site.webmanifest","crossOrigin":"use-credentials"}],["$","meta","5",{"name":"robots","content":"index, follow"}],["$","meta","6",{"property":"og:title","content":"Yutian's Blog"}],["$","meta","7",{"property":"og:description","content":"A place for me to create and share"}],["$","meta","8",{"property":"og:url","content":"https://www.yutianchen.blog"}],["$","meta","9",{"property":"og:site_name","content":"Yutian's Blog"}],["$","meta","10",{"property":"og:locale","content":"en_US"}],["$","meta","11",{"property":"og:image","content":"https://www.yutianchen.blog/images/og.jpg"}],["$","meta","12",{"property":"og:type","content":"website"}],["$","meta","13",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","14",{"name":"twitter:title","content":"Yutian's Blog"}],["$","meta","15",{"name":"twitter:description","content":"A place for me to create and share"}],["$","meta","16",{"name":"twitter:image","content":"https://www.yutianchen.blog/images/og.jpg"}],["$","link","17",{"rel":"shortcut icon","href":"/favicon/favicon-16x16.png"}],["$","link","18",{"rel":"icon","href":"/favicon/favicon.ico"}],["$","link","19",{"rel":"apple-touch-icon","href":"/favicon/apple-touch-icon.png"}]]
+1:null
