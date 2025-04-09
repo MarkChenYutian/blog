@@ -13,7 +13,9 @@ interface Params {
 export async function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), 'content/posts');
   const filenames = fs.readdirSync(postsDirectory);
-  return filenames.map((filename) => ({
+  return filenames.filter((filename) => 
+    !filename.startsWith('_')
+  ).map((filename) => ({
     slug: filename.replace(/\.md$/, ''),
   }));
 }

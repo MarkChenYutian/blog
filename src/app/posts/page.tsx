@@ -31,7 +31,9 @@ function parsePostContent(filepath: string): PostPageProps {
 
 export default async function PostPage() {
   const postsDirectory = path.join(process.cwd(), 'content/posts');
-  const posts = fs.readdirSync(postsDirectory).map(
+  const posts = fs.readdirSync(postsDirectory).filter((filename) => 
+    !filename.startsWith('_')
+  ).map(
     fn => parsePostContent(path.join(postsDirectory, fn))
   ).sort(
     (a, b) => b.date.getTime() - a.date.getTime()

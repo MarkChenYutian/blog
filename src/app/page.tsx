@@ -51,9 +51,10 @@ export default function HomePage() {
 
                 <div className='flex justify-between items-center flex-wrap'>
                   <span className='text-xl font-bold'>Carnegie Mellon University</span>
-                  <span>2021 Aug - 2025 May</span>
+                  <span>2021 Aug - 2027 May</span>
                 </div>
-                <p className='text-xl'>BSc. Computer Science, Minor in Mathematical Science</p>
+                <p className='text-lg'>MS. Robotics</p>
+                <p className='text-lg'>BSc. Computer Science, Minor in Mathematical Science</p>
               </div>
 
               <div className='flex-grow' />
