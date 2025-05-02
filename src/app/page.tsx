@@ -14,6 +14,7 @@ import UnderlineLink from '@/components/links/UnderlineLink';
 import NavigationBar from '@/components/Navigation';
 
 import AirLabLogo from '~/images/AirLab_Logo.png'
+import FieldAILogo from '~/images/FieldAI_Logo.png'
 import GuangdongCardiovescularImage from '~/images/guangdong_cardiovescular_inst.jpg'
 import LTIImage from '~/images/lti.png';
 import MITIBMImage from '~/images/MIT-IBM-WatsonAI.png'
@@ -46,7 +47,6 @@ export default function HomePage() {
                 <h1 className='text-6xl font-extrabold py-2'>Yutian Chen</h1>
                 <ul className='mb-8'>
                   <li> <UnderlineLink href="mailto:yutianch@andrew.cmu.edu"><MailIcon className='mr-2' /> yutianch@andrew.cmu.edu </UnderlineLink></li>
-                  {/* <li className='m-2'> <UnderlineLink href="https://maps.app.goo.gl/UxYby1QCcpZYdoFF7"><MapPinIcon className='mr-2' /> Pittsburgh PA, United States </UnderlineLink></li> */}
                 </ul>
 
                 <div className='flex justify-between items-center flex-wrap'>
@@ -71,9 +71,6 @@ export default function HomePage() {
             <div className='grid grid-cols-1 md:grid-cols-6'>
               <div className='text-lg homepage-card col-span-1 md:col-span-2 row-span-2'>
                 <h2 className='text-3xl py-2 text-primary-900'>About Me</h2>
-                {/* <p className='break-words hyphens-auto overflow-auto'>
-                  I am a 4-th year undergraduate student at Carnegie Mellon University majoring Computer Science. Currently I'm working at the AirLab with Professor Sebastian Scherer on the topic of visual-inertial SLAM.
-                </p> */}
                 <p className='break-words hyphens-auto overflow-auto pt-4'>
                   I am dedicated to improve the <b>spatial understanding</b> ability of autonomous systems, which requires a combination of geometry and semantic information about the surroundings. My research experience on <b>visual-inertial SLAM</b> at <UnderlineLink href="https://theairlab.org/">the AirLAB</UnderlineLink> focuses on improving the recognition of scene geometry in adversarial conditions, while my research experience in <b>Natural Language Processing (NLP)</b> and semantic segmentation focuses on grasping and interpreting the semantic of scenes.
                 </p>
@@ -82,6 +79,7 @@ export default function HomePage() {
 
               <div className='text-lg homepage-card col-span-1 md:col-span-4 row-span-1'>
                 <h2 className='text-3xl py-2 text-primary-900'>Recent Research</h2>
+                <p className='bg-primary-50 text-primary-600'>Our work <i>MAC-VO</i> was nominated as the Best Paper Award Finalist for ICRA 2025!</p>
                 <p>Below is a highlight list of my recent works. For a full list of works, please see <UnderlineLink className='text-primary-500' href="#experience-section">Here</UnderlineLink>.</p>
                 <ul className='pl-8 py-4'>
                   <li><Paperlink title="AirIO: Learning Inertial Odometry with Enhanced IMU Feature Observability" link="https://air-io.github.io" /></li>
@@ -143,10 +141,26 @@ export default function HomePage() {
                 <div className='flex flex-row-reverse pt-4'><ButtonLink href='/files' variant='light' size='large' className='min-w-44 text-center' rightIcon={ArrowRightIcon}>Visit My Notes</ButtonLink></div>
               </div>
 
-              <div className='text-lg homepage-card col-span-1 md:col-span-4 row-span-2'>
+              <div className='text-lg homepage-card col-span-1 md:col-span-4 row-span-4'>
                 <h2 className='text-3xl pt-2 text-primary-900' id='experience-section'>Experience</h2>
                 <ol>
                   <li>
+                    <ExperienceHead
+                      icon={FieldAILogo}
+                      title="Robot Perception Intern"
+                      place="Field AI Inc."
+                      link="https://www.fieldai.com"
+                      from_date="Jun 2025"
+                      to_date="Aug 2025"
+                      desc={
+                        <p>
+                          Excited to join Field AI Inc. as a Robot Perception Intern, working with <UnderlineLink href="https://www.kennyjchen.com">Kenny Chen</UnderlineLink> on robot perception in challenging environments.
+                        </p>
+                      }
+                      items={[
+                      ]}
+                    />
+
                     <ExperienceHead
                       icon={AirLabLogo}
                       title="Learning-based Visual-Inertial SLAM"
