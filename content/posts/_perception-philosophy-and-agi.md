@@ -1,15 +1,11 @@
 ---
-title: "Perception, Philosophy and AGI (1)"
+title: "Something Less Practical (1) - Why Perception?"
 date: 2025-04-09
 tags: ["Philosophy"]
 ---
 
-## Preface & Disclaimer
+With all the laugh and tears and memories and so much more on the commencement party, it's the time for me to reflect deeply and answer the hard (if not the hardest) questions: **What do I really want to do?**. In this post I try to answer a more concrete derivative of this question - what research do I want to work on for the upcoming MS. and PhD study?
 
-This post is the first in a series of posts about the relationship between perception and AGI. This is also a personal reflection on my own research direction from very abstract and metaphysical point of view. Some arguments in this post may not have strong supporting evidence but rather more of a belief, I will put <u>underline</u> for such arguments.
+The Path to AGI - A Perception-first Perspective
 
-I also want to admit my own limitation in this topic. Some arguments may seem naive for professionals in philosophy, linguistic and other domains, and I am open to any feedback. I may also re-iterate and update this post for many times in the future.
 
-[ DRAFT ]
-
-* Intelligence is the ability to create abstraction.
