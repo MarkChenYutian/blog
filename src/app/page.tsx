@@ -154,7 +154,7 @@ export default function HomePage() {
                       to_date="Aug 2025"
                       desc={
                         <p>
-                          Excited to join Field AI Inc. as a Robot Perception Intern, working with <UnderlineLink href="https://www.kennyjchen.com">Kenny Chen</UnderlineLink> on robot perception in challenging environments.
+                          Excited to join Field AI Inc. as a Robot Perception Intern, working with <UnderlineLink href="https://www.jaypatrikar.me">Jay Patrikar</UnderlineLink> on accelerating high-resolution visual transformer inference on edge compute devices.
                         </p>
                       }
                       items={[
