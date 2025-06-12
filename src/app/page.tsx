@@ -79,12 +79,11 @@ export default function HomePage() {
 
               <div className='text-lg homepage-card col-span-1 md:col-span-4 row-span-1'>
                 <h2 className='text-3xl py-2 text-primary-900'>Recent Research</h2>
-                {/*<p className='bg-primary-50 text-primary-600'>Our work <i>MAC-VO</i> was nominated as the Best Paper Award Finalist for ICRA 2025!</p>*/}
                 <p>Below is a highlight list of my recent works. For a full list of works, please see <UnderlineLink className='text-primary-500' href="#experience-section">Here</UnderlineLink>.</p>
                 <ul className='pl-8 py-4'>
+                  <li><Paperlink key={0} title="UFM: A Simple Path towards Unified Dense Correspondence with Flow" link="https://uniflowmatch.github.io"/></li>
                   <li><Paperlink title="AirIO: Learning Inertial Odometry with Enhanced IMU Feature Observability" link="https://air-io.github.io" /></li>
                   <li><Paperlink title="MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry" link="https://mac-vo.github.io/" awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]}/></li>
-                  <li><Paperlink title="Token Prediction as Implicit Classification to Identify LLM-Generated Text" link="https://aclanthology.org/2023.emnlp-main.810/" /></li>
                 </ul>
               </div>
 
@@ -147,7 +146,7 @@ export default function HomePage() {
                   <li>
                     <ExperienceHead
                       icon={FieldAILogo}
-                      title="Robot Perception Intern"
+                      title="AI Research Intern"
                       place="Field AI Inc."
                       link="https://www.fieldai.com"
                       from_date="Jun 2025"
@@ -176,10 +175,11 @@ export default function HomePage() {
                         </p>
                       }
                       items={[
-                        <Paperlink key={0} title="AirIO: Learning Inertial Odometry with Enhanced IMU Feature Observability" link="https://mac-vo.github.io/" />,
-                        <Paperlink key={1} title="MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry" link="https://mac-vo.github.io/" awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]}/>,
-                        <Paperlink key={2} title="AirIMU: Learning Uncertainty Propagation for Inertial Odometry" link="https://airimu.github.io/" />,
-                        <Paperlink key={3} title="PyPose v0.6: The Imperative Programming Interface for Robotics" link="https://arxiv.org/abs/2309.13035" />
+                        <Paperlink key={0} title="UFM: A Simple Path towards Unified Dense Correspondence with Flow" link="https://uniflowmatch.github.io"/>,
+                        <Paperlink key={1} title="AirIO: Learning Inertial Odometry with Enhanced IMU Feature Observability" link="https://air-io.github.io/" />,
+                        <Paperlink key={2} title="MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry" link="https://mac-vo.github.io/" awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]}/>,
+                        <Paperlink key={3} title="AirIMU: Learning Uncertainty Propagation for Inertial Odometry" link="https://airimu.github.io/" />,
+                        <Paperlink key={4} title="PyPose v0.6: The Imperative Programming Interface for Robotics" link="https://arxiv.org/abs/2309.13035" />
                       ]}
                     />
 
