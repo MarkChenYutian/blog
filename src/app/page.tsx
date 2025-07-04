@@ -196,7 +196,7 @@ export default function HomePage() {
                         </p>
                       }
                       items={[
-                        <span key={0} className='font-light italic'>Work In Progress, Currently under double-blind review</span>
+                        <Paperlink key={0} title="Virtual Community: An Open World for Humans, Robots, and Society" link="https://virtual-community-ai.github.io/paper.pdf"/>
                       ]}
                     />
 
