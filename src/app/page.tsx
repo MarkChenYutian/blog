@@ -1,9 +1,10 @@
 'use static';
 
-import { ArrowRightIcon, GithubIcon, GraduationCapIcon, LinkedinIcon, MailIcon } from 'lucide-react';
+import { ArrowRightIcon, GraduationCapIcon, LinkedinIcon, MailIcon } from 'lucide-react';
 import type { Metadata } from 'next'
 import Image from 'next/image';
 import * as React from 'react';
+import { RiGithubLine } from 'react-icons/ri';
 import '@/lib/env';
 
 import ExperienceHead from '@/components/custom/experience_heading';
@@ -20,7 +21,7 @@ import LTIImage from '~/images/lti.png';
 import MITIBMImage from '~/images/MIT-IBM-WatsonAI.png'
 import PyposeImage from '~/images/pypose.jpg';
 import SCSImage from '~/images/scslogo_no_outline_simple.gif';
-import AvatarImage from '~/images/Yutian2025_Squared.jpg';
+import AvatarImage from '~/images/Yutian_Chen.jpg';
 /**
  * SVGR Support
  * Caveat: No React Props Type.
@@ -53,7 +54,7 @@ export default function HomePage() {
                   <span className='text-xl font-bold'>Carnegie Mellon University</span>
                   <span>2021 Aug - 2027 May</span>
                 </div>
-                <p className='text-lg'>MS. Robotics</p>
+                <p className='text-lg'>MSc. Robotics</p>
                 <p className='text-lg'>BSc. Computer Science, Minor in Mathematical Science</p>
               </div>
 
@@ -63,22 +64,25 @@ export default function HomePage() {
                 <ul>
                   <li className='text-lg'><UnderlineLink href="https://scholar.google.com/citations?user=9-Cac9MAAAAJ&hl=en"><GraduationCapIcon className='mr-2' /> Google Scholar</UnderlineLink></li>
                   <li className='text-lg'><UnderlineLink href="https://www.linkedin.com/in/yutian-chen-469602223/"><LinkedinIcon className='mr-2' /> LinkedIn</UnderlineLink></li>
-                  <li className='text-lg'><UnderlineLink href="https://github.com/MarkChenYutian"><GithubIcon className='mr-2' /> GitHub</UnderlineLink></li>
+                  <li className='text-lg'><UnderlineLink href="https://github.com/MarkChenYutian"><RiGithubLine className='text-2xl mr-2' /> GitHub</UnderlineLink></li>
                 </ul>
               </div>
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-6'>
-              <div className='text-lg homepage-card col-span-1 md:col-span-2 row-span-2'>
-                <h2 className='text-3xl py-2 text-primary-900'>About Me</h2>
+              <div className='text-lg homepage-card col-span-1 md:col-span-2 row-span-2 flex flex-col'>
+                <h2 className='text-3xl py-2 text-primary-800'>About Me</h2>
                 <p className='break-words hyphens-auto overflow-auto pt-4'>
-                  I am dedicated to improve the <b>spatial understanding</b> ability of autonomous systems, which requires a combination of geometry and semantic information about the surroundings. My research experience on <b>visual-inertial SLAM</b> at <UnderlineLink href="https://theairlab.org/">the AirLAB</UnderlineLink> focuses on improving the recognition of scene geometry in adversarial conditions, while my research experience in <b>Natural Language Processing (NLP)</b> and semantic segmentation focuses on grasping and interpreting the semantic of scenes.
+                  I am an M.S. Robotics student at Carnegie Mellon University, advised by <UnderlineLink href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Prof. Sebastian Scherer</UnderlineLink> in <UnderlineLink href="https://theairlab.org/">the AirLab</UnderlineLink>.
+                  My research focuses on enabling machines to understand and interact with the physical reality through robust geometric and semantic perception.
+                  I am broadly interested in visual geometry, spatial reasoning, and the development of scalable algorithms that bridge perception and action for autonomous systems.
                 </p>
+                <div className='flex-grow'/>
                 <div className='flex flex-row-reverse pt-4'><ButtonLink href='/files/resume.pdf' variant='primary' size='large' className='min-w-44 text-center' rightIcon={ArrowRightIcon}>See My Resume</ButtonLink></div>
               </div>
 
               <div className='text-lg homepage-card col-span-1 md:col-span-4 row-span-1'>
-                <h2 className='text-3xl py-2 text-primary-900'>Recent Research</h2>
+                <h2 className='text-3xl py-2 text-primary-800'>Recent Research</h2>
                 <p>Below is a highlight list of my recent works. For a full list of works, please see <UnderlineLink className='text-primary-500' href="#experience-section">Here</UnderlineLink>.</p>
                 <ul className='pl-8 py-4'>
                   <li><Paperlink key={0} title="UFM: A Simple Path towards Unified Dense Correspondence with Flow" link="https://uniflowmatch.github.io"/></li>
@@ -88,7 +92,7 @@ export default function HomePage() {
               </div>
 
               <div className='text-lg homepage-card col-span-1 md:col-span-2 row-span-2'>
-                <h2 className='text-3xl py-2 text-primary-900'>Projects</h2>
+                <h2 className='text-3xl py-2 text-primary-800'>Projects</h2>
                 <div className='grid grid-cols-4 justify-center items-center auto-cols-min'>
                   <Image alt='PyPose Icon' src={PyposeImage.src} width='44' height='44' className='inline-block ml-4' />
                   <h3 className='break-words hyphens-auto overflow-auto text-xl font-semibold col-span-3'>
@@ -109,7 +113,7 @@ export default function HomePage() {
               </div>
 
               <div className='text-lg homepage-card col-span-1 md:col-span-2 row-span-2'>
-                <h2 className='text-3xl py-2 text-primary-900'>Skills</h2>
+                <h2 className='text-3xl py-2 text-primary-800'>Skills</h2>
                 <p className='break-words hyphens-auto overflow-auto font-semibold mt-2'>
                   Robotics
                 </p>
@@ -133,7 +137,7 @@ export default function HomePage() {
               </div>
 
               <div className='text-lg homepage-card col-span-1 md:col-span-2 row-span-1'>
-                <h2 className='text-3xl py-2 text-primary-900'>Open Source Notes</h2>
+                <h2 className='text-3xl py-2 text-primary-800'>Open Source Notes</h2>
                 <p className='break-words hyphens-auto overflow-auto'>
                   I believe knowledge is most impactful when shared freely. By open-sourcing my notes from high school AP courses to advanced university topics, I aim to improve the accessibility of knowledge for everyone.
                 </p>
@@ -141,28 +145,12 @@ export default function HomePage() {
               </div>
 
               <div className='text-lg homepage-card col-span-1 md:col-span-4 row-span-4'>
-                <h2 className='text-3xl pt-2 text-primary-900' id='experience-section'>Experience</h2>
+                <h2 className='text-3xl pt-2 text-primary-800' id='experience-section'>Experience</h2>
                 <ol>
                   <li>
                     <ExperienceHead
-                      icon={FieldAILogo}
-                      title="AI Research Intern"
-                      place="Field AI Inc."
-                      link="https://www.fieldai.com"
-                      from_date="Jun 2025"
-                      to_date="Aug 2025"
-                      desc={
-                        <p>
-                          Excited to join Field AI Inc. as a Robot Perception Intern, working with <UnderlineLink href="https://www.jaypatrikar.me">Jay Patrikar</UnderlineLink> on accelerating high-resolution visual transformer inference on edge compute devices.
-                        </p>
-                      }
-                      items={[
-                      ]}
-                    />
-
-                    <ExperienceHead
                       icon={AirLabLogo}
-                      title="Learning-based Visual-Inertial SLAM"
+                      title="Spatial AI & Visual-Inertial SLAM"
                       place="The AirLab, Robotics Institue, Carnegie Mellon University"
                       link="https://theairlab.org/"
                       from_date="Sep 2022"
@@ -170,23 +158,41 @@ export default function HomePage() {
                       desc={
                         <p>
                           Working with Professor <UnderlineLink href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Sebastian Scherer</UnderlineLink>, I aimed to construct robust and accurate visual-inertial SLAM system using data-driven approach.
-                          I Developed the MAC-VO, a visual odometry that outperforms the state-of-the-art visual odomtries like DPVO by 30% on relative translation error (RTE) and relative rotation error (ROE) in multiple public datasets.
+                          I Developed the MAC-VO, an award-winning visual odometry that significantly outperforms the state-of-the-art visual odomtries like DPVO by 30% on relative translation error (RTE) and relative rotation error (ROE) in multiple public datasets.
                           I also Deployed the MAC-VO as ROS2 node on Orin-AGX on real drone and speedup the system by 4 times with TensorRT.
                         </p>
                       }
                       items={[
-                        <Paperlink key={0} title="UFM: A Simple Path towards Unified Dense Correspondence with Flow" link="https://uniflowmatch.github.io"/>,
-                        <Paperlink key={1} title="AirIO: Learning Inertial Odometry with Enhanced IMU Feature Observability" link="https://air-io.github.io/" />,
-                        <Paperlink key={2} title="MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry" link="https://mac-vo.github.io/" awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]}/>,
+                        <Paperlink key={0} title="MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry" link="https://mac-vo.github.io/" awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]}/>,
+                        <Paperlink key={1} title="UFM: A Simple Path towards Unified Dense Correspondence with Flow" link="https://uniflowmatch.github.io"/>,
+                        <Paperlink key={2} title="AirIO: Learning Inertial Odometry with Enhanced IMU Feature Observability" link="https://air-io.github.io/" />,
                         <Paperlink key={3} title="AirIMU: Learning Uncertainty Propagation for Inertial Odometry" link="https://airimu.github.io/" />,
                         <Paperlink key={4} title="PyPose v0.6: The Imperative Programming Interface for Robotics" link="https://arxiv.org/abs/2309.13035" />
                       ]}
                     />
 
                     <ExperienceHead
+                      icon={FieldAILogo}
+                      title="ViT Inference Acceleration"
+                      place="Field AI Inc., Field AI Research Institute"
+                      link="https://www.fieldai.com/fairi"
+                      from_date="Jun 2025"
+                      to_date="Aug 2025"
+                      desc={
+                        <p>
+                          Working with <UnderlineLink href="https://www.jaypatrikar.me">Jay Patrikar</UnderlineLink>, we propose the Confidence-Guided Token Merging (Co-Me), a training-free acceleration method for visual geometric transformers that identifies and merges low-confidence tokens to reduce computation while preserving spatial fidelity.
+                          By leveraging a distilled confidence predictor, Co-Me delivers substantial speedups across models like VGGT (up to 11.3x) and MapAnything (up to 7.8x), enabling real-time 3D perception.
+                        </p>
+                      }
+                      items={[
+                        <span key={0} className='font-light italic'>Public release coming soon...</span>
+                      ]}
+                    />
+
+                    <ExperienceHead
                       icon={MITIBMImage}
                       title="Embodied AI Simulator"
-                      place="IBM-MIT Watson AI Lab"
+                      place="MIT-IBM Watson AI Lab"
                       link="https://mitibmwatsonailab.mit.edu/"
                       from_date="Apr 2024"
                       to_date="Jan 2025"
@@ -241,7 +247,7 @@ export default function HomePage() {
               </div>
 
               <div className='text-lg homepage-card col-span-1 md:col-span-2 row-span-1'>
-                <h2 className='text-3xl py-2 text-primary-900'>Courses</h2>
+                <h2 className='text-3xl py-2 text-primary-800'>Courses</h2>
                 <ol className="my-2 ml-4 list-disc">
                   <li>16-833 Localization and Mapping</li>
                   <li>16-385 Computer Vision</li>

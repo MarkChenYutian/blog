@@ -4,11 +4,11 @@ import Image from 'next/image';
 import * as React from 'react';
 
 import FileSystemApp from '@/components/filesystem2/app';
+import Footer from '@/components/Footer';
 import ButtonLink from '@/components/links/ButtonLink';
 import NavigationBar from '@/components/Navigation';
 
-import AvatarImage from '~/images/Yutian2025_Squared.jpg';
-import Footer from '@/components/Footer';
+import AvatarImage from '~/images/Yutian_Chen.jpg';
 
 export const metadata: Metadata = {
   title: 'Shared Files',

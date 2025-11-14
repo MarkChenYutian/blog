@@ -10,7 +10,7 @@ import NavigationBar from '@/components/Navigation';
 import AllPosts from '@/app/posts/page-search';
 import { PostPageProps } from '@/app/posts/post-entry';
 
-import AvatarImage from '~/images/Yutian2025_Squared.jpg';
+import AvatarImage from '~/images/Yutian_Chen.jpg';
 
 export const metadata: Metadata = {
   title: 'Posts',
