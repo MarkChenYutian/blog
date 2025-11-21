@@ -4,6 +4,7 @@ import { IconType } from 'react-icons';
 
 import { cn } from '@/lib/utils';
 
+import type { IconComponentProps } from '@/components/icons/withValidIcon';
 import UnstyledLink, {
   UnstyledLinkProps,
 } from '@/components/links/UnstyledLink';
@@ -44,6 +45,13 @@ const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
     },
     ref
   ) => {
+    const LeftIconComponent = LeftIcon
+      ? (LeftIcon as unknown as React.ComponentType<IconComponentProps>)
+      : undefined;
+    const RightIconComponent = RightIcon
+      ? (RightIcon as unknown as React.ComponentType<IconComponentProps>)
+      : undefined;
+
     return (
       <UnstyledLink
         ref={ref}
@@ -100,14 +108,14 @@ const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
           className
         )}
       >
-        {LeftIcon && (
+        {LeftIconComponent && (
           <div
             className={cn([
               size === 'base' && 'mr-1',
               size === 'sm' && 'mr-1.5',
             ])}
           >
-            <LeftIcon
+            <LeftIconComponent
               size='1em'
               className={cn(
                 [
@@ -120,14 +128,14 @@ const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
           </div>
         )}
         {children}
-        {RightIcon && (
+        {RightIconComponent && (
           <div
             className={cn([
               size === 'base' && 'ml-1',
               size === 'sm' && 'ml-1.5',
             ])}
           >
-            <RightIcon
+            <RightIconComponent
               size='1em'
               className={cn(
                 [

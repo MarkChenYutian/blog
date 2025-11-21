@@ -1,9 +1,9 @@
 'use client'; // Error components must be Client Components
 
 import * as React from 'react';
-import { RiAlarmWarningFill } from 'react-icons/ri';
 
 import TextButton from '@/components/buttons/TextButton';
+import AlarmWarningIcon from '@/components/icons/AlarmWarningIcon';
 
 export default function Error({
   error,
@@ -21,7 +21,7 @@ export default function Error({
     <main>
       <section className='bg-white'>
         <div className='layout flex min-h-screen flex-col items-center justify-center text-center text-black'>
-          <RiAlarmWarningFill
+          <AlarmWarningIcon
             size={60}
             className='drop-shadow-glow animate-flicker text-red-500'
           />

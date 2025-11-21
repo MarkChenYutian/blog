@@ -4,6 +4,7 @@ import { IconType } from 'react-icons';
 
 import { cn } from '@/lib/utils';
 
+import type { IconComponentProps } from '@/components/icons/withValidIcon';
 import UnstyledLink, {
   UnstyledLinkProps,
 } from '@/components/links/UnstyledLink';
@@ -37,6 +38,10 @@ const IconLink = React.forwardRef<HTMLAnchorElement, IconLinkProps>(
     },
     ref
   ) => {
+    const IconComponent = Icon
+      ? (Icon as unknown as React.ComponentType<IconComponentProps>)
+      : undefined;
+
     return (
       <UnstyledLink
         ref={ref}
@@ -88,7 +93,9 @@ const IconLink = React.forwardRef<HTMLAnchorElement, IconLinkProps>(
         )}
         {...rest}
       >
-        {Icon && <Icon size='1em' className={cn(classNames?.icon)} />}
+        {IconComponent && (
+          <IconComponent size='1em' className={cn(classNames?.icon)} />
+        )}
       </UnstyledLink>
     );
   }

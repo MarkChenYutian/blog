@@ -7,6 +7,7 @@ import React from "react";
 import { ImFileEmpty, ImFilePdf } from "react-icons/im";
 
 import { AWSFileObject, downloadItem, DownloadProgress } from "@/components/filesystem2/download";
+import { withValidIcon } from "@/components/icons/withValidIcon";
 
 
 interface FileSystemProps {
@@ -16,10 +17,15 @@ interface FileSystemProps {
 }
 
 
+const PdfIcon = withValidIcon(ImFilePdf);
+const GenericFileIcon = withValidIcon(ImFileEmpty);
+
 const FileIcon: React.FC<{ fileType: string }> = ({ fileType }) => {
   switch (fileType) {
-    case "pdf": return <ImFilePdf className="block" size={24} color="red" />;
-    default: return <ImFileEmpty className="block" size={24} />;
+    case "pdf":
+      return <PdfIcon className="block" size={24} color="red" />;
+    default:
+      return <GenericFileIcon className="block" size={24} />;
   };
 }
 

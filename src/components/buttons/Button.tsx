@@ -1,9 +1,11 @@
 import { LucideIcon } from 'lucide-react';
 import * as React from 'react';
 import { IconType } from 'react-icons';
-import { ImSpinner2 } from 'react-icons/im';
 
 import { cn } from '@/lib/utils';
+
+import SpinnerIcon from '@/components/icons/SpinnerIcon';
+import type { IconComponentProps } from '@/components/icons/withValidIcon';
 
 const ButtonVariant = ['primary', 'outline', 'ghost', 'light', 'dark'] as const;
 const ButtonSize = ['sm', 'base'] as const;
@@ -39,6 +41,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const disabled = isLoading || buttonDisabled;
+    const LeftIconComponent = LeftIcon
+      ? (LeftIcon as unknown as React.ComponentType<IconComponentProps>)
+      : undefined;
+    const RightIconComponent = RightIcon
+      ? (RightIcon as unknown as React.ComponentType<IconComponentProps>)
+      : undefined;
 
     return (
       <button
@@ -110,17 +118,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               }
             )}
           >
-            <ImSpinner2 className='animate-spin' />
+            <SpinnerIcon className='animate-spin' />
           </div>
         )}
-        {LeftIcon && (
+        {LeftIconComponent && (
           <div
             className={cn([
               size === 'base' && 'mr-1',
               size === 'sm' && 'mr-1.5',
             ])}
           >
-            <LeftIcon
+            <LeftIconComponent
               size='1em'
               className={cn(
                 [
@@ -133,14 +141,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           </div>
         )}
         {children}
-        {RightIcon && (
+        {RightIconComponent && (
           <div
             className={cn([
               size === 'base' && 'ml-1',
               size === 'sm' && 'ml-1.5',
             ])}
           >
-            <RightIcon
+            <RightIconComponent
               size='1em'
               className={cn(
                 [

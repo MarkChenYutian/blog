@@ -1,7 +1,7 @@
 'use static';
 
 import { ArrowRightIcon, GraduationCapIcon, LinkedinIcon, MailIcon } from 'lucide-react';
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import * as React from 'react';
 import { RiGithubLine } from 'react-icons/ri';
@@ -10,15 +10,16 @@ import '@/lib/env';
 import ExperienceHead from '@/components/custom/experience_heading';
 import Paperlink from '@/components/custom/paper_link';
 import Footer from '@/components/Footer';
+import { withValidIcon } from '@/components/icons/withValidIcon';
 import ButtonLink from '@/components/links/ButtonLink';
 import UnderlineLink from '@/components/links/UnderlineLink';
 import NavigationBar from '@/components/Navigation';
 
-import AirLabLogo from '~/images/AirLab_Logo.png'
-import FieldAILogo from '~/images/FieldAI_Logo.png'
-import GuangdongCardiovescularImage from '~/images/guangdong_cardiovescular_inst.jpg'
+import AirLabLogo from '~/images/AirLab_Logo.png';
+import FieldAILogo from '~/images/FieldAI_Logo.png';
+import GuangdongCardiovescularImage from '~/images/guangdong_cardiovescular_inst.jpg';
 import LTIImage from '~/images/lti.png';
-import MITIBMImage from '~/images/MIT-IBM-WatsonAI.png'
+import MITIBMImage from '~/images/MIT-IBM-WatsonAI.png';
 import PyposeImage from '~/images/pypose.jpg';
 import SCSImage from '~/images/scslogo_no_outline_simple.gif';
 import AvatarImage from '~/images/Yutian_Chen.jpg';
@@ -29,6 +30,8 @@ import AvatarImage from '~/images/Yutian_Chen.jpg';
  * You can override the next-env if the type is important to you
  * @see https://stackoverflow.com/questions/68103844/how-to-override-next-js-svg-module-declaration
  */
+
+const GithubIcon = withValidIcon(RiGithubLine);
 
 export const metadata: Metadata = {
   title: 'Yutian Chen',
@@ -64,7 +67,7 @@ export default function HomePage() {
                 <ul>
                   <li className='text-lg'><UnderlineLink href="https://scholar.google.com/citations?user=9-Cac9MAAAAJ&hl=en"><GraduationCapIcon className='mr-2' /> Google Scholar</UnderlineLink></li>
                   <li className='text-lg'><UnderlineLink href="https://www.linkedin.com/in/yutian-chen-469602223/"><LinkedinIcon className='mr-2' /> LinkedIn</UnderlineLink></li>
-                  <li className='text-lg'><UnderlineLink href="https://github.com/MarkChenYutian"><RiGithubLine className='text-2xl mr-2' /> GitHub</UnderlineLink></li>
+                  <li className='text-lg'><UnderlineLink href="https://github.com/MarkChenYutian"><GithubIcon className='text-2xl mr-2' /> GitHub</UnderlineLink></li>
                 </ul>
               </div>
             </div>
@@ -85,8 +88,8 @@ export default function HomePage() {
                 <h2 className='text-3xl py-2 text-primary-800'>Recent Research</h2>
                 <p>Below is a highlight list of my recent works. For a full list of works, please see <UnderlineLink className='text-primary-500' href="#experience-section">Here</UnderlineLink>.</p>
                 <ul className='pl-8 py-4'>
-                  <li><Paperlink key={0} title="UFM: A Simple Path towards Unified Dense Correspondence with Flow" link="https://uniflowmatch.github.io"/></li>
-                  <li><Paperlink title="AirIO: Learning Inertial Odometry with Enhanced IMU Feature Observability" link="https://air-io.github.io" /></li>
+                  <li><Paperlink title="Co-Me: Confidence-Guided Token Merging for Visual Geometric Transformers" link="https://co-me-tokens.github.io"/></li>
+                  <li><Paperlink title="UFM: A Simple Path towards Unified Dense Correspondence with Flow" link="https://uniflowmatch.github.io"/></li>
                   <li><Paperlink title="MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry" link="https://mac-vo.github.io/" awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]}/></li>
                 </ul>
               </div>
@@ -185,7 +188,7 @@ export default function HomePage() {
                         </p>
                       }
                       items={[
-                        <span key={0} className='font-light italic'>Public release coming soon...</span>
+                        <Paperlink key={0} title="Co-Me: Confidence-Guided Token Merging for Visual Geometric Transformers" link="https://co-me-tokens.github.io"/>
                       ]}
                     />
 
