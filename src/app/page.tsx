@@ -35,6 +35,9 @@ const GithubIcon = withValidIcon(RiGithubLine);
 
 export const metadata: Metadata = {
   title: 'Yutian Chen',
+  alternates: {
+    canonical: 'https://yutianchen.blog/',
+  },
 }
 
 export default function HomePage() {
