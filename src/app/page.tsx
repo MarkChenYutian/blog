@@ -7,6 +7,7 @@ import * as React from 'react';
 import { RiGithubLine } from 'react-icons/ri';
 import '@/lib/env';
 
+import CursorField from '@/components/custom/cursor_field';
 import ExperienceHead from '@/components/custom/experience_heading';
 import Paperlink from '@/components/custom/paper_link';
 import Footer from '@/components/Footer';
@@ -47,8 +48,9 @@ export default function HomePage() {
 
         <div className='relative flex min-h-screen flex-col text-neutral-800'>
           <div className='pb-4'>
-            <div className='header-band bg-primary-800 px-6 py-6 text-neutral-100'>
-            <div className='relative flex flex-wrap flex-row items-center justify-center w-full'>
+            <div className='header-band relative overflow-hidden bg-primary-900 px-6 py-6 text-neutral-100'>
+            <CursorField color='rgba(255,255,255,0.35)' />
+            <div className='relative z-10 flex flex-wrap flex-row items-center justify-center w-full'>
               <Image alt="Yutian Chen portrait" src={AvatarImage.src} width={256} height={256} className='rounded-full m-8' />
               <div className='p-4'>
                 <h1 className='text-6xl font-extrabold py-2'>Yutian Chen</h1>
@@ -62,12 +64,12 @@ export default function HomePage() {
                 </div>
                 <p className='text-lg leading-tight'>Ph.D. in Computer Science</p>
 
-                <div className='flex justify-between items-center flex-wrap mt-2 text-neutral-400 font-light leading-tight'>
+                <div className='flex justify-between items-center flex-wrap mt-2 text-neutral-300 font-extralight leading-tight'>
                   <span className='text-xl'>Carnegie Mellon University</span>
                   <span>2021 Aug - 2026 May</span>
                 </div>
-                <p className='text-lg text-neutral-400 font-light leading-tight'><del>MSc. Robotics</del> (Dropped)</p>
-                <p className='text-lg text-neutral-400 font-light leading-tight'>BSc. Computer Science, Minor in Mathematical Science</p>
+                <p className='text-lg text-neutral-300 font-extralight leading-tight'><del>MSc. Robotics</del> (Dropped)</p>
+                <p className='text-lg text-neutral-300 font-extralight leading-tight'>BSc. Computer Science, Minor in Mathematical Science</p>
               </div>
 
               <div className='flex-grow' />
