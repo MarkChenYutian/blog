@@ -17,20 +17,20 @@ interface ExperienceProps {
 };
 
 export default function ExperienceHead(exp: ExperienceProps) {
-  return <div className="mt-12">
-    <div className="flex content-between items-start flex-wrap">
-      <Image alt={exp.title} src={exp.icon} width={96} height={96} />
-      <div className="ml-4">
+  return <div className="mt-6">
+    <div className="flex items-center flex-wrap gap-x-4 gap-y-1">
+      <Image alt={exp.title} src={exp.icon} width={64} height={64} />
+      <div className="leading-tight">
         <p className="text-2xl font-semibold">{exp.title}</p>
         <UnderlineLink href={exp.link} className="font-normal">{exp.place}</UnderlineLink>
       </div>
       <div className="flex-grow" />
-      <span className="font-light">{exp.from_date}-{exp.to_date}</span>
+      <span className="font-light text-neutral-500">{exp.from_date} – {exp.to_date}</span>
     </div>
-    <ol className="ml-4 border-l-4 pl-4 my-4">
-      {exp.desc === undefined ? null : <div className="mb-8">{exp.desc}</div>}
+    <ol className="ml-[30px] border-l-4 pl-4 mt-3 mb-2 space-y-1">
+      {exp.desc !== undefined && <div className="mb-3">{exp.desc}</div>}
       {
-        exp.items.map((elem, index) => <li key={index} className="my-1">{elem}</li>)
+        exp.items.map((elem, index) => <li key={index}>{elem}</li>)
       }
     </ol>
   </div>

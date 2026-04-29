@@ -57,7 +57,7 @@ const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
         ref={ref}
         {...rest}
         className={cn(
-          'inline-flex items-center font-medium ',
+          'group inline-flex items-center font-medium ',
           'focus-visible:ring-primary-500 focus:outline-none focus-visible:ring',
           'shadow-sm',
           'transition-colors duration-75',
@@ -71,11 +71,11 @@ const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
           //#region  //*=========== Variants ===========
           [
             variant === 'primary' && [
-              'bg-primary-500 text-white',
-              'border-primary-600 border',
-              'hover:bg-primary-600 hover:text-white',
+              'bg-primary-600 text-white',
+              'border-primary-700 border',
+              'hover:bg-primary-700 hover:text-white',
               'active:bg-primary-700',
-              'disabled:bg-primary-700',
+              'disabled:bg-stale-700',
             ],
             variant === 'outline' && [
               'text-primary-500',
@@ -130,13 +130,12 @@ const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
         {children}
         {RightIconComponent && (
           <div
-            className={cn([
-              size === 'base' && 'ml-1',
-              size === 'sm' && 'ml-1.5',
-            ])}
+            className={cn(
+              'ml-auto pl-2 transition-transform duration-200 group-hover:translate-x-1',
+            )}
           >
             <RightIconComponent
-              size='1em'
+              size='1.5em'
               className={cn(
                 [
                   size === 'base' && 'text-md md:text-md',

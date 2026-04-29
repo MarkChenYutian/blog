@@ -10,6 +10,7 @@ import '@/lib/env';
 import CursorField from '@/components/custom/cursor_field';
 import ExperienceHead from '@/components/custom/experience_heading';
 import Paperlink from '@/components/custom/paper_link';
+import PdfButtonLink from '@/components/custom/pdf_button_link';
 import Footer from '@/components/Footer';
 import { withValidIcon } from '@/components/icons/withValidIcon';
 import ButtonLink from '@/components/links/ButtonLink';
@@ -48,8 +49,8 @@ export default function HomePage() {
 
         <div className='relative flex min-h-screen flex-col text-neutral-800'>
           <div className='pb-4'>
-            <div className='header-band relative overflow-hidden bg-primary-900 px-6 py-6 text-neutral-100'>
-            <CursorField color='rgba(255,255,255,0.35)' />
+            <div className='header-band relative overflow-hidden bg-primary-800 px-6 py-6 text-neutral-100'>
+            <CursorField color='white' />
             <div className='relative z-10 flex flex-wrap flex-row items-center justify-center w-full'>
               <Image alt="Yutian Chen portrait" src={AvatarImage.src} width={256} height={256} className='rounded-full m-8' />
               <div className='p-4'>
@@ -87,7 +88,7 @@ export default function HomePage() {
             <NavigationBar />
 
             <div className='grid grid-cols-1 lg:grid-cols-6 px-6'>
-              <div className='text-lg homepage-card col-span-1 lg:col-span-2 row-span-2 flex flex-col'>
+              <div className='text-lg homepage-card col-span-1 lg:col-span-2 row-span-1 flex flex-col'>
                 <h2 className='text-3xl py-2 text-primary-800'>About Me</h2>
                 <p className='break-words hyphens-auto overflow-auto pt-4 text-justify'>
                   I am an M.S. Robotics student at Carnegie Mellon University, advised by <UnderlineLink href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Prof. Sebastian Scherer</UnderlineLink> in <UnderlineLink href="https://theairlab.org/">the AirLab</UnderlineLink>.
@@ -95,37 +96,47 @@ export default function HomePage() {
                   I am broadly interested in visual geometry, spatial reasoning, and the development of scalable algorithms that bridge perception and action for autonomous systems.
                 </p>
                 <div className='flex-grow'/>
-                <div className='flex flex-row-reverse pt-4'><ButtonLink href='/files/resume.pdf' variant='primary' size='large' className='min-w-44 text-center' rightIcon={ArrowRightIcon}>See My Resume</ButtonLink></div>
+                <div className='flex flex-row-reverse pt-4'>
+                  <PdfButtonLink link='/files/Yutian_Chen_CV.pdf' modalTitle='Yutian Chen — CV'>
+                    <ButtonLink href='/files/Yutian_Chen_CV.pdf' variant='primary' size='large' className='min-w-44 text-center' rightIcon={ArrowRightIcon}>See My CV</ButtonLink>
+                  </PdfButtonLink>
+                </div>
               </div>
 
               <div className='text-lg homepage-card col-span-1 lg:col-span-4 row-span-1'>
-                <h2 className='text-3xl py-2 text-primary-800'>Recent Research</h2>
+                <h2 className='text-3xl py-2 text-primary-800'>Recent Updates</h2>
                 <p className='text-justify hyphens-auto'>Below is a highlight list of my recent works. For a full list of works, please see <UnderlineLink className='text-primary-500' href="#experience-section">Here</UnderlineLink>.</p>
-                <ul className='pl-8 py-4'>
-                  <li><Paperlink title="Co-Me: Confidence-Guided Token Merging for Visual Geometric Transformers" link="https://co-me-tokens.github.io"/></li>
-                  <li><Paperlink title="UFM: A Simple Path towards Unified Dense Correspondence with Flow" link="https://uniflowmatch.github.io"/></li>
-                  <li><Paperlink title="MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry" link="https://mac-vo.github.io/" awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]}/></li>
+                <ul className='pl-4 py-2'>
+                  <li><Paperlink title="Co-Me: Confidence-Guided Token Merging for Visual Geometric Transformers" link="https://co-me-tokens.github.io" venue="CVPR 2026"/></li>
+                  <li><Paperlink title="MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry" link="https://mac-vo.github.io/" venue="ICRA 2025" awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]}/></li>
                 </ul>
               </div>
 
-              <div className='text-lg homepage-card col-span-1 lg:col-span-2 row-span-2'>
+              <div className='text-lg homepage-card col-span-1 lg:col-span-4 row-span-1'>
                 <h2 className='text-3xl py-2 text-primary-800'>Projects</h2>
-                <div className='grid grid-cols-4 justify-center items-center auto-cols-min'>
-                  <Image alt='PyPose Icon' src={PyposeImage.src} width='44' height='44' className='inline-block ml-4' />
-                  <h3 className='break-words hyphens-auto overflow-auto text-xl font-semibold col-span-3'>
-                    <UnderlineLink href="https://pypose.org/">PyPose</UnderlineLink>
-                  </h3>
-                  <p className='col-span-4 text-justify hyphens-auto'>
-                    PyPose is a Library for Robot Learning with Physics-based Optimization. It supports efficient automatic-differentiation on Lie Group and Algebra.
-                  </p>
-                  <div className='col-span-4 p-2'></div>
-                  <Image alt='CMU SCS Icon' src={SCSImage.src} width='44' height='44' className='inline-block ml-4' />
-                  <h3 className='break-words hyphens-auto overflow-auto text-xl font-semibold pt-4 col-span-3'>
-                    <UnderlineLink href="https://cs122.andrew.cmu.edu/visualc0/">C0 Visualizer</UnderlineLink>
-                  </h3>
-                  <p className='col-span-4 text-justify hyphens-auto'>
-                    I created the C0 program visualizer, a virtual machine that executes C language in browser and provide realtime memory visualization.
-                  </p>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 pt-2'>
+                  <div>
+                    <div className='flex items-center gap-3 mb-2'>
+                      <Image alt='PyPose Icon' src={PyposeImage.src} width={44} height={44} />
+                      <h3 className='text-xl font-semibold'>
+                        <UnderlineLink href="https://pypose.org/">PyPose</UnderlineLink>
+                      </h3>
+                    </div>
+                    <p className='text-justify hyphens-auto'>
+                      PyPose is a Library for Robot Learning with Physics-based Optimization. It supports efficient automatic-differentiation on Lie Group and Algebra.
+                    </p>
+                  </div>
+                  <div>
+                    <div className='flex items-center gap-3 mb-2'>
+                      <Image alt='CMU SCS Icon' src={SCSImage.src} width={44} height={44} />
+                      <h3 className='text-xl font-semibold'>
+                        <UnderlineLink href="https://cs122.andrew.cmu.edu/visualc0/">C0 Visualizer</UnderlineLink>
+                      </h3>
+                    </div>
+                    <p className='text-justify hyphens-auto'>
+                      I created the C0 program visualizer, a virtual machine that executes C language in browser and provide realtime memory visualization.
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -151,16 +162,18 @@ export default function HomePage() {
                       desc={
                         <p className='text-justify hyphens-auto'>
                           Working with Professor <UnderlineLink href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Sebastian Scherer</UnderlineLink>, I aimed to construct robust and accurate visual-inertial SLAM system using data-driven approach.
-                          I Developed the MAC-VO, an award-winning visual odometry that significantly outperforms the state-of-the-art visual odomtries like DPVO by 30% on relative translation error (RTE) and relative rotation error (ROE) in multiple public datasets.
-                          I also Deployed the MAC-VO as ROS2 node on Orin-AGX on real drone and speedup the system by 4 times with TensorRT.
+                          I Developed the MAC-VO, an award-winning SoTA visual odometry that is generalizable everywhere (even the lunar surface 🌕!).
                         </p>
                       }
                       items={[
-                        <Paperlink key={0} title="MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry" link="https://mac-vo.github.io/" awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]}/>,
-                        <Paperlink key={1} title="UFM: A Simple Path towards Unified Dense Correspondence with Flow" link="https://uniflowmatch.github.io"/>,
-                        <Paperlink key={2} title="AirIO: Learning Inertial Odometry with Enhanced IMU Feature Observability" link="https://air-io.github.io/" />,
-                        <Paperlink key={3} title="AirIMU: Learning Uncertainty Propagation for Inertial Odometry" link="https://airimu.github.io/" />,
-                        <Paperlink key={4} title="PyPose v0.6: The Imperative Programming Interface for Robotics" link="https://arxiv.org/abs/2309.13035" />
+                        <Paperlink key={0} title="MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry" link="https://mac-vo.github.io/" venue="ICRA 2025"
+                          awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]}
+                          slides={[{ title: "MAC-VO Presentation Slide", link: "/files/MAC-VO-AirLab-Long-Presentation.pdf" }]}
+                        />,
+                        <Paperlink key={1} title="UFM: A Simple Path towards Unified Dense Correspondence with Flow" link="https://uniflowmatch.github.io" venue="NeurIPS 2025"/>,
+                        <Paperlink key={2} title="AirIO: Learning Inertial Odometry with Enhanced IMU Feature Observability" link="https://air-io.github.io/" venue="IEEE RA-L" />,
+                        <Paperlink key={3} title="AirIMU: Learning Uncertainty Propagation for Inertial Odometry" link="https://airimu.github.io/" venue="arXiv Preprint" />,
+                        <Paperlink key={4} title="PyPose v0.6: The Imperative Programming Interface for Robotics" link="https://arxiv.org/abs/2309.13035" venue="IROS Workshop 2023" />
                       ]}
                     />
 
@@ -178,7 +191,9 @@ export default function HomePage() {
                         </p>
                       }
                       items={[
-                        <Paperlink key={0} title="Co-Me: Confidence-Guided Token Merging for Visual Geometric Transformers" link="https://co-me-tokens.github.io"/>
+                        <Paperlink key={0} title="Co-Me: Confidence-Guided Token Merging for Visual Geometric Transformers" link="https://co-me-tokens.github.io" venue="CVPR 2026"
+                          slides={[{ title: "Co-Me Presentation Slide", link: "/files/Co-Me-AirLab-Long-Presentation.pdf" }]}
+                        />
                       ]}
                     />
 
@@ -195,7 +210,7 @@ export default function HomePage() {
                         </p>
                       }
                       items={[
-                        <Paperlink key={0} title="Virtual Community: An Open World for Humans, Robots, and Society" link="https://virtual-community-ai.github.io/paper.pdf"/>
+                        <Paperlink key={0} title="Virtual Community: An Open World for Humans, Robots, and Society" link="https://virtual-community-ai.github.io/paper.pdf" venue="ICLR 2026"/>
                       ]}
                     />
 
@@ -214,7 +229,7 @@ export default function HomePage() {
                         </p>
                       }
                       items={[
-                        <Paperlink key={0} title="Token Prediction as Implicit Classification to Identify LLM-Generated Text" link="https://aclanthology.org/2023.emnlp-main.810/" />
+                        <Paperlink key={0} title="Token Prediction as Implicit Classification to Identify LLM-Generated Text" link="https://aclanthology.org/2023.emnlp-main.810/" venue="EMNLP 2023" />
                       ]}
                     />
 
@@ -232,7 +247,7 @@ export default function HomePage() {
                         </p>
                       }
                       items={[
-                        <Paperlink key={0} title="Myocardial Segmentation of Cardiac MRI Sequences With Temporal Consistency for Coronary Artery Disease Diagnosis" link="https://www.frontiersin.org/journals/cardiovascular-medicine/articles/10.3389/fcvm.2022.804442/full" />
+                        <Paperlink key={0} title="Myocardial Segmentation of Cardiac MRI Sequences With Temporal Consistency for Coronary Artery Disease Diagnosis" link="https://www.frontiersin.org/journals/cardiovascular-medicine/articles/10.3389/fcvm.2022.804442/full" venue="Frontier Cardiovascular Medicine 2022" />
                       ]}
                     />
                   </li>

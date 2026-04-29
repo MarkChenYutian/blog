@@ -10,6 +10,12 @@ type Props = {
   className?: string;
   /** Pixel radius within which the cursor's influence dominates over the base field. */
   influenceRadius?: number;
+  /** Stroke opacity at rest (no rotation). */
+  baseOpacity?: number;
+  /** Stroke opacity at max cursor-driven velocity. */
+  maxOpacity?: number;
+  /** Angular speed (deg/frame) at which a segment reaches max opacity. */
+  speedForFull?: number;
 };
 
 const noiseAngle = (x: number, y: number, t: number) =>
@@ -25,6 +31,9 @@ const CursorField = ({
   color = 'currentColor',
   className = '',
   influenceRadius = 220,
+  baseOpacity = 0.2,
+  maxOpacity = 0.8,
+  speedForFull = 6,
 }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -97,6 +106,32 @@ const CursorField = ({
 
         const angle = (Math.atan2(blendY, blendX) * 180) / Math.PI;
         line.setAttribute('transform', `rotate(${angle} ${cx} ${cy})`);
+
+        // Cursor-induced motion only: subtract the base (noise) angle from the
+        // blended angle so steady-state noise drift doesn't count as velocity.
+        const baseDeg = (base * 180) / Math.PI;
+        let cursorDelta = angle - baseDeg;
+        while (cursorDelta > 180) cursorDelta -= 360;
+        while (cursorDelta < -180) cursorDelta += 360;
+
+        const prevStr = line.dataset.prev;
+        let speed = 0;
+        if (prevStr !== undefined) {
+          let delta = cursorDelta - Number(prevStr);
+          while (delta > 180) delta -= 360;
+          while (delta < -180) delta += 360;
+          speed = Math.abs(delta);
+        }
+        const prevSmooth = Number(line.dataset.speed || '0');
+        const smooth = prevSmooth * 0.85 + speed * 0.15;
+        line.dataset.prev = String(cursorDelta);
+        line.dataset.speed = String(smooth);
+
+        // Gate brightness by cursor proximity (w) so only segments the cursor
+        // is actively pushing brighten — stationary noise drift stays dim.
+        const boost = Math.min(1, smooth / speedForFull) * w;
+        const opacity = baseOpacity + boost * (maxOpacity - baseOpacity);
+        line.setAttribute('stroke-opacity', opacity.toFixed(3));
       });
       raf = requestAnimationFrame(tick);
     };
