@@ -45,23 +45,29 @@ export default function HomePage() {
     <main>
       <section className='bg-white'>
 
-        <div className='relative flex min-h-screen flex-col text-neutral-700'>
-          <NavigationBar />
-          <div className='pb-4 px-6'>
+        <div className='relative flex min-h-screen flex-col text-neutral-800'>
+          <div className='pb-4'>
+            <div className='header-band bg-primary-800 px-6 py-6 text-neutral-100'>
             <div className='relative flex flex-wrap flex-row items-center justify-center w-full'>
               <Image alt="Yutian Chen portrait" src={AvatarImage.src} width={256} height={256} className='rounded-full m-8' />
               <div className='p-4'>
                 <h1 className='text-6xl font-extrabold py-2'>Yutian Chen</h1>
-                <ul className='mb-8'>
-                  <li> <UnderlineLink href="mailto:yutianch@andrew.cmu.edu"><MailIcon className='mr-2' /> yutianch@andrew.cmu.edu </UnderlineLink></li>
+                <ul className='mb-4'>
+                  <li> <UnderlineLink href="mailto:yutianch@andrew.cmu.edu"><MailIcon className='mr-2' /> yutianch@stanford.edu </UnderlineLink></li>
                 </ul>
 
-                <div className='flex justify-between items-center flex-wrap'>
-                  <span className='text-xl font-bold'>Carnegie Mellon University</span>
-                  <span>2021 Aug - 2027 May</span>
+                <div className='flex justify-between items-center flex-wrap leading-tight'>
+                  <span className='text-xl font-bold'>Stanford University</span>
+                  <span>2026 Sep - Now</span>
                 </div>
-                <p className='text-lg'>MSc. Robotics</p>
-                <p className='text-lg'>BSc. Computer Science, Minor in Mathematical Science</p>
+                <p className='text-lg leading-tight'>Ph.D. in Computer Science</p>
+
+                <div className='flex justify-between items-center flex-wrap mt-2 text-neutral-400 font-light leading-tight'>
+                  <span className='text-xl'>Carnegie Mellon University</span>
+                  <span>2021 Aug - 2026 May</span>
+                </div>
+                <p className='text-lg text-neutral-400 font-light leading-tight'><del>MSc. Robotics</del> (Dropped)</p>
+                <p className='text-lg text-neutral-400 font-light leading-tight'>BSc. Computer Science, Minor in Mathematical Science</p>
               </div>
 
               <div className='flex-grow' />
@@ -74,11 +80,14 @@ export default function HomePage() {
                 </ul>
               </div>
             </div>
+            </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-6'>
-              <div className='text-lg homepage-card col-span-1 md:col-span-2 row-span-2 flex flex-col'>
+            <NavigationBar />
+
+            <div className='grid grid-cols-1 lg:grid-cols-6 px-6'>
+              <div className='text-lg homepage-card col-span-1 lg:col-span-2 row-span-2 flex flex-col'>
                 <h2 className='text-3xl py-2 text-primary-800'>About Me</h2>
-                <p className='break-words hyphens-auto overflow-auto pt-4'>
+                <p className='break-words hyphens-auto overflow-auto pt-4 text-justify'>
                   I am an M.S. Robotics student at Carnegie Mellon University, advised by <UnderlineLink href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Prof. Sebastian Scherer</UnderlineLink> in <UnderlineLink href="https://theairlab.org/">the AirLab</UnderlineLink>.
                   My research focuses on enabling machines to understand and interact with the physical reality through robust geometric and semantic perception.
                   I am broadly interested in visual geometry, spatial reasoning, and the development of scalable algorithms that bridge perception and action for autonomous systems.
@@ -87,9 +96,9 @@ export default function HomePage() {
                 <div className='flex flex-row-reverse pt-4'><ButtonLink href='/files/resume.pdf' variant='primary' size='large' className='min-w-44 text-center' rightIcon={ArrowRightIcon}>See My Resume</ButtonLink></div>
               </div>
 
-              <div className='text-lg homepage-card col-span-1 md:col-span-4 row-span-1'>
+              <div className='text-lg homepage-card col-span-1 lg:col-span-4 row-span-1'>
                 <h2 className='text-3xl py-2 text-primary-800'>Recent Research</h2>
-                <p>Below is a highlight list of my recent works. For a full list of works, please see <UnderlineLink className='text-primary-500' href="#experience-section">Here</UnderlineLink>.</p>
+                <p className='text-justify hyphens-auto'>Below is a highlight list of my recent works. For a full list of works, please see <UnderlineLink className='text-primary-500' href="#experience-section">Here</UnderlineLink>.</p>
                 <ul className='pl-8 py-4'>
                   <li><Paperlink title="Co-Me: Confidence-Guided Token Merging for Visual Geometric Transformers" link="https://co-me-tokens.github.io"/></li>
                   <li><Paperlink title="UFM: A Simple Path towards Unified Dense Correspondence with Flow" link="https://uniflowmatch.github.io"/></li>
@@ -97,60 +106,36 @@ export default function HomePage() {
                 </ul>
               </div>
 
-              <div className='text-lg homepage-card col-span-1 md:col-span-2 row-span-2'>
+              <div className='text-lg homepage-card col-span-1 lg:col-span-2 row-span-2'>
                 <h2 className='text-3xl py-2 text-primary-800'>Projects</h2>
                 <div className='grid grid-cols-4 justify-center items-center auto-cols-min'>
                   <Image alt='PyPose Icon' src={PyposeImage.src} width='44' height='44' className='inline-block ml-4' />
                   <h3 className='break-words hyphens-auto overflow-auto text-xl font-semibold col-span-3'>
                     <UnderlineLink href="https://pypose.org/">PyPose</UnderlineLink>
                   </h3>
-                  <p className='col-span-4'>
-                    PyPose is a Library for Robot Learning with Physics-based Optimization. It supports efficient automatic-differentiation on Lie Group and Lie Algebra. I'm an active contributor of the PyPose project.
+                  <p className='col-span-4 text-justify hyphens-auto'>
+                    PyPose is a Library for Robot Learning with Physics-based Optimization. It supports efficient automatic-differentiation on Lie Group and Algebra.
                   </p>
                   <div className='col-span-4 p-2'></div>
                   <Image alt='CMU SCS Icon' src={SCSImage.src} width='44' height='44' className='inline-block ml-4' />
                   <h3 className='break-words hyphens-auto overflow-auto text-xl font-semibold pt-4 col-span-3'>
                     <UnderlineLink href="https://cs122.andrew.cmu.edu/visualc0/">C0 Visualizer</UnderlineLink>
                   </h3>
-                  <p className='col-span-4'>
-                    I designed and implemented the C0 program visualizer in 2022 Summer. It is a virtual machine that executes C0 language (a safe subset of C) and provide visualization and debugging tools for education purpose.
+                  <p className='col-span-4 text-justify hyphens-auto'>
+                    I created the C0 program visualizer, a virtual machine that executes C language in browser and provide realtime memory visualization.
                   </p>
                 </div>
               </div>
 
-              <div className='text-lg homepage-card col-span-1 md:col-span-2 row-span-2'>
-                <h2 className='text-3xl py-2 text-primary-800'>Skills</h2>
-                <p className='break-words hyphens-auto overflow-auto font-semibold mt-2'>
-                  Robotics
-                </p>
-                <p>
-                  Visual-Inertial SLAM, Computer Vision, Geometric Vision, ROS2, C++
-                </p>
-
-                <p className='break-words hyphens-auto overflow-auto font-semibold mt-4'>
-                  Deep learning & Artificial Intelligence
-                </p>
-                <p>
-                  Natural Language Processing, Semantic Segmentation, PyTorch, CUDA, TensorRT, Python, Triton
-                </p>
-
-                <p className='break-words hyphens-auto overflow-auto font-semibold mt-4'>
-                  Miscellaneous
-                </p>
-                <p>
-                  React, HTML, CSS, TypeScript, LaTeX, Blender
-                </p>
-              </div>
-
-              <div className='text-lg homepage-card col-span-1 md:col-span-2 row-span-1'>
+              <div className='text-lg homepage-card col-span-1 lg:col-span-2 row-span-1'>
                 <h2 className='text-3xl py-2 text-primary-800'>Open Source Notes</h2>
-                <p className='break-words hyphens-auto overflow-auto'>
+                <p className='break-words hyphens-auto overflow-auto text-justify'>
                   I believe knowledge is most impactful when shared freely. By open-sourcing my notes from high school AP courses to advanced university topics, I aim to improve the accessibility of knowledge for everyone.
                 </p>
-                <div className='flex flex-row-reverse pt-4'><ButtonLink href='/files' variant='light' size='large' className='min-w-44 text-center' rightIcon={ArrowRightIcon}>Visit My Notes</ButtonLink></div>
+                <div className='flex flex-row-reverse pt-4'><ButtonLink href='/notes' variant='light' size='large' className='min-w-44 text-center' rightIcon={ArrowRightIcon}>Visit My Notes</ButtonLink></div>
               </div>
 
-              <div className='text-lg homepage-card col-span-1 md:col-span-4 row-span-4'>
+              <div className='text-lg homepage-card col-span-1 lg:col-span-6 row-span-4'>
                 <h2 className='text-3xl pt-2 text-primary-800' id='experience-section'>Experience</h2>
                 <ol>
                   <li>
@@ -162,7 +147,7 @@ export default function HomePage() {
                       from_date="Sep 2022"
                       to_date="Now"
                       desc={
-                        <p>
+                        <p className='text-justify hyphens-auto'>
                           Working with Professor <UnderlineLink href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Sebastian Scherer</UnderlineLink>, I aimed to construct robust and accurate visual-inertial SLAM system using data-driven approach.
                           I Developed the MAC-VO, an award-winning visual odometry that significantly outperforms the state-of-the-art visual odomtries like DPVO by 30% on relative translation error (RTE) and relative rotation error (ROE) in multiple public datasets.
                           I also Deployed the MAC-VO as ROS2 node on Orin-AGX on real drone and speedup the system by 4 times with TensorRT.
@@ -185,7 +170,7 @@ export default function HomePage() {
                       from_date="Jun 2025"
                       to_date="Aug 2025"
                       desc={
-                        <p>
+                        <p className='text-justify hyphens-auto'>
                           Working with <UnderlineLink href="https://www.jaypatrikar.me">Jay Patrikar</UnderlineLink>, we propose the Confidence-Guided Token Merging (Co-Me), a training-free acceleration method for visual geometric transformers that identifies and merges low-confidence tokens to reduce computation while preserving spatial fidelity.
                           By leveraging a distilled confidence predictor, Co-Me delivers substantial speedups across models like VGGT (up to 11.3x) and MapAnything (up to 7.8x), enabling real-time 3D perception.
                         </p>
@@ -203,7 +188,7 @@ export default function HomePage() {
                       from_date="Apr 2024"
                       to_date="Jan 2025"
                       desc={
-                        <p>
+                        <p className='text-justify hyphens-auto'>
                           Working with Professor <UnderlineLink href="https://people.csail.mit.edu/ganchuang/">Chuang Gan</UnderlineLink>, I developed a data pipeline for City-scale 3D scene reconstruction based on real world satellite/street-view image for multi-agent simulator.
                         </p>
                       }
@@ -220,7 +205,7 @@ export default function HomePage() {
                       from_date="Mar 2023"
                       to_date="Sep 2023"
                       desc={
-                        <p>
+                        <p className='text-justify hyphens-auto'>
                           Working with Professor <UnderlineLink href="http://ayesha.lti.cs.cmu.edu/mlsp/people/rsingh/index.html">Rita Singh</UnderlineLink> and <UnderlineLink href="https://scholar.google.com/citations?user=IWcGY98AAAAJ&hl=en">Bhiksha Raj</UnderlineLink>, built a LLM-generated content detector called "LLM-Sentinel".
                           Reaches 98% accuracy on test dataset and outperform existing content detector by OpenAI and ZeroGPT.
                           Collected the OpenLLMText dataset, a dataset contains 30k human written text from OpenWebText and its corresponding rephrased version by various LLMs such as GPT3.5, LLaMA, PaLM, etc.
@@ -239,7 +224,7 @@ export default function HomePage() {
                       from_date="Dec 2018"
                       to_date="Jan 2020"
                       desc={
-                        <p>
+                        <p className='text-justify hyphens-auto'>
                           Mentored by Professor <UnderlineLink href="https://engineering.nd.edu/faculty/yiyu-shi/">Yiyu Shi</UnderlineLink> and <UnderlineLink href="https://xiaoweixu.github.io">Xiaowei Xu</UnderlineLink>, I proposed an encoder-decoder architecture to perform semantic segmentation on cardiac MRI sequence.
                           By introducing Temporal constraint on segmentation result, the model improved the accuracy by 2% on ACDC Dataset comparing to the baseline model.
                         </p>
@@ -249,19 +234,6 @@ export default function HomePage() {
                       ]}
                     />
                   </li>
-                </ol>
-              </div>
-
-              <div className='text-lg homepage-card col-span-1 md:col-span-2 row-span-1'>
-                <h2 className='text-3xl py-2 text-primary-800'>Courses</h2>
-                <ol className="my-2 ml-4 list-disc">
-                  <li>16-833 Localization and Mapping</li>
-                  <li>16-385 Computer Vision</li>
-                  <li>15-451 Algorithm Design & Analysis</li>
-                  <li>15-418 Parallel Computer Architecture and Programming</li>
-                  <li>11-777 Multi-Modal Machine Learning</li>
-                  <li>10-708 Probablistic Graphical Model</li>
-                  <li>11-785 Intro to Deep Learning</li>
                 </ol>
               </div>
             </div>

@@ -6,7 +6,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        primary: ['Inter', ...defaultTheme.fontFamily.sans],
+        primary: ['Arial', 'Helvetica', ...defaultTheme.fontFamily.sans],
+        heading: ['Arial', 'Helvetica', ...defaultTheme.fontFamily.sans],
       },
       colors: {
         primary: {

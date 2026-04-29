@@ -7,45 +7,33 @@ html {
 }
 
 :root {
-  /* #region  /**=========== Primary Color =========== */
-  --tw-color-primary-50: 255 251 235;
-  --tw-color-primary-100: 254 243 199;
-  --tw-color-primary-200: 253 230 138;
-  --tw-color-primary-300: 252 211 77;
-  --tw-color-primary-400: 251 191 36;
-  --tw-color-primary-500: 245 158 11;
-  --tw-color-primary-600: 217 119 6;
-  --tw-color-primary-700: 180 83 9;
-  --tw-color-primary-800: 146 64 14;
-  --tw-color-primary-900: 120 53 15;
-  --tw-color-primary-950: 69 26 3;
-  --color-primary-50: rgb(var(--tw-color-primary-50)); /* #fffbeb */
-  --color-primary-100: rgb(var(--tw-color-primary-100)); /* #fef3c7 */
-  --color-primary-200: rgb(var(--tw-color-primary-200)); /* #fde68a */
-  --color-primary-300: rgb(var(--tw-color-primary-300)); /* #fcd34d */
-  --color-primary-400: rgb(var(--tw-color-primary-400)); /* #fbbf24 */
-  --color-primary-500: rgb(var(--tw-color-primary-500)); /* #f59e0b */
-  --color-primary-600: rgb(var(--tw-color-primary-600)); /* #d97706 */
-  --color-primary-700: rgb(var(--tw-color-primary-700)); /* #b45309 */
-  --color-primary-800: rgb(var(--tw-color-primary-800)); /* #92400e */
-  --color-primary-900: rgb(var(--tw-color-primary-900)); /* #78350f */
-  --color-primary-950: rgb(var(--tw-color-primary-950)); /* #451a03 */
+  /* #region  /**=========== Primary Color (Stanford Cardinal) =========== */
+  --tw-color-primary-50: 253 242 242;
+  --tw-color-primary-100: 252 231 231;
+  --tw-color-primary-200: 249 200 200;
+  --tw-color-primary-300: 244 163 163;
+  --tw-color-primary-400: 232 117 117;
+  --tw-color-primary-500: 213 77 77;
+  --tw-color-primary-600: 184 50 50;
+  --tw-color-primary-700: 157 32 32;
+  --tw-color-primary-800: 140 21 21;
+  --tw-color-primary-900: 110 15 15;
+  --tw-color-primary-950: 62 8 8;
+  --color-primary-50: rgb(var(--tw-color-primary-50)); /* #fdf2f2 */
+  --color-primary-100: rgb(var(--tw-color-primary-100)); /* #fce7e7 */
+  --color-primary-200: rgb(var(--tw-color-primary-200)); /* #f9c8c8 */
+  --color-primary-300: rgb(var(--tw-color-primary-300)); /* #f4a3a3 */
+  --color-primary-400: rgb(var(--tw-color-primary-400)); /* #e87575 */
+  --color-primary-500: rgb(var(--tw-color-primary-500)); /* #d54d4d */
+  --color-primary-600: rgb(var(--tw-color-primary-600)); /* #b83232 */
+  --color-primary-700: rgb(var(--tw-color-primary-700)); /* #9d2020 */
+  --color-primary-800: rgb(var(--tw-color-primary-800)); /* #8c1515 — Stanford Cardinal */
+  --color-primary-900: rgb(var(--tw-color-primary-900)); /* #6e0f0f */
+  --color-primary-950: rgb(var(--tw-color-primary-950)); /* #3e0808 */
   /* #endregion  /**======== Primary Color =========== */
 }
 
 @layer base {
-  /* inter var - latin */
-  @font-face {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 100 900;
-    font-display: block;
-    src: url('/fonts/inter-var-latin.woff2') format('woff2');
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
-      U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193,
-      U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-
   .cursor-newtab {
     cursor:
       url('/images/new-tab.png') 10 10,
@@ -54,27 +42,27 @@ html {
 
   /* #region  /**=========== Typography =========== */
   .h0 {
-    @apply font-primary text-3xl font-bold md:text-5xl;
+    @apply font-heading text-3xl font-bold md:text-5xl;
   }
 
   h1,
   .h1 {
-    @apply font-primary text-2xl font-bold md:text-4xl;
+    @apply font-heading text-2xl font-bold md:text-4xl;
   }
 
   h2,
   .h2 {
-    @apply font-primary text-xl font-bold md:text-3xl;
+    @apply font-heading text-xl font-bold md:text-3xl;
   }
 
   h3,
   .h3 {
-    @apply font-primary text-lg font-bold md:text-2xl;
+    @apply font-heading text-lg font-bold md:text-2xl;
   }
 
   h4,
   .h4 {
-    @apply font-primary text-base font-bold md:text-lg;
+    @apply font-heading text-base font-bold md:text-lg;
   }
 
   body,
@@ -100,6 +88,11 @@ html {
 
   ::selection {
     @apply bg-slate-300;
+  }
+
+  .header-band ::selection,
+  .header-band::selection {
+    @apply bg-neutral-700 text-white;
   }
 
   progress {
@@ -142,14 +135,39 @@ html {
     }
   }
   .animated-underline:hover,
-  .animated-underline:focus-visible {
+  .animated-underline:focus-visible,
+  .animated-underline.active {
     background-size:
       0 2px,
       100% 2px;
   }
 
   .homepage-card {
-    @apply p-4 md:p-8 bg-white md:border-[1px] md:border-neutral-200 md:hover:shadow-md md:hover:z-10;
+    @apply p-2 lg:p-4 bg-white;
+  }
+  @media (min-width: 1024px) {
+    .homepage-card {
+      background-image:
+        linear-gradient(#e5e7eb, #e5e7eb),
+        linear-gradient(#e5e7eb, #e5e7eb),
+        linear-gradient(#e5e7eb, #e5e7eb),
+        linear-gradient(#e5e7eb, #e5e7eb),
+        linear-gradient(#e5e7eb, #e5e7eb),
+        linear-gradient(#e5e7eb, #e5e7eb),
+        linear-gradient(#e5e7eb, #e5e7eb),
+        linear-gradient(#e5e7eb, #e5e7eb);
+      background-position:
+        top left, top left,
+        top right, top right,
+        bottom left, bottom left,
+        bottom right, bottom right;
+      background-size:
+        20px 1px, 1px 20px,
+        20px 1px, 1px 20px,
+        20px 1px, 1px 20px,
+        20px 1px, 1px 20px;
+      background-repeat: no-repeat;
+    }
   }
   @media (prefers-reduced-motion: no-preference) {
     .homepage-card {

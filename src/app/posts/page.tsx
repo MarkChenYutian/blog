@@ -41,13 +41,15 @@ export default async function PostPage() {
 
   return (
     <div className='min-h-screen'>
-      <NavigationBar />
       <div className='px-4'>
         <div className='relative flex flex-wrap flex-row items-center justify-center w-full'>
           <Image alt="Yutian Chen portrait" src={AvatarImage.src} width={64} height={64} className='rounded-full m-4 hidden md:block' />
           <h1 className='text-2xl md:text-3xl font-extralight py-2'>Yutian Chen's <span className='font-semibold'>Posts</span></h1>
           <div className='flex-grow' />
         </div>
+      </div>
+      <NavigationBar />
+      <div className='px-4'>
         <AllPosts posts={posts} />
       </div>
       <Footer />
