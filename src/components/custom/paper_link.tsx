@@ -32,7 +32,7 @@ export default function Paperlink(paper: PaperProps) {
       <div className="ml-6 border-l-2 pl-2 mt-1 space-y-0.5">
         {paper.awards && paper.awards.map((award, index) => (
           <p key={`award-${index}`} className="text-sm font-semibold text-primary-600">
-            <AwardIcon className="inline-block text-xs mr-2 mb-0" strokeWidth={1.5} /> {award}
+            <AwardIcon className="inline-block text-xs mr-2 mb-0" strokeWidth={1.0} /> {award}
           </p>
         ))}
         {paper.slides && paper.slides.map((slide, index) => (

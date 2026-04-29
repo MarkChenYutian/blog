@@ -1,0 +1,7 @@
+# GitHub repos to track for star counts.
+# One owner/repo per line. Lines starting with # are ignored.
+# Updated weekly by .github/workflows/update-stars.yml — output goes to public/stars.json.
+
+MAC-VO/MAC-VO
+pypose/pypose
+co-me-tokens/CoMe

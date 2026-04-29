@@ -16,6 +16,7 @@ const NavigationBar = () => {
   return (
     <nav className="sticky top-0 z-20 flex flex-row flex-nowrap justify-around items-stretch bg-white/80 backdrop-blur-[4px]">
       <Link href="/" className={cls("/")}>About Me</Link>
+      <Link href="/publications" className={cls("/publications")}>Publications</Link>
       <Link href="/posts" className={cls("/posts")}>Posts</Link>
       <Link href="/notes" className={cls("/notes")}>Notes</Link>
     </nav>
