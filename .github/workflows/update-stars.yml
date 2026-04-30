@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: write  # needed to dispatch the deploy workflow below
 
 jobs:
   update:
@@ -25,14 +26,25 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/fetch-stars.mjs
 
-      - name: Commit changes (if any)
+      # Commits made with the default GITHUB_TOKEN do NOT trigger other
+      # workflows that listen on `push` (GitHub's recursion guard). After
+      # committing public/stars.json we therefore explicitly dispatch the
+      # deploy workflow via `gh workflow run` so the site rebuilds with the
+      # refreshed star data. This is simpler than wiring up a `workflow_run`
+      # trigger on deploy.yml and keeps the deploy workflow's trigger surface
+      # narrow (push + manual only).
+      - name: Commit changes (if any) and trigger deploy
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/stars.json docs/stars.json 2>/dev/null || true
+          git add public/stars.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No changes — star counts are up to date."
           else
             git commit -m "chore(stars): refresh star counts"
             git push
+            echo "Dispatching deploy workflow..."
+            gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"
           fi

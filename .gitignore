@@ -13,6 +13,9 @@
 # next.js
 /.next/
 /out/
+# Static export output (Next.js distDir). Built and published by GitHub Actions;
+# do not commit local builds.
+/docs/
 
 # production
 /build

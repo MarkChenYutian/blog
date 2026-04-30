@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 // Fetch GitHub star counts for repos listed in tracked_repos.txt and write the
-// result to public/stars.json (and docs/stars.json if a built export exists,
-// so deployed pages pick up the new values without a rebuild).
+// result to public/stars.json. The deploy workflow regenerates docs/ on every
+// build, so we no longer write docs/stars.json directly — committing into the
+// build output would conflict with the GitHub Actions deploy pipeline.
 
 import fs from 'node:fs';
 import path from 'node:path';
 
 const REPOS_FILE = 'tracked_repos.txt';
-const OUT_FILES = ['public/stars.json', 'docs/stars.json'];
+const OUT_FILES = ['public/stars.json'];
 
 const repos = fs
   .readFileSync(REPOS_FILE, 'utf8')
