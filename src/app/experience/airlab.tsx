@@ -15,8 +15,9 @@ export default function AirLabExperience() {
       to_date="Now"
       desc={
         <p className='text-justify hyphens-auto'>
-          Working with Professor <UnderlineLink href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Sebastian Scherer</UnderlineLink>, I aimed to construct robust and accurate visual-inertial SLAM system using data-driven approach.
+          Working with Professor <UnderlineLink href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Sebastian Scherer</UnderlineLink> and Dr. <UnderlineLink href="http://yuhengqiu.com/">Yuheng Qiu</UnderlineLink>, I aimed to construct robust and accurate visual-inertial SLAM system using data-driven approach.
           I Developed the MAC-VO, an award-winning SoTA visual odometry that is generalizable everywhere (even the lunar surface 🌕!).
+          I also worked extensively on IMU and visual-inerital system to create low-latency and robust state estimation system for real-world deployment.
         </p>
       }
       items={[

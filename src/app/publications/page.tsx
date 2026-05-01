@@ -2,9 +2,10 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import * as React from 'react';
 
-import PublicationEntry, { PublicationEntryProps } from '@/app/publications/entry';
 import Footer from '@/components/Footer';
 import NavigationBar from '@/components/Navigation';
+
+import PublicationEntry, { PublicationEntryProps } from '@/app/publications/entry';
 
 import AvatarImage from '~/images/Yutian_Chen.jpg';
 
@@ -40,6 +41,7 @@ const publications: PublicationEntryProps[] = [
     venue: "NeurIPS 2025",
     arxiv: "https://arxiv.org/abs/2506.09278",
     homepage: "https://uniflowmatch.github.io",
+    github: "https://github.com/UniFlowMatch/UFM",
   },
   {
     title: "AirIO: Learning Inertial Odometry with Enhanced IMU Feature Observability",
@@ -47,6 +49,7 @@ const publications: PublicationEntryProps[] = [
     venue: "IEEE RA-L",
     arxiv: "https://arxiv.org/abs/2501.15659",
     homepage: "https://air-io.github.io/",
+    github: "https://github.com/Air-IO/Air-IO",
   },
   {
     title: "AirIMU: Learning Uncertainty Propagation for Inertial Odometry",
@@ -54,6 +57,7 @@ const publications: PublicationEntryProps[] = [
     venue: "arXiv Preprint",
     arxiv: "https://arxiv.org/abs/2310.04874",
     homepage: "https://airimu.github.io/",
+    github: "https://github.com/haleqiu/AirIMU",
   },
   {
     title: "Virtual Community: An Open World for Humans, Robots, and Society",
@@ -66,12 +70,14 @@ const publications: PublicationEntryProps[] = [
     venue: "ICLR 2026",
     arxiv: "https://arxiv.org/abs/2508.14893",
     homepage: "https://virtual-community-ai.github.io/",
+    github: "https://github.com/UMass-Embodied-AGI/Virtual-Community"
   },
   {
     title: "Token Prediction as Implicit Classification to Identify LLM-Generated Text",
     authors: ["Yutian Chen*", "Hao Kang*", "Vivian Zhai", "Liangze Li", "Rita Singh", "Bhiksha Raj"],
     venue: "EMNLP 2023",
     homepage: "https://aclanthology.org/2023.emnlp-main.810/",
+    github: "https://github.com/MarkChenYutian/T5-Sentinel-public"
   },
   {
     title: "GPT-Sentinel: Distinguishing Human and ChatGPT Generated Content",
@@ -81,7 +87,16 @@ const publications: PublicationEntryProps[] = [
   },
   {
     title: "PyPose v0.6: The Imperative Programming Interface for Robotics",
-    authors: ["Zitong Zhan", "Xiangfu Li", "…", "Yutian Chen", "…", "Jiajun Wu", "…", "Chen Wang"],
+    authors: [
+      "Zitong Zhan", "Xiangfu Li", "Qihang Li", "Haonan He", "Abhinav Pandey",
+      "Haitao Xiao", "Yangmengfei Xu", "Xiangyu Chen", "Kuan Xu", "Kun Cao",
+      "Zhipeng Zhao", "Zihan Wang", "Huan Xu", "Zihang Fang", "Yutian Chen",
+      "Wentao Wang", "Xu Fang", "Yi Du", "Tianhao Wu", "Xiao Lin",
+      "Yuheng Qiu", "Fan Yang", "Jingnan Shi", "Shaoshu Su", "Yiren Lu",
+      "Taimeng Fu", "Karthik Dantu", "Jiajun Wu", "Lihua Xie", "Marco Hutter",
+      "Luca Carlone", "Sebastian Scherer", "Daning Huang", "Yaoyu Hu",
+      "Junyi Geng", "Chen Wang",
+    ],
     venue: "IROS Workshop 2023",
     arxiv: "https://arxiv.org/abs/2309.13035",
     homepage: "https://pypose.org/",
@@ -90,7 +105,7 @@ const publications: PublicationEntryProps[] = [
   {
     title: "Myocardial Segmentation of Cardiac MRI Sequences With Temporal Consistency for Coronary Artery Disease Diagnosis",
     authors: [
-      "Yutian Chen", "Wen Xie", "Jiawei Zhang", "Hailong Qiu", "Dewen Zeng", "Yiyu Shi",
+      "Yutian Chen*", "Wen Xie*", "Jiawei Zhang*", "Hailong Qiu*", "Dewen Zeng", "Yiyu Shi",
       "Haiyun Yuan", "Jian Zhuang", "Yanchun Zhang", "Yuhao Dong", "Meiping Huang", "Xiaowei Xu",
     ],
     venue: "Frontier Cardiovascular Medicine 2022",

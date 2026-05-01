@@ -15,7 +15,7 @@ export default function GuangdongExperience() {
       to_date="Jan 2020"
       desc={
         <p className='text-justify hyphens-auto'>
-          Mentored by Professor <UnderlineLink href="https://engineering.nd.edu/faculty/yiyu-shi/">Yiyu Shi</UnderlineLink> and <UnderlineLink href="https://xiaoweixu.github.io">Xiaowei Xu</UnderlineLink>, I proposed an encoder-decoder architecture to perform semantic segmentation on cardiac MRI sequence.
+          Mentored by Professor <UnderlineLink href="https://engineering.nd.edu/faculty/yiyu-shi/">Yiyu Shi</UnderlineLink> and Dr. <UnderlineLink href="https://xiaoweixu.github.io">Xiaowei Xu</UnderlineLink>, I proposed an encoder-decoder architecture to perform semantic segmentation on cardiac MRI sequence.
           By introducing Temporal constraint on segmentation result, the model improved the accuracy by 2% on ACDC Dataset comparing to the baseline model.
         </p>
       }

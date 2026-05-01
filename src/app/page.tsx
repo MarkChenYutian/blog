@@ -1,6 +1,6 @@
 'use static';
 
-import { ArrowRightIcon, GraduationCapIcon, LinkedinIcon, MailIcon } from 'lucide-react';
+import { ArrowRightIcon, GraduationCapIcon, LinkedinIcon, MailIcon, UserIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import * as React from 'react';
@@ -89,6 +89,7 @@ export default function HomePage() {
             <NavigationBar />
 
             <div className='grid grid-cols-1 lg:grid-cols-6 px-6'>
+              {/* About Me */}
               <div className='text-lg homepage-card col-span-1 lg:col-span-2 row-span-1 flex flex-col'>
                 <h2 className='text-3xl py-2 text-primary-800'>About Me</h2>
                 <p className='break-words hyphens-auto overflow-auto pt-4 text-justify'>
@@ -104,15 +105,17 @@ export default function HomePage() {
                 </div>
               </div>
 
+              {/* Updates */}
               <div className='text-lg homepage-card col-span-1 lg:col-span-4 row-span-1'>
                 <h2 className='text-3xl py-2 text-primary-800'>Recent Updates</h2>
-                <p className='text-justify hyphens-auto'>Below is a highlight list of my recent works. For a full list of works, please see <UnderlineLink className='text-primary-500' href="#experience-section">Here</UnderlineLink>.</p>
+                <p className='text-justify hyphens-auto'>Below is a highlight list of my recent works. For a full list of works, please see <UnderlineLink className='text-primary-500' href="/publications">Here</UnderlineLink>.</p>
                 <ul className='pl-4 py-2'>
                   <li><Paperlink title="Co-Me: Confidence-Guided Token Merging for Visual Geometric Transformers" link="https://co-me-tokens.github.io" venue="CVPR 2026" /></li>
                   <li><Paperlink title="MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry" link="https://mac-vo.github.io/" venue="ICRA 2025" awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]} /></li>
                 </ul>
               </div>
 
+              {/* Projects */}
               <div className='text-lg homepage-card col-span-1 lg:col-span-4 row-span-1'>
                 <h2 className='text-3xl py-2 text-primary-800'>Projects</h2>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 pt-2'>
@@ -141,6 +144,7 @@ export default function HomePage() {
                 </div>
               </div>
 
+              {/* Notes */}
               <div className='text-lg homepage-card col-span-1 lg:col-span-2 row-span-1'>
                 <h2 className='text-3xl py-2 text-primary-800'>Open Source Notes</h2>
                 <p className='break-words hyphens-auto overflow-auto text-justify'>
@@ -149,6 +153,7 @@ export default function HomePage() {
                 <div className='flex flex-row-reverse pt-4'><ButtonLink href='/notes' variant='light' size='large' className='min-w-44 text-center' rightIcon={ArrowRightIcon}>Visit My Notes</ButtonLink></div>
               </div>
 
+              {/* Experiences */}
               <div className='text-lg homepage-card col-span-1 lg:col-span-6 row-span-4'>
                 <h2 className='text-3xl pt-2 text-primary-800' id='experience-section'>Experience</h2>
                 <ol>
@@ -164,6 +169,30 @@ export default function HomePage() {
                   </li>
                 </ol>
               </div>
+
+              {/* Other (Yutian Chen)s */}
+              <div className='text-lg homepage-card col-span-1 lg:col-span-2 row-span-1'>
+                <h2 className='text-3xl py-2 text-primary-800'>Fun Fact</h2>
+                <p className='break-words hyphens-auto overflow-auto text-justify'>
+                  There are at least two other (Yutian Chen)s actively working in AI research. If I'm not the one you are looking for, you might want to check on their homepages:
+                  <ul className='pl-4 py-2'>
+                    <li><UnderlineLink href="https://www.cantab.net/users/yutian.chen/index.html"><UserIcon className='mr-2' /> Yutian Chen @ Google DeepMind</UnderlineLink></li>
+                    <li><UnderlineLink href="https://yutian10.github.io/"><UserIcon className='mr-2' /> Yutian Chen @ CUHK</UnderlineLink></li>
+                  </ul>
+                </p>
+              </div>
+
+              {/* Research Motto */}
+              <div className='text-lg homepage-card col-span-1 lg:col-span-4 row-span-1 flex items-center justify-center'>
+                <blockquote className='relative px-8 py-2 max-w-2xl'>
+                  <span aria-hidden className='absolute -top-4 -left-4 text-8xl leading-none font-serif text-slate-300 select-none pointer-events-none'>&ldquo;</span>
+                  <p className='relative z-10 text-left font-normal tracking-wide px-6'>
+                    GOOD RESEARCH IS ABOUT SOLVING THE IMPORTANT PROBLEM AT THE RIGHT TIME WITH SIMPLE METHODS AND SOLID ENGINEERING.
+                  </p>
+                  <span aria-hidden className='absolute -bottom-10 -right-4 text-8xl leading-none font-serif text-slate-300 select-none pointer-events-none'>&rdquo;</span>
+                </blockquote>
+              </div>
+
             </div>
           </div>
         </div>
