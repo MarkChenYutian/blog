@@ -1,7 +1,7 @@
 ---
 title: "Direct Method SLAM - Jacobian Formulation"
 date: 2023-08-16
-tags: ["SLAM", "Optimization"]
+tags: ["SLAM", "Robotics"]
 ---
 
 > This post is mainly a re-formulation and detailed expansion for the section 8.4, "Direct Method" in ["14 lectures on Visual SLAM"](https://github.com/gaoxiang12/slambook-en).

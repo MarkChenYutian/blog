@@ -42,8 +42,10 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = (raw_data) => {
       const tree = processor.parse(content);
 
       const tocEntries: TOCEntry[] = [];
-      visit(tree, 'heading', (node: any) => {
-        const title = node.children.map((child: any) => child.value).join('');
+      visit(tree, 'heading', (node) => {
+        const title = node.children
+          .map((child) => ('value' in child ? child.value : ''))
+          .join('');
         const level = node.depth;
         const id = title
           .toLowerCase()
@@ -93,10 +95,10 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = (raw_data) => {
           </div>
         </div>
       </header>
-      <div className='bg-slate-50'>
+      <div className='bg-slate-50 flex-1 flex flex-col'>
         <NavigationBar />
-        <div className="flex flex-1 max-w-screen-xl mx-auto min-h-screen">
-          <aside className="hidden lg:block w-80 p-4 sticky top-12 h-screen overflow-y-auto">
+        <div className="flex flex-1 max-w-screen-xl mx-auto w-full">
+          <aside className="hidden lg:block w-80 p-4 sticky top-12 max-h-[calc(100vh-3rem)] overflow-y-auto self-start">
             <nav>
               <h3 className='pb-4 text-primary-900'>Table of Content</h3>
               {toc.length == 0 ?

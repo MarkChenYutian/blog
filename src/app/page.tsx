@@ -175,11 +175,11 @@ export default function HomePage() {
                 <h2 className='text-3xl py-2 text-primary-800'>Fun Fact</h2>
                 <p className='break-words hyphens-auto overflow-auto text-justify'>
                   There are at least two other (Yutian Chen)s actively working in AI research. If I'm not the one you are looking for, you might want to check on their homepages:
-                  <ul className='pl-4 py-2'>
-                    <li><UnderlineLink href="https://www.cantab.net/users/yutian.chen/index.html"><UserIcon className='mr-2' /> Yutian Chen @ Google DeepMind</UnderlineLink></li>
-                    <li><UnderlineLink href="https://yutian10.github.io/"><UserIcon className='mr-2' /> Yutian Chen @ CUHK</UnderlineLink></li>
-                  </ul>
                 </p>
+                <ul className='pl-4 py-2'>
+                  <li><UnderlineLink href="https://www.cantab.net/users/yutian.chen/index.html"><UserIcon className='mr-2' /> Yutian Chen @ Google DeepMind</UnderlineLink></li>
+                  <li><UnderlineLink href="https://yutian10.github.io/"><UserIcon className='mr-2' /> Yutian Chen @ CUHK</UnderlineLink></li>
+                </ul>
               </div>
 
               {/* Research Motto */}

@@ -74,7 +74,7 @@ export async function downloadItem(client: S3Client, bucketName: string, file: A
         return new Uint8Array(result);
       }
     ).catch(
-      (e) => {
+      () => {
         throw new Error("Failed to download file!");
       }
     )

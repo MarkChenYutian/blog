@@ -1,6 +1,8 @@
 /* Basic CSS for Markdown Rendering using Tailwind CSS */
 
 .react-md-render {
+  counter-reset: figure;
+
   /* Set styles for markdown titles */
   h1 {
     @apply text-4xl font-bold mb-4 mt-8 text-primary-700;
@@ -84,6 +86,35 @@
   /* Image styles */
   img {
     @apply max-w-full rounded mb-4;
+  }
+
+  /* Figure / video styles */
+  figure {
+    counter-increment: figure;
+    @apply my-6 mx-auto flex flex-col items-center;
+  }
+  /* Tighten gap when a figure follows a heading (flex blocks don't margin-collapse) */
+  h1 + figure,
+  h2 + figure,
+  h3 + figure,
+  h4 + figure,
+  h5 + figure,
+  h6 + figure {
+    @apply mt-2;
+  }
+  figure > img,
+  figure > video {
+    @apply max-w-full rounded mb-0;
+  }
+  video {
+    @apply max-w-full rounded;
+  }
+  figcaption {
+    @apply mt-2 text-base text-neutral-500 text-left self-start w-full;
+  }
+  figcaption::before {
+    content: "Fig " counter(figure) ". ";
+    @apply font-semibold text-neutral-500;
   }
 
   /* Horizontal rule styles */

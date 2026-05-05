@@ -1,6 +1,6 @@
 ---
 title: "Optimizers in PyPose - Gauss Newton and Levenberg-Marquadt"
-tags: ["Machine Learning", "SLAM"]
+tags: ["SLAM", "Robotics"]
 date: 2023-07-14
 ---
 

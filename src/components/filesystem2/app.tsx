@@ -85,6 +85,7 @@ const FileSystemApp: React.FC<FileSystemProps> = (props) => {
           setFiles(fileObjects);
         }
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error("Error fetching files: ", error);
       }
     };

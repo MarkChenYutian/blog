@@ -164,7 +164,7 @@ const CursorField = ({
       io.disconnect();
       window.removeEventListener('mousemove', onMove);
     };
-  }, [grid, influenceRadius]);
+  }, [grid, influenceRadius, baseOpacity, maxOpacity, speedForFull]);
 
   return (
     <div
