@@ -1,13 +1,13 @@
 {
-  "updatedAt": "2026-06-08T10:18:50.677Z",
+  "updatedAt": "2026-06-15T11:47:21.023Z",
   "repos": {
-    "MAC-VO/MAC-VO": 919,
-    "pypose/pypose": 1554,
+    "MAC-VO/MAC-VO": 920,
+    "pypose/pypose": 1557,
     "co-me-tokens/CoMe": 188,
-    "UniFlowMatch/UFM": 329,
+    "UniFlowMatch/UFM": 330,
     "Air-IO/Air-IO": 231,
-    "haleqiu/AirIMU": 154,
-    "UMass-Embodied-AGI/Virtual-Community": 182,
+    "haleqiu/AirIMU": 156,
+    "UMass-Embodied-AGI/Virtual-Community": 185,
     "MarkChenYutian/T5-Sentinel-public": 25
   }
 }
