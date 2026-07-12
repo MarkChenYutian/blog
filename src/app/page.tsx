@@ -103,7 +103,8 @@ export default function HomePage() {
               <div className='text-lg homepage-card col-span-1 lg:col-span-3 row-span-1 flex flex-col'>
                 <h2 className='text-3xl font-medium tracking-tight py-2 text-primary-800 dark:text-primary-400'>About Me</h2>
                 <p className='break-words pt-4'>
-                  I am an M.S. Robotics student at Carnegie Mellon University, advised by <UnderlineLink bold href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Prof. Sebastian Scherer</UnderlineLink> in <UnderlineLink bold href="https://theairlab.org/">the AirLab</UnderlineLink>.
+                  I am a Ph.D. student in Computer Science at Stanford University working with <UnderlineLink bold href="https://shurans.github.io/">Prof. Shuran Song</UnderlineLink>.
+                  Previously, I have had the honor of collaborating with <UnderlineLink bold href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Prof. Sebastian Scherer</UnderlineLink> and <UnderlineLink bold href="http://yuhengqiu.com/">Dr. Yuheng Qiu</UnderlineLink> in <UnderlineLink bold href="https://theairlab.org/">the AirLab</UnderlineLink> at CMU, <UnderlineLink bold href="https://me.berkeley.edu/people/koushil-sreenath/">Prof. Koushil Sreenath</UnderlineLink> at Amazon Frontier AI Robotics (FAR), <UnderlineLink bold href="https://sairlab.org/chenwang/">Prof. Chen Wang</UnderlineLink> at the University at Buffalo, and <UnderlineLink bold href="https://people.csail.mit.edu/ganchuang/">Prof. Chuang Gan</UnderlineLink> at the MIT-IBM Watson AI Lab.
                   My research focuses on enabling machines to understand and interact with the physical reality through robust geometric and semantic perception.
                   I am broadly interested in visual geometry, spatial reasoning, and the development of scalable algorithms that bridge perception and action for autonomous systems.
                 </p>
