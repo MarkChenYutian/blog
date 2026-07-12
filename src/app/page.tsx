@@ -18,6 +18,7 @@ import UnderlineLink from '@/components/links/UnderlineLink';
 import NavigationBar from '@/components/Navigation';
 
 import AirLabExperience from '@/app/experience/airlab';
+import AmazonExperience from '@/app/experience/amazon';
 import FieldAIExperience from '@/app/experience/fieldai';
 import GuangdongExperience from '@/app/experience/guangdong';
 import LTIExperience from '@/app/experience/lti';
@@ -68,9 +69,8 @@ export default function HomePage() {
 
                   <div className='flex justify-between items-center flex-wrap mt-2 text-neutral-300 font-extralight leading-tight'>
                     <span className='text-xl'>Carnegie Mellon University</span>
-                    <span>2021 Aug - 2026 May</span>
+                    <span>2021 Aug - 2025 May</span>
                   </div>
-                  <p className='text-lg text-neutral-300 font-extralight leading-tight'><del>MSc. Robotics</del> (Dropped)</p>
                   <p className='text-lg text-neutral-300 font-extralight leading-tight'>BSc. Computer Science, Minor in Mathematical Science</p>
                 </div>
 
@@ -90,7 +90,7 @@ export default function HomePage() {
 
             <div className='grid grid-cols-1 lg:grid-cols-6 px-6'>
               {/* About Me */}
-              <div className='text-lg homepage-card col-span-1 lg:col-span-2 row-span-1 flex flex-col'>
+              <div className='text-lg homepage-card col-span-1 lg:col-span-3 row-span-1 flex flex-col'>
                 <h2 className='text-3xl py-2 text-primary-800'>About Me</h2>
                 <p className='break-words hyphens-auto overflow-auto pt-4 text-justify'>
                   I am an M.S. Robotics student at Carnegie Mellon University, advised by <UnderlineLink href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Prof. Sebastian Scherer</UnderlineLink> in <UnderlineLink href="https://theairlab.org/">the AirLab</UnderlineLink>.
@@ -106,7 +106,7 @@ export default function HomePage() {
               </div>
 
               {/* Updates */}
-              <div className='text-lg homepage-card col-span-1 lg:col-span-4 row-span-1'>
+              <div className='text-lg homepage-card col-span-1 lg:col-span-3 row-span-1'>
                 <h2 className='text-3xl py-2 text-primary-800'>Recent Updates</h2>
                 <p className='text-justify hyphens-auto'>Below is a highlight list of my recent works. For a full list of works, please see <UnderlineLink className='text-primary-500' href="/publications">Here</UnderlineLink>.</p>
                 <ul className='pl-4 py-2'>
@@ -158,6 +158,7 @@ export default function HomePage() {
                 <h2 className='text-3xl pt-2 text-primary-800' id='experience-section'>Experience</h2>
                 <ol>
                   <li>
+                    <AmazonExperience />
                     <AirLabExperience />
                     <FieldAIExperience />
 

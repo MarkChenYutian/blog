@@ -11,8 +11,8 @@ export default function GuangdongExperience() {
       title="Medical Image Segmentation"
       place="Guangdong Cardiovascular Institute"
       link="https://www.gdghospital.org.cn/en/introductiontotheinstitute/info_itemId_85.html"
-      from_date="Dec 2018"
-      to_date="Jan 2020"
+      from_date="Dec 2019"
+      to_date="Jan 2021"
       desc={
         <p className='text-justify hyphens-auto'>
           Mentored by Professor <UnderlineLink href="https://engineering.nd.edu/faculty/yiyu-shi/">Yiyu Shi</UnderlineLink> and Dr. <UnderlineLink href="https://xiaoweixu.github.io">Xiaowei Xu</UnderlineLink>, I proposed an encoder-decoder architecture to perform semantic segmentation on cardiac MRI sequence.

@@ -24,9 +24,9 @@ export default function Paperlink(paper: PaperProps) {
     || (paper.media && paper.media.length > 0);
 
   return <div>
-    <UnderlineLink className='' href={paper.link}><FileTextIcon className='mr-2' strokeWidth={1.25} />{paper.title}</UnderlineLink>
+    <UnderlineLink className='inline' href={paper.link}><FileTextIcon className='inline-block mr-2 align-text-top' strokeWidth={1.25} size={18} />{paper.title}</UnderlineLink>
     {paper.venue && (
-      <span className="ml-2 text-sm italic text-neutral-500">· {paper.venue}</span>
+      <span className="ml-2 text-sm italic text-neutral-500 whitespace-nowrap">· {paper.venue}</span>
     )}
     {hasChildren && (
       <div className="ml-6 border-l-2 pl-2 mt-1 space-y-0.5">

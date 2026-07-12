@@ -12,7 +12,7 @@ export default function AirLabExperience() {
       place="The AirLab, Robotics Institue, Carnegie Mellon University"
       link="https://theairlab.org/"
       from_date="Sep 2022"
-      to_date="Now"
+      to_date="May 2026"
       desc={
         <p className='text-justify hyphens-auto'>
           Working with Professor <UnderlineLink href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Sebastian Scherer</UnderlineLink> and Dr. <UnderlineLink href="http://yuhengqiu.com/">Yuheng Qiu</UnderlineLink>, I aimed to construct robust and accurate visual-inertial SLAM system using data-driven approach.
