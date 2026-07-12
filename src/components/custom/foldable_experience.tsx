@@ -16,14 +16,14 @@ export default function FoldableExperience({ label, children }: { label: string,
         type='button'
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className='group mt-8 flex w-full items-center gap-2 border-t border-neutral-200 pt-3 text-left'
+        className='group mt-8 flex w-full items-center gap-2 border-t border-neutral-200 dark:border-neutral-800 pt-3 text-left'
       >
-        <span className='mono-label text-neutral-400 transition-colors group-hover:text-primary-800'>
+        <span className='mono-label text-neutral-400 dark:text-neutral-500 transition-colors group-hover:text-primary-800 dark:group-hover:text-primary-300'>
           {label}
         </span>
         <ChevronDownIcon
           size={14}
-          className={`text-neutral-400 transition-transform duration-300 group-hover:text-primary-800 motion-reduce:transition-none ${open ? 'rotate-180' : ''}`}
+          className={`text-neutral-400 dark:text-neutral-500 transition-transform duration-300 group-hover:text-primary-800 dark:group-hover:text-primary-300 motion-reduce:transition-none ${open ? 'rotate-180' : ''}`}
         />
       </button>
       <div

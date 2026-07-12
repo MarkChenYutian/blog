@@ -39,16 +39,16 @@ export default function PdfModal({ isOpen, onClose, title, link }: PdfModalProps
       aria-label={title}
     >
       <div
-        className="relative w-full max-w-6xl h-[90vh] bg-white shadow-2xl flex flex-col"
+        className="relative w-full max-w-6xl h-[90vh] bg-white dark:bg-neutral-900 shadow-2xl flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between bg-primary-800 text-white pl-4">
+        <div className="flex items-center justify-between bg-primary-800 dark:bg-primary-900 text-white pl-4">
           <h2 className="text-base font-medium truncate">{title}</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="flex items-center justify-center w-10 h-10 bg-primary-800 hover:bg-primary-700 transition-colors"
+            className="flex items-center justify-center w-10 h-10 bg-primary-800 hover:bg-primary-700 dark:bg-primary-900 dark:hover:bg-primary-800 transition-colors"
           >
             <XIcon size={20} className="text-white" strokeWidth={2} />
           </button>

@@ -22,18 +22,18 @@ export default function ResearchHighlight(p: ResearchHighlightProps) {
           alt={p.imageAlt ?? ''}
           width={256}
           height={160}
-          className='w-28 sm:w-36 h-auto shrink-0 border border-neutral-200 grayscale transition-[filter] duration-200 group-hover:grayscale-0'
+          className='w-28 sm:w-36 h-auto shrink-0 border border-neutral-200 dark:border-neutral-800 grayscale transition-[filter] duration-200 group-hover:grayscale-0'
         />
       )}
       <div className='min-w-0'>
-        <p className='text-base leading-snug transition-colors group-hover:text-primary-800'>{p.title}</p>
+        <p className='text-base leading-snug transition-colors group-hover:text-primary-800 dark:group-hover:text-primary-300'>{p.title}</p>
         {p.venue && (
-          <span className='mt-1.5 inline-block font-mono text-xs uppercase tracking-wider text-neutral-500 border border-neutral-300 px-1.5 py-0.5'>
+          <span className='mt-1.5 inline-block font-mono text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700 px-1.5 py-0.5'>
             {p.venue}
           </span>
         )}
         {p.awards && p.awards.map((award, i) => (
-          <p key={i} className='mt-1 flex items-center gap-1.5 text-sm font-medium text-primary-600'>
+          <p key={i} className='mt-1 flex items-center gap-1.5 text-sm font-medium text-primary-600 dark:text-primary-400'>
             <AwardIcon size={14} strokeWidth={1.25} className='shrink-0' /> {award}
           </p>
         ))}

@@ -18,6 +18,7 @@ import CursorField from '@/components/custom/cursor_field';
 import Footer from '@/components/Footer';
 import useActiveHeading, { TOCEntry } from '@/components/markdown_extension/interact';
 import NavigationBar from '@/components/Navigation';
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface MarkdownRendererProps {
   content: string;
@@ -64,7 +65,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = (raw_data) => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="header-band relative overflow-hidden bg-primary-800 text-neutral-100 h-80 flex items-center justify-center px-4">
+      <header className="header-band relative overflow-hidden bg-primary-800 dark:bg-primary-900 text-neutral-100 h-80 flex items-center justify-center px-4">
         <CursorField color='white' />
         <Link
           href="/posts"
@@ -73,6 +74,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = (raw_data) => {
           <ArrowLeftIcon size={16} />
           All Posts
         </Link>
+        <ThemeToggle className='absolute z-20 top-4 right-4' />
         <div className="relative z-10 flex flex-col items-center gap-4 text-center max-w-4xl">
           <h1 className="text-5xl font-normal">{post_title}</h1>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-neutral-200">
@@ -95,14 +97,14 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = (raw_data) => {
           </div>
         </div>
       </header>
-      <div className='bg-slate-50 flex-1 flex flex-col'>
+      <div className='bg-slate-50 dark:bg-neutral-900 flex-1 flex flex-col'>
         <NavigationBar />
         <div className="flex flex-1 max-w-screen-xl mx-auto w-full">
           <aside className="hidden lg:block w-80 p-4 sticky top-12 max-h-[calc(100vh-3rem)] overflow-y-auto self-start">
             <nav>
-              <h3 className='pb-4 text-primary-900'>Table of Content</h3>
+              <h3 className='pb-4 text-primary-900 dark:text-primary-300'>Table of Content</h3>
               {toc.length == 0 ?
-                <span className='italic text-neutral-500'>No headings in this page</span> :
+                <span className='italic text-neutral-500 dark:text-neutral-400'>No headings in this page</span> :
                 <ul className="text-lg">
                   {toc.map((entry, index) => {
                     const is_active: boolean = activeId === entry.id;
@@ -110,8 +112,8 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = (raw_data) => {
                       <a href={`#${entry.id}`} key={index}><li
                         style={{ paddingLeft: `${(entry.level * 15) - (is_active ? 4 : 0)}px` }}
                         className={
-                          `${is_active ? 'border-l-4 text-primary-700' : 'text-slate-400'} font-normal
-                       border-primary-800 hover:bg-primary-50 hover:text-primary-700`
+                          `${is_active ? 'border-l-4 text-primary-700 dark:text-primary-300' : 'text-slate-400 dark:text-neutral-500'} font-normal
+                       border-primary-800 dark:border-primary-400 hover:bg-primary-50 dark:hover:bg-neutral-800 hover:text-primary-700 dark:hover:text-primary-300`
                         }
                       >
                         {entry.title}

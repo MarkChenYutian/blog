@@ -11,7 +11,7 @@ export default function AmazonExperience() {
       place="Amazon, Frontier AI Robotics (FAR)"
       link="https://www.amazon.science/research-areas/robotics"
       from_date="May 2026"
-      to_date="Aug 2026"
+      to_date="Now"
       desc={
         <p>
           As an intern Member of Technical Staff, where I have the honor of working with Professor <UnderlineLink bold href="https://me.berkeley.edu/people/koushil-sreenath/">Koushil Sreenath</UnderlineLink> on an IMU foundation model for human and humanoid motion &mdash; a robust, generalizable encoder for multiple downstream tasks.

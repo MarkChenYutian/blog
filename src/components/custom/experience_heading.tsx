@@ -20,7 +20,7 @@ interface ExperienceProps {
 
 function CollabNote({ collab }: { collab: NonNullable<ExperienceProps['collab']> }) {
   return (
-    <p className='mono-label text-neutral-400 mt-0.5'>
+    <p className='mono-label text-neutral-400 dark:text-neutral-500 mt-0.5'>
       with{' '}
       {collab.link
         ? <UnderlineLink href={collab.link}>{collab.name}</UnderlineLink>
@@ -36,13 +36,13 @@ export default function ExperienceHead(exp: ExperienceProps) {
         <Image alt={exp.title} src={exp.icon} width={40} height={40} />
         <div className="leading-snug">
           <p className="text-base font-medium">{exp.title}</p>
-          <UnderlineLink href={exp.link} className="text-sm text-neutral-500">{exp.place}</UnderlineLink>
+          <UnderlineLink href={exp.link} className="text-sm text-neutral-500 dark:text-neutral-400">{exp.place}</UnderlineLink>
           {exp.collab && <CollabNote collab={exp.collab} />}
         </div>
         <div className="flex-grow" />
-        <span className="font-mono text-xs text-neutral-400 whitespace-nowrap">{exp.from_date} — {exp.to_date}</span>
+        <span className="font-mono text-xs text-neutral-400 dark:text-neutral-500 whitespace-nowrap">{exp.from_date} — {exp.to_date}</span>
       </div>
-      <div className="ml-5 border-l-2 border-neutral-200 pl-4 sm:pl-6 pt-2 pb-1 space-y-2 text-sm text-neutral-500">
+      <div className="ml-5 border-l-2 border-neutral-200 dark:border-neutral-800 pl-4 sm:pl-6 pt-2 pb-1 space-y-2 text-sm text-neutral-500 dark:text-neutral-400">
         {exp.desc !== undefined && (
           <div className="leading-relaxed max-w-3xl">{exp.desc}</div>
         )}
@@ -60,21 +60,21 @@ export default function ExperienceHead(exp: ExperienceProps) {
       <Image alt={exp.title} src={exp.icon} width={64} height={64} />
       <div className="leading-snug">
         <p className="text-xl font-medium">{exp.title}</p>
-        <UnderlineLink href={exp.link} className="text-base text-neutral-500">{exp.place}</UnderlineLink>
+        <UnderlineLink href={exp.link} className="text-base text-neutral-500 dark:text-neutral-400">{exp.place}</UnderlineLink>
         {exp.collab && <CollabNote collab={exp.collab} />}
       </div>
       <div className="flex-grow" />
-      <span className="font-mono text-sm text-neutral-500 whitespace-nowrap">{exp.from_date} — {exp.to_date}</span>
+      <span className="font-mono text-sm text-neutral-500 dark:text-neutral-400 whitespace-nowrap">{exp.from_date} — {exp.to_date}</span>
     </div>
 
     {/* Rail aligned with the icon's center line */}
-    <div className="ml-8 border-l-2 border-neutral-200 pl-4 sm:pl-8 pt-3 pb-1 space-y-4">
+    <div className="ml-8 border-l-2 border-neutral-200 dark:border-neutral-800 pl-4 sm:pl-8 pt-3 pb-1 space-y-4">
       {exp.desc !== undefined && (
-        <div className="text-base leading-relaxed text-neutral-700 max-w-3xl">{exp.desc}</div>
+        <div className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300 max-w-3xl">{exp.desc}</div>
       )}
       {exp.items.length > 0 && (
         <div>
-          <p className="mono-label text-neutral-400 mb-2">Papers</p>
+          <p className="mono-label text-neutral-400 dark:text-neutral-500 mb-2">Papers</p>
           <ol className="space-y-2 text-base">
             {exp.items.map((elem, index) => <li key={index}>{elem}</li>)}
           </ol>

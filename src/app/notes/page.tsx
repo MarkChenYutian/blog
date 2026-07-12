@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function FilePage() {
   return (
     <main>
-      <section className='min-w-full bg-white mb-8'>
+      <section className='min-w-full bg-white dark:bg-neutral-900 mb-8'>
         <PageHeader title='Notes' />
         <NavigationBar />
         <div className='px-4'>

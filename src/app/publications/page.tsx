@@ -117,7 +117,7 @@ export default function PublicationsPage() {
       <PageHeader title='Publications' />
       <NavigationBar />
       <div className='layout py-6'>
-        <p className='font-mono text-slate-500 mb-2'><span className='text-lg mb-1'>★</span> indicates equal contribution.</p>
+        <p className='font-mono text-slate-500 dark:text-neutral-400 mb-2'><span className='text-lg mb-1'>★</span> indicates equal contribution.</p>
         {publications.map((pub, i) => (
           <PublicationEntry key={i} index={i + 1} {...pub} />
         ))}

@@ -43,7 +43,7 @@ const FileName: React.FC<{ name: string }> = ({ name }) => {
   const components = name.split("/");
   const file_name = components.pop();
   components.push("");
-  return <p><span className="font-light text-slate-500">{components.join("/")}</span><span>{file_name}</span></p>;
+  return <p><span className="font-light text-slate-500 dark:text-neutral-400">{components.join("/")}</span><span>{file_name}</span></p>;
 }
 
 
@@ -104,7 +104,7 @@ const FileSystemApp: React.FC<FileSystemProps> = (props) => {
   return <div className="">
     <div className="flex justify-between items-center flex-nowrap">
       <div className="flex-grow min-w-[200px] py-4">
-        <input className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-400 px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+        <input className="w-full bg-transparent placeholder:text-slate-400 dark:placeholder:text-neutral-500 text-slate-700 dark:text-neutral-300 text-sm border border-slate-400 dark:border-neutral-600 px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 dark:focus:border-neutral-500 hover:border-slate-300 dark:hover:border-neutral-500 shadow-sm focus:shadow"
           placeholder="Search Title ..." onChange={handleSearchChange} />
       </div>
     </div>
@@ -119,7 +119,7 @@ const FileSystemApp: React.FC<FileSystemProps> = (props) => {
 
       {visibleFiles.map((file, index) => (
         <li key={index}
-          className="col-span-4 grid grid-cols-subgrid py-2 px-4 gap-2 hover:bg-gray-100 hover:cursor-pointer"
+          className="col-span-4 grid grid-cols-subgrid py-2 px-4 gap-2 hover:bg-gray-100 dark:hover:bg-neutral-800 hover:cursor-pointer"
           onClick={() => downloadItem(s3Client, bucketName, file, setDownloadProgress)}
         >
           <FileIcon fileType={file.FileType} />
@@ -129,11 +129,11 @@ const FileSystemApp: React.FC<FileSystemProps> = (props) => {
         </li>
       ))}
     </ul>
-    <div className="bottom-0 sticky w-full h-12 max-h-12 bg-white z-10 py-2 border-t-2 border-slate-300">
+    <div className="bottom-0 sticky w-full h-12 max-h-12 bg-white dark:bg-neutral-900 z-10 py-2 border-t-2 border-slate-300 dark:border-neutral-700">
       {downloadProgress.fullSize === 0 ?
-        <span className="text-slate-400">No download task, <span className='text-primary-600 italic font-semibold'>Click on files to download</span></span> :
+        <span className="text-slate-400 dark:text-neutral-500">No download task, <span className='text-primary-600 dark:text-primary-400 italic font-semibold'>Click on files to download</span></span> :
         <div className="flex justify-between items-center">
-          <span className="text-primary-600">Downloading: <FileSize size={downloadProgress.currSize} /> / <FileSize size={downloadProgress.fullSize} /></span>
+          <span className="text-primary-600 dark:text-primary-400">Downloading: <FileSize size={downloadProgress.currSize} /> / <FileSize size={downloadProgress.fullSize} /></span>
           <progress className="h-2 rounded bg-gray-200" value={downloadProgress.currSize} max={downloadProgress.fullSize} />
         </div>
       }

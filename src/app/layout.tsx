@@ -98,9 +98,20 @@ export default function RootLayout({
   return (
     <html
       lang='en'
+      suppressHydrationWarning
       className={`${plexSans.variable} ${plexMono.variable} ${lxgwWenkai.variable}`}
     >
-      <body>{children}</body>
+      <head>
+        {/* Apply the saved (or system) theme before first paint to avoid a light-mode flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})()`,
+          }}
+        />
+      </head>
+      <body className='bg-white text-neutral-800 dark:bg-neutral-900 dark:text-neutral-300'>
+        {children}
+      </body>
     </html>
   );
 }

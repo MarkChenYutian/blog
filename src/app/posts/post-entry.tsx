@@ -41,12 +41,12 @@ export default function PostEntry(content: PostPageProps) {
   return (
     <Link
       href={"/posts/" + content.filename}
-      className="group flex flex-col h-full bg-white border border-slate-200 p-4 hover:shadow-md hover:border-slate-300"
+      className="group flex flex-col h-full bg-white border border-slate-200 dark:bg-neutral-800/50 dark:border-neutral-700/60 p-4 hover:shadow-md hover:border-slate-300 dark:hover:border-neutral-600"
     >
-      <h2 className="text-lg font-medium text-slate-800 group-hover:text-primary-800">
+      <h2 className="text-lg font-medium text-slate-800 dark:text-neutral-200 group-hover:text-primary-800 dark:group-hover:text-primary-300">
         {content.title}
       </h2>
-      <p className="mt-1 font-mono text-xs text-slate-400 flex items-center gap-1">
+      <p className="mt-1 font-mono text-xs text-slate-400 dark:text-neutral-500 flex items-center gap-1">
         <CalendarIcon size={12} /> {content.date.toLocaleDateString()}
       </p>
 
@@ -55,7 +55,7 @@ export default function PostEntry(content: PostPageProps) {
           {content.tags.map((tag) => (
             <span
               key={tag}
-              className="font-mono text-xs uppercase tracking-wider text-slate-600 border border-slate-300 px-1.5 py-0.5"
+              className="font-mono text-xs uppercase tracking-wider text-slate-600 dark:text-neutral-400 border border-slate-300 dark:border-neutral-700 px-1.5 py-0.5"
             >
               {tag}
             </span>
@@ -63,9 +63,9 @@ export default function PostEntry(content: PostPageProps) {
         </div>
       )}
 
-      <p className="mt-3 text-sm text-slate-600 line-clamp-4">{preview}</p>
+      <p className="mt-3 text-sm text-slate-600 dark:text-neutral-400 line-clamp-4">{preview}</p>
 
-      <div className="mt-auto pt-4 flex items-center text-sm text-primary-700">
+      <div className="mt-auto pt-4 flex items-center text-sm text-primary-700 dark:text-primary-400">
         Read more <ArrowRightIcon size={14} className="ml-1" />
       </div>
     </Link>
