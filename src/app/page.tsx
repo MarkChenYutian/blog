@@ -1,6 +1,6 @@
 'use static';
 
-import { ArrowRightIcon, GraduationCapIcon, LinkedinIcon, MailIcon, UserIcon } from 'lucide-react';
+import { ArrowRightIcon, ArrowUpRightIcon, GraduationCapIcon, LinkedinIcon, MailIcon, NotebookPenIcon, UserIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import * as React from 'react';
@@ -8,13 +8,14 @@ import { RiGithubLine } from 'react-icons/ri';
 import '@/lib/env';
 
 import CursorField from '@/components/custom/cursor_field';
-import FoldableRegion from '@/components/custom/foldable_region';
-import Paperlink from '@/components/custom/paper_link';
+import FoldableExperience from '@/components/custom/foldable_experience';
 import PdfButtonLink from '@/components/custom/pdf_button_link';
+import ResearchHighlight from '@/components/custom/research_highlight';
 import Footer from '@/components/Footer';
 import { withValidIcon } from '@/components/icons/withValidIcon';
 import ButtonLink from '@/components/links/ButtonLink';
 import UnderlineLink from '@/components/links/UnderlineLink';
+import UnstyledLink from '@/components/links/UnstyledLink';
 import NavigationBar from '@/components/Navigation';
 
 import AirLabExperience from '@/app/experience/airlab';
@@ -24,6 +25,7 @@ import GuangdongExperience from '@/app/experience/guangdong';
 import LTIExperience from '@/app/experience/lti';
 import MITIBMExperience from '@/app/experience/mitibm';
 
+import GWCSImage from '~/images/GWCS_Logo.png';
 import PyposeImage from '~/images/pypose.jpg';
 import SCSImage from '~/images/scslogo_no_outline_simple.gif';
 import AvatarImage from '~/images/Yutian_Chen.jpg';
@@ -51,32 +53,38 @@ export default function HomePage() {
 
         <div className='relative flex min-h-screen flex-col text-neutral-800'>
           <div className='pb-4'>
-            <div className='header-band relative overflow-hidden bg-primary-800 px-6 py-6 text-neutral-100'>
+            <div className='header-band corner-ticks relative overflow-hidden bg-primary-800 px-6 py-6 text-neutral-100'>
               <CursorField color='white' />
               <div className='relative z-10 flex flex-wrap flex-row items-center justify-center w-full'>
-                <Image alt="Yutian Chen portrait" src={AvatarImage.src} width={256} height={256} className='rounded-full m-8' />
+                <Image
+                  alt='Yutian Chen portrait'
+                  src={AvatarImage.src}
+                  width={512}
+                  height={512}
+                  className='relative m-8 h-64 w-64 shrink-0 rounded-2xl object-cover object-bottom'
+                />
                 <div className='p-4'>
-                  <h1 className='text-6xl font-extrabold py-2'>Yutian Chen</h1>
-                  <ul className='mb-4'>
-                    <li> <UnderlineLink href="mailto:yutianch@andrew.cmu.edu"><MailIcon className='mr-2' /> yutianch@stanford.edu </UnderlineLink></li>
+                  <h1 className='text-5xl md:text-6xl font-medium tracking-tight py-2'>Yutian Chen <span className='text-2xl'>陈昱天</span></h1>
+                  <ul className='mb-5'>
+                    <li className='font-mono text-sm'> <UnderlineLink href="mailto:yutianch@andrew.cmu.edu"><MailIcon className='mr-2' size={16} /> yutianch@stanford.edu </UnderlineLink></li>
                   </ul>
 
-                  <div className='flex justify-between items-center flex-wrap leading-tight'>
-                    <span className='text-xl font-bold'>Stanford University</span>
-                    <span>2026 Sep - Now</span>
+                  <div className='flex justify-between items-baseline gap-x-6 flex-wrap leading-tight'>
+                    <span className='text-xl font-medium'>Stanford University</span>
+                    <span className='font-mono text-sm text-neutral-300'>Sep 2026 — Now</span>
                   </div>
                   <p className='text-lg leading-tight'>Ph.D. in Computer Science</p>
 
-                  <div className='flex justify-between items-center flex-wrap mt-2 text-neutral-300 font-extralight leading-tight'>
+                  <div className='flex justify-between items-baseline gap-x-6 flex-wrap mt-3 text-neutral-300 font-light leading-tight'>
                     <span className='text-xl'>Carnegie Mellon University</span>
-                    <span>2021 Aug - 2025 May</span>
+                    <span className='font-mono text-sm'>Aug 2021 — May 2025</span>
                   </div>
-                  <p className='text-lg text-neutral-300 font-extralight leading-tight'>BSc. Computer Science, Minor in Mathematical Science</p>
+                  <p className='text-lg text-neutral-300 font-light leading-tight'>BSc. Computer Science, Minor in Mathematical Science</p>
                 </div>
 
                 <div className='flex-grow' />
                 <div className='p-4'>
-                  <h3 className='font-normal italic'>Also find me at ...</h3>
+                  <h3 className='mono-label font-normal text-neutral-300 mb-2'>Find me at</h3>
                   <ul>
                     <li className='text-lg'><UnderlineLink href="https://scholar.google.com/citations?user=9-Cac9MAAAAJ&hl=en"><GraduationCapIcon className='mr-2' /> Google Scholar</UnderlineLink></li>
                     <li className='text-lg'><UnderlineLink href="https://www.linkedin.com/in/yutian-chen-469602223/"><LinkedinIcon className='mr-2' /> LinkedIn</UnderlineLink></li>
@@ -88,12 +96,12 @@ export default function HomePage() {
 
             <NavigationBar />
 
-            <div className='grid grid-cols-1 lg:grid-cols-6 px-6'>
+            <div className='grid grid-cols-1 lg:grid-cols-6 lg:gap-4 px-6 pt-4'>
               {/* About Me */}
               <div className='text-lg homepage-card col-span-1 lg:col-span-3 row-span-1 flex flex-col'>
-                <h2 className='text-3xl py-2 text-primary-800'>About Me</h2>
-                <p className='break-words hyphens-auto overflow-auto pt-4 text-justify'>
-                  I am an M.S. Robotics student at Carnegie Mellon University, advised by <UnderlineLink href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Prof. Sebastian Scherer</UnderlineLink> in <UnderlineLink href="https://theairlab.org/">the AirLab</UnderlineLink>.
+                <h2 className='text-3xl font-medium tracking-tight py-2 text-primary-800'>About Me</h2>
+                <p className='break-words pt-4'>
+                  I am an M.S. Robotics student at Carnegie Mellon University, advised by <UnderlineLink bold href="https://www.ri.cmu.edu/ri-faculty/sebastian-scherer/">Prof. Sebastian Scherer</UnderlineLink> in <UnderlineLink bold href="https://theairlab.org/">the AirLab</UnderlineLink>.
                   My research focuses on enabling machines to understand and interact with the physical reality through robust geometric and semantic perception.
                   I am broadly interested in visual geometry, spatial reasoning, and the development of scalable algorithms that bridge perception and action for autonomous systems.
                 </p>
@@ -105,76 +113,98 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Updates */}
-              <div className='text-lg homepage-card col-span-1 lg:col-span-3 row-span-1'>
-                <h2 className='text-3xl py-2 text-primary-800'>Recent Updates</h2>
-                <p className='text-justify hyphens-auto'>Below is a highlight list of my recent works. For a full list of works, please see <UnderlineLink className='text-primary-500' href="/publications">Here</UnderlineLink>.</p>
-                <ul className='pl-4 py-2'>
-                  <li><Paperlink title="Co-Me: Confidence-Guided Token Merging for Visual Geometric Transformers" link="https://co-me-tokens.github.io" venue="CVPR 2026" /></li>
-                  <li><Paperlink title="MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry" link="https://mac-vo.github.io/" venue="ICRA 2025" awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]} /></li>
-                </ul>
-              </div>
-
-              {/* Projects */}
-              <div className='text-lg homepage-card col-span-1 lg:col-span-4 row-span-1'>
-                <h2 className='text-3xl py-2 text-primary-800'>Projects</h2>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 pt-2'>
-                  <div>
-                    <div className='flex items-center gap-3 mb-2'>
-                      <Image alt='PyPose Icon' src={PyposeImage.src} width={44} height={44} />
-                      <h3 className='text-xl font-semibold'>
-                        <UnderlineLink href="https://pypose.org/">PyPose</UnderlineLink>
-                      </h3>
-                    </div>
-                    <p className='text-justify hyphens-auto'>
-                      PyPose is a Library for Robot Learning with Physics-based Optimization. It supports efficient automatic-differentiation on Lie Group and Algebra.
-                    </p>
-                  </div>
-                  <div>
-                    <div className='flex items-center gap-3 mb-2'>
-                      <Image alt='CMU SCS Icon' src={SCSImage.src} width={44} height={44} />
-                      <h3 className='text-xl font-semibold'>
-                        <UnderlineLink href="https://cs122.andrew.cmu.edu/visualc0/">C0 Visualizer</UnderlineLink>
-                      </h3>
-                    </div>
-                    <p className='text-justify hyphens-auto'>
-                      I created the C0 program visualizer, a virtual machine that executes C language in browser and provide realtime memory visualization.
-                    </p>
-                  </div>
+              {/* Research Highlights */}
+              <div className='text-lg homepage-card col-span-1 lg:col-span-3 row-span-1 flex flex-col'>
+                <h2 className='text-3xl font-medium tracking-tight py-2 text-primary-800'>Research Highlights</h2>
+                <div className='divide-y divide-neutral-200'>
+                  <ResearchHighlight
+                    title='Co-Me: Confidence-Guided Token Merging for Visual Geometric Transformers'
+                    link='https://co-me-tokens.github.io'
+                    venue='CVPR 2026'
+                    image='/images/research/co-me.png'
+                    imageAlt='Point cloud of the Sydney Opera House reconstructed with Co-Me'
+                  />
+                  <ResearchHighlight
+                    title='MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry'
+                    link='https://mac-vo.github.io/'
+                    venue='ICRA 2025'
+                    awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]}
+                    image='/images/research/mac-vo.jpg'
+                    imageAlt='MAC-VO running on-device on a stereo camera rig'
+                  />
+                </div>
+                <div className='flex-grow' />
+                <div className='flex justify-end pt-2'>
+                  <UnderlineLink href='/publications' className='font-mono text-xs uppercase tracking-widest text-neutral-500'>All Publications →</UnderlineLink>
                 </div>
               </div>
 
-              {/* Notes */}
-              <div className='text-lg homepage-card col-span-1 lg:col-span-2 row-span-1'>
-                <h2 className='text-3xl py-2 text-primary-800'>Open Source Notes</h2>
-                <p className='break-words hyphens-auto overflow-auto text-justify'>
-                  I believe knowledge is most impactful when shared freely. By open-sourcing my notes from high school AP courses to advanced university topics, I aim to improve the accessibility of knowledge for everyone.
-                </p>
-                <div className='flex flex-row-reverse pt-4'><ButtonLink href='/notes' variant='light' size='large' className='min-w-44 text-center' rightIcon={ArrowRightIcon}>Visit My Notes</ButtonLink></div>
+              {/* Projects & Notes */}
+              <div className='text-lg homepage-card col-span-1 lg:col-span-6 row-span-1'>
+                <h2 className='font-mono text-sm uppercase tracking-widest text-primary-800 pt-1 pb-3'>Open Source Projects</h2>
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-4 pb-1'>
+                  <UnstyledLink href='https://pypose.org/' className='group flex items-center gap-3'>
+                    <Image alt='PyPose Icon' src={PyposeImage.src} width={36} height={36}
+                      className='grayscale transition-[filter] duration-200 group-hover:grayscale-0' />
+                    <span className='min-w-0'>
+                      <span className='flex items-center gap-1 text-xl leading-tight text-neutral-500 transition-colors group-hover:text-primary-800'>
+                        PyPose <ArrowUpRightIcon size={16} className='shrink-0' />
+                      </span>
+                      <span className='block font-mono text-xs text-neutral-400'>Robot learning · Lie theory · PyTorch</span>
+                    </span>
+                  </UnstyledLink>
+                  <UnstyledLink href='/notes' className='group flex items-center gap-3'>
+                    <span className='flex h-9 w-9 shrink-0 items-center justify-center bg-primary-50 text-primary-800 grayscale transition-[filter] duration-200 group-hover:grayscale-0'>
+                      <NotebookPenIcon size={20} strokeWidth={1.5} />
+                    </span>
+                    <span className='min-w-0'>
+                      <span className='flex items-center gap-1 text-xl leading-tight text-neutral-500 transition-colors group-hover:text-primary-800'>
+                        Open Notes <ArrowUpRightIcon size={16} className='shrink-0' />
+                      </span>
+                      <span className='block font-mono text-xs text-neutral-400'>Course notes · AP to university · Open access</span>
+                    </span>
+                  </UnstyledLink>
+                  <UnstyledLink href='https://cs122.andrew.cmu.edu/visualc0/' className='group flex items-center gap-3'>
+                    <Image alt='CMU SCS Icon' src={SCSImage.src} width={36} height={36}
+                      className='grayscale transition-[filter] duration-200 group-hover:grayscale-0' />
+                    <span className='min-w-0'>
+                      <span className='flex items-center gap-1 text-xl leading-tight text-neutral-500 transition-colors group-hover:text-primary-800'>
+                        C0 Visualizer <ArrowUpRightIcon size={16} className='shrink-0' />
+                      </span>
+                      <span className='block font-mono text-xs text-neutral-400'>C in browser · Memory visualization · CMU 15-122</span>
+                    </span>
+                  </UnstyledLink>
+                  <UnstyledLink href='https://gwcs.xyz/' className='group flex items-center gap-3'>
+                    <Image alt='GZFLS CS Club Icon' src={GWCSImage.src} width={36} height={36}
+                      className='grayscale transition-[filter] duration-200 group-hover:grayscale-0' />
+                    <span className='min-w-0'>
+                      <span className='flex items-center gap-1 text-xl leading-tight text-neutral-500 transition-colors group-hover:text-primary-800'>
+                        CS Club <ArrowUpRightIcon size={16} className='shrink-0' />
+                      </span>
+                      <span className='block font-mono text-xs text-neutral-400'>High School · Student community · CS education</span>
+                    </span>
+                  </UnstyledLink>
+                </div>
               </div>
 
               {/* Experiences */}
               <div className='text-lg homepage-card col-span-1 lg:col-span-6 row-span-4'>
-                <h2 className='text-3xl pt-2 text-primary-800' id='experience-section'>Experience</h2>
-                <ol>
-                  <li>
-                    <AmazonExperience />
-                    <AirLabExperience />
-                    <FieldAIExperience />
+                <h2 className='text-3xl font-medium tracking-tight pt-2 text-primary-800' id='experience-section'>Experience</h2>
+                <AmazonExperience />
+                <AirLabExperience />
+                <FieldAIExperience />
 
-                    <FoldableRegion collapsedHeight={120}>
-                      <MITIBMExperience />
-                      <LTIExperience />
-                      <GuangdongExperience />
-                    </FoldableRegion>
-                  </li>
-                </ol>
+                <FoldableExperience label='More Experience'>
+                  <MITIBMExperience />
+                  <LTIExperience />
+                  <GuangdongExperience />
+                </FoldableExperience>
               </div>
 
               {/* Other (Yutian Chen)s */}
               <div className='text-lg homepage-card col-span-1 lg:col-span-2 row-span-1'>
-                <h2 className='text-3xl py-2 text-primary-800'>Fun Fact</h2>
-                <p className='break-words hyphens-auto overflow-auto text-justify'>
+                <h2 className='text-3xl font-medium tracking-tight py-2 text-primary-800'>Fun Fact</h2>
+                <p className='break-words'>
                   There are at least two other (Yutian Chen)s actively working in AI research. If I'm not the one you are looking for, you might want to check on their homepages:
                 </p>
                 <ul className='pl-4 py-2'>
@@ -185,12 +215,11 @@ export default function HomePage() {
 
               {/* Research Motto */}
               <div className='text-lg homepage-card col-span-1 lg:col-span-4 row-span-1 flex items-center justify-center'>
-                <blockquote className='relative px-8 py-2 max-w-2xl'>
-                  <span aria-hidden className='absolute -top-4 -left-4 text-8xl leading-none font-serif text-slate-300 select-none pointer-events-none'>&ldquo;</span>
-                  <p className='relative z-10 text-left font-normal tracking-wide px-6'>
-                    GOOD RESEARCH IS ABOUT SOLVING THE IMPORTANT PROBLEM AT THE RIGHT TIME WITH SIMPLE METHODS AND SOLID ENGINEERING.
+                <blockquote className='max-w-2xl border-l-2 border-primary-800 pl-6 py-2'>
+                  <p className='mono-label text-neutral-400 mb-3'>Research Motto</p>
+                  <p className='text-xl font-light leading-relaxed'>
+                    Good research is about solving the important problem at the right time, with simple methods and solid engineering.
                   </p>
-                  <span aria-hidden className='absolute -bottom-10 -right-4 text-8xl leading-none font-serif text-slate-300 select-none pointer-events-none'>&rdquo;</span>
                 </blockquote>
               </div>
 

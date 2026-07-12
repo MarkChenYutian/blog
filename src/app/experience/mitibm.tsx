@@ -6,7 +6,7 @@ import MITIBMImage from '~/images/MIT-IBM-WatsonAI.png';
 
 export default function MITIBMExperience() {
   return (
-    <ExperienceHead
+    <ExperienceHead compact
       icon={MITIBMImage}
       title="Embodied AI Simulator"
       place="MIT-IBM Watson AI Lab"
@@ -14,8 +14,8 @@ export default function MITIBMExperience() {
       from_date="Apr 2024"
       to_date="Jan 2025"
       desc={
-        <p className='text-justify hyphens-auto'>
-          Working with Professor <UnderlineLink href="https://people.csail.mit.edu/ganchuang/">Chuang Gan</UnderlineLink>, I developed a data pipeline for City-scale 3D scene reconstruction based on real world satellite/street-view image for multi-agent simulator.
+        <p>
+          Working with Professor <UnderlineLink bold href="https://people.csail.mit.edu/ganchuang/">Chuang Gan</UnderlineLink>, I developed a data pipeline for City-scale 3D scene reconstruction based on real world satellite/street-view image for multi-agent simulator.
         </p>
       }
       items={[

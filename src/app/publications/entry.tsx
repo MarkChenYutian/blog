@@ -31,14 +31,14 @@ export default function PublicationEntry({
   return (
     <article className="flex gap-4 border-b border-slate-200 py-5">
       {index !== undefined && (
-        <span className="text-slate-400 text-sm font-medium pt-1 w-10 text-right shrink-0 tabular-nums">
+        <span className="text-slate-400 font-mono text-sm pt-1 w-10 text-right shrink-0 tabular-nums">
           [{index}]
         </span>
       )}
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline justify-between gap-4 flex-wrap">
-          <h3 className="text-lg font-semibold flex-1 min-w-[16rem]">{title}</h3>
-          <span className="text-sm italic text-slate-500 whitespace-nowrap">{venue}</span>
+          <h3 className="text-lg font-medium flex-1 min-w-[16rem]">{title}</h3>
+          <span className="font-mono text-xs uppercase tracking-wider text-slate-500 border border-slate-300 px-1.5 py-0.5 whitespace-nowrap">{venue}</span>
         </div>
         <p className="text-sm text-slate-600 mt-2">
           {authors.map((raw, i) => {
@@ -47,7 +47,7 @@ export default function PublicationEntry({
             const isMe = name === ME;
             return (
               <React.Fragment key={i}>
-                <span className={isMe ? 'font-bold text-slate-800' : ''}>{name}</span>
+                <span className={isMe ? 'font-medium text-slate-800' : ''}>{name}</span>
                 {equalContrib && <sup className="text-slate-400 ml-0.5">★</sup>}
                 {i < authors.length - 1 ? ', ' : ''}
               </React.Fragment>
@@ -58,7 +58,7 @@ export default function PublicationEntry({
         {awards && awards.length > 0 && (
           <ul className="mt-2 ml-2 border-l-2 border-primary-700 pl-3 space-y-1">
             {awards.map((a, i) => (
-              <li key={i} className="flex items-center gap-1.5 text-sm text-primary-700 font-semibold">
+              <li key={i} className="flex items-center gap-1.5 text-sm text-primary-700 font-medium">
                 <AwardIcon size={14} strokeWidth={1.5} /> {a}
               </li>
             ))}

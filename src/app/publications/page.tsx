@@ -1,13 +1,11 @@
 import { Metadata } from 'next';
-import Image from 'next/image';
 import * as React from 'react';
 
+import PageHeader from '@/components/custom/page_header';
 import Footer from '@/components/Footer';
 import NavigationBar from '@/components/Navigation';
 
 import PublicationEntry, { PublicationEntryProps } from '@/app/publications/entry';
-
-import AvatarImage from '~/images/Yutian_Chen.jpg';
 
 export const metadata: Metadata = {
   title: 'Publications',
@@ -116,16 +114,10 @@ const publications: PublicationEntryProps[] = [
 export default function PublicationsPage() {
   return (
     <div className='min-h-screen'>
-      <div className='px-4'>
-        <div className='relative flex flex-wrap flex-row items-center justify-center w-full'>
-          <Image alt="Yutian Chen portrait" src={AvatarImage.src} width={64} height={64} className='rounded-full m-4 hidden md:block' />
-          <h1 className='text-2xl md:text-3xl font-extralight py-2'>Yutian Chen's <span className='font-semibold'>Publications</span></h1>
-          <div className='flex-grow' />
-        </div>
-      </div>
+      <PageHeader title='Publications' />
       <NavigationBar />
       <div className='layout py-6'>
-        <p className='text-xs italic text-slate-500 mb-2'>★ indicates equal contribution.</p>
+        <p className='font-mono text-slate-500 mb-2'><span className='text-lg mb-1'>★</span> indicates equal contribution.</p>
         {publications.map((pub, i) => (
           <PublicationEntry key={i} index={i + 1} {...pub} />
         ))}

@@ -48,7 +48,7 @@ export default function AllPosts({ posts }: { posts: PostPageProps[] }) {
         {
           allTags.map((tag, index) =>
             <button key={index}
-              className={"text-sm text-slate-700 px-2 py-1 rounded-full hover:bg-primary-300" + (searchTag.has(tag) ? " bg-primary-400" : " bg-slate-100")}
+              className={"font-mono text-xs uppercase tracking-wider px-2 py-1 border transition-colors" + (searchTag.has(tag) ? " border-primary-800 bg-primary-800 text-white" : " border-slate-300 text-slate-700 hover:border-primary-800 hover:text-primary-800")}
               onClick={() => toggleTag(tag)}
             >
               {tag}

@@ -13,9 +13,10 @@ export default function FieldAIExperience() {
       link="https://www.fieldai.com/fairi"
       from_date="Jun 2025"
       to_date="Aug 2025"
+      collab={{ name: "the AirLab, CMU", link: "https://theairlab.org/" }}
       desc={
-        <p className='text-justify hyphens-auto'>
-          Working with Dr. <UnderlineLink href="https://www.jaypatrikar.me">Jay Patrikar</UnderlineLink>, we propose the Confidence-Guided Token Merging (Co-Me), a training-free acceleration method for visual geometric transformers that identifies and merges low-confidence tokens to reduce computation while preserving spatial fidelity.
+        <p>
+          Working with Dr. <UnderlineLink bold href="https://www.jaypatrikar.me">Jay Patrikar</UnderlineLink>, we propose the Confidence-Guided Token Merging (Co-Me), a training-free acceleration method for visual geometric transformers that identifies and merges low-confidence tokens to reduce computation while preserving spatial fidelity.
           By leveraging a distilled confidence predictor, Co-Me delivers substantial speedups across models like VGGT (up to 11.3x) and MapAnything (up to 7.8x), enabling real-time 3D perception.
         </p>
       }

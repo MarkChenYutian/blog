@@ -43,10 +43,10 @@ export default function PostEntry(content: PostPageProps) {
       href={"/posts/" + content.filename}
       className="group flex flex-col h-full bg-white border border-slate-200 p-4 hover:shadow-md hover:border-slate-300"
     >
-      <h2 className="text-lg font-semibold text-slate-800 group-hover:text-primary-800">
+      <h2 className="text-lg font-medium text-slate-800 group-hover:text-primary-800">
         {content.title}
       </h2>
-      <p className="mt-1 text-xs text-slate-400 flex items-center gap-1">
+      <p className="mt-1 font-mono text-xs text-slate-400 flex items-center gap-1">
         <CalendarIcon size={12} /> {content.date.toLocaleDateString()}
       </p>
 
@@ -55,7 +55,7 @@ export default function PostEntry(content: PostPageProps) {
           {content.tags.map((tag) => (
             <span
               key={tag}
-              className="text-xs text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full"
+              className="font-mono text-xs uppercase tracking-wider text-slate-600 border border-slate-300 px-1.5 py-0.5"
             >
               {tag}
             </span>

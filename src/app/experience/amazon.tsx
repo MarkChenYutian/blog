@@ -13,8 +13,8 @@ export default function AmazonExperience() {
       from_date="May 2026"
       to_date="Aug 2026"
       desc={
-        <p className='text-justify hyphens-auto'>
-          I joined Amazon&apos;s Frontier AI Robotics (FAR) as an intern Member of Technical Staff, where I have the honor of working with Professor <UnderlineLink href="https://me.berkeley.edu/people/koushil-sreenath/">Koushil Sreenath</UnderlineLink> on an IMU foundation model for human and humanoid motion &mdash; a robust, generalizable encoder for multiple downstream tasks.
+        <p>
+          As an intern Member of Technical Staff, where I have the honor of working with Professor <UnderlineLink bold href="https://me.berkeley.edu/people/koushil-sreenath/">Koushil Sreenath</UnderlineLink> on an IMU foundation model for human and humanoid motion &mdash; a robust, generalizable encoder for multiple downstream tasks.
         </p>
       }
       items={[]}

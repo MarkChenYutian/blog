@@ -1,4 +1,6 @@
 import { Metadata } from 'next';
+import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
+import localFont from 'next/font/local';
 import * as React from 'react';
 
 import '@/styles/globals.css';
@@ -8,6 +10,45 @@ import '@/styles/colors.css';
 import 'katex/dist/katex.min.css';
 
 import { siteConfig } from '@/constant/config';
+
+const plexSans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-plex-sans',
+  display: 'swap',
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-plex-mono',
+  display: 'swap',
+});
+
+// CJK fallback for IBM Plex Sans/Mono, which have no CJK glyphs. Browsers pick
+// the nearest of these three cuts per element's font-weight automatically.
+const lxgwWenkai = localFont({
+  src: [
+    {
+      path: '../../public/fonts/lxgw-wenkai/LXGWWenKai-Light.woff2',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/lxgw-wenkai/LXGWWenKai-Medium.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/lxgw-wenkai/LXGWWenKai-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-lxgw-wenkai',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -55,7 +96,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en'>
+    <html
+      lang='en'
+      className={`${plexSans.variable} ${plexMono.variable} ${lxgwWenkai.variable}`}
+    >
       <body>{children}</body>
     </html>
   );

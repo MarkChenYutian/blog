@@ -1,12 +1,10 @@
 import { Metadata } from 'next';
-import Image from 'next/image';
 import * as React from 'react';
 
+import PageHeader from '@/components/custom/page_header';
 import FileSystemApp from '@/components/filesystem2/app';
 import Footer from '@/components/Footer';
 import NavigationBar from '@/components/Navigation';
-
-import AvatarImage from '~/images/Yutian_Chen.jpg';
 
 export const metadata: Metadata = {
   title: 'Shared Files',
@@ -16,13 +14,7 @@ export default function FilePage() {
   return (
     <main>
       <section className='min-w-full bg-white mb-8'>
-        <div className='px-4'>
-          <div className='relative flex flex-wrap flex-row items-center justify-center w-full'>
-            <Image alt="Yutian Chen portrait" src={AvatarImage.src} width={64} height={64} className='rounded-full m-4 hidden md:block' />
-            <h1 className='text-2xl md:text-3xl font-extralight py-2'>Yutian Chen's <span className='font-semibold'>Notes</span></h1>
-            <div className='flex-grow' />
-          </div>
-        </div>
+        <PageHeader title='Notes' />
         <NavigationBar />
         <div className='px-4'>
           <FileSystemApp

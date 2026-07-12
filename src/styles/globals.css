@@ -42,32 +42,38 @@ html {
 
   /* #region  /**=========== Typography =========== */
   .h0 {
-    @apply font-heading text-3xl font-bold md:text-5xl;
+    @apply font-heading text-3xl font-medium tracking-tight md:text-5xl;
   }
 
   h1,
   .h1 {
-    @apply font-heading text-2xl font-bold md:text-4xl;
+    @apply font-heading text-2xl font-medium tracking-tight md:text-4xl;
   }
 
   h2,
   .h2 {
-    @apply font-heading text-xl font-bold md:text-3xl;
+    @apply font-heading text-xl font-medium tracking-tight md:text-3xl;
   }
 
   h3,
   .h3 {
-    @apply font-heading text-lg font-bold md:text-2xl;
+    @apply font-heading text-lg font-medium tracking-tight md:text-2xl;
   }
 
   h4,
   .h4 {
-    @apply font-heading text-base font-bold md:text-lg;
+    @apply font-heading text-base font-medium md:text-lg;
   }
 
   body,
   .p {
     @apply font-primary text-sm md:text-base;
+  }
+
+  /* IBM Plex Sans reads blocky at 700; keep inline emphasis at 600 */
+  strong,
+  b {
+    @apply font-semibold;
   }
   /* #endregion  /**======== Typography =========== */
 
@@ -144,14 +150,14 @@ html {
   @media (min-width: 1024px) {
     .homepage-card {
       background-image:
-        linear-gradient(#e5e7eb, #e5e7eb),
-        linear-gradient(#e5e7eb, #e5e7eb),
-        linear-gradient(#e5e7eb, #e5e7eb),
-        linear-gradient(#e5e7eb, #e5e7eb),
-        linear-gradient(#e5e7eb, #e5e7eb),
-        linear-gradient(#e5e7eb, #e5e7eb),
-        linear-gradient(#e5e7eb, #e5e7eb),
-        linear-gradient(#e5e7eb, #e5e7eb);
+        linear-gradient(#d1d5db, #d1d5db),
+        linear-gradient(#d1d5db, #d1d5db),
+        linear-gradient(#d1d5db, #d1d5db),
+        linear-gradient(#d1d5db, #d1d5db),
+        linear-gradient(#d1d5db, #d1d5db),
+        linear-gradient(#d1d5db, #d1d5db),
+        linear-gradient(#d1d5db, #d1d5db),
+        linear-gradient(#d1d5db, #d1d5db);
       background-position:
         top left, top left,
         top right, top right,
@@ -175,5 +181,48 @@ html {
 
   .flat-button {
     @apply border-2 border-neutral-200 p-4 m-4;
+  }
+
+  /* Viewfinder ticks inset from the corners of the cardinal header band */
+  .corner-ticks {
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.4)),
+      linear-gradient(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.4)),
+      linear-gradient(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.4)),
+      linear-gradient(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.4)),
+      linear-gradient(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.4)),
+      linear-gradient(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.4)),
+      linear-gradient(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.4)),
+      linear-gradient(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.4));
+    background-position:
+      1rem 1rem, 1rem 1rem,
+      calc(100% - 1rem) 1rem, calc(100% - 1rem) 1rem,
+      1rem calc(100% - 1rem), 1rem calc(100% - 1rem),
+      calc(100% - 1rem) calc(100% - 1rem), calc(100% - 1rem) calc(100% - 1rem);
+    background-size:
+      20px 1px, 1px 20px,
+      20px 1px, 1px 20px,
+      20px 1px, 1px 20px,
+      20px 1px, 1px 20px;
+    background-repeat: no-repeat;
+  }
+
+  /* Smaller ticks for the compact subpage header band */
+  .corner-ticks-sm {
+    background-position:
+      0.625rem 0.625rem, 0.625rem 0.625rem,
+      calc(100% - 0.625rem) 0.625rem, calc(100% - 0.625rem) 0.625rem,
+      0.625rem calc(100% - 0.625rem), 0.625rem calc(100% - 0.625rem),
+      calc(100% - 0.625rem) calc(100% - 0.625rem), calc(100% - 0.625rem) calc(100% - 0.625rem);
+    background-size:
+      12px 1px, 1px 12px,
+      12px 1px, 1px 12px,
+      12px 1px, 1px 12px,
+      12px 1px, 1px 12px;
+  }
+
+  /* Instrument-readout label: dates, venues, tags, nav */
+  .mono-label {
+    @apply font-mono text-xs uppercase tracking-widest;
   }
 }

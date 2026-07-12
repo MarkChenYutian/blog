@@ -6,8 +6,21 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        primary: ['Arial', 'Helvetica', ...defaultTheme.fontFamily.sans],
-        heading: ['Arial', 'Helvetica', ...defaultTheme.fontFamily.sans],
+        primary: [
+          'var(--font-plex-sans)',
+          'var(--font-lxgw-wenkai)',
+          ...defaultTheme.fontFamily.sans,
+        ],
+        heading: [
+          'var(--font-plex-sans)',
+          'var(--font-lxgw-wenkai)',
+          ...defaultTheme.fontFamily.sans,
+        ],
+        mono: [
+          'var(--font-plex-mono)',
+          'var(--font-lxgw-wenkai)',
+          ...defaultTheme.fontFamily.mono,
+        ],
       },
       colors: {
         primary: {

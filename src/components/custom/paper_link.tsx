@@ -26,12 +26,12 @@ export default function Paperlink(paper: PaperProps) {
   return <div>
     <UnderlineLink className='inline' href={paper.link}><FileTextIcon className='inline-block mr-2 align-text-top' strokeWidth={1.25} size={18} />{paper.title}</UnderlineLink>
     {paper.venue && (
-      <span className="ml-2 text-sm italic text-neutral-500 whitespace-nowrap">· {paper.venue}</span>
+      <span className="ml-2 inline-block max-w-full align-middle font-mono text-xs uppercase tracking-wider text-neutral-500 border border-neutral-300 px-1.5 py-0.5">{paper.venue}</span>
     )}
     {hasChildren && (
-      <div className="ml-6 border-l-2 pl-2 mt-1 space-y-0.5">
+      <div className="ml-6 border-l-2 border-neutral-300 pl-2 mt-1 space-y-0.5">
         {paper.awards && paper.awards.map((award, index) => (
-          <p key={`award-${index}`} className="text-sm font-semibold text-primary-600">
+          <p key={`award-${index}`} className="text-sm font-medium text-primary-600">
             <AwardIcon className="inline-block text-xs mr-2 mb-0" strokeWidth={1.0} /> {award}
           </p>
         ))}
