@@ -80,7 +80,7 @@
 
   /* Link styles */
   a {
-    @apply animated-underline custom-link inline-flex items-center font-medium focus-visible:ring-primary-500 focus:outline-none focus-visible:rounded focus-visible:ring focus-visible:ring-offset-2 border-dark dark:border-neutral-500 border-b border-dotted hover:border-black/0 dark:hover:border-white/0 text-primary-600 dark:text-primary-400
+    @apply animated-underline inline-flex items-center font-medium focus-visible:ring-primary-500 focus:outline-none focus-visible:rounded focus-visible:ring focus-visible:ring-offset-2 border-dark dark:border-neutral-500 border-b border-dotted hover:border-black/0 dark:hover:border-white/0 text-primary-600 dark:text-primary-400
   }
 
   /* Image styles */

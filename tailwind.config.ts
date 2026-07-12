@@ -1,5 +1,6 @@
 import type { Config } from 'tailwindcss';
 import defaultTheme from 'tailwindcss/defaultTheme';
+import plugin from 'tailwindcss/plugin';
 
 export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
@@ -67,5 +68,31 @@ export default {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [
+    require('@tailwindcss/forms'),
+    // Registered as a plugin (not in globals.css) so posts.css can @apply it —
+    // Tailwind cannot resolve @apply of classes defined in a different CSS file.
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        '.animated-underline': {
+          backgroundImage:
+            'linear-gradient(transparent, transparent), linear-gradient(to right, currentColor, currentColor)',
+          backgroundSize: '100% 2px, 0 2px',
+          backgroundPosition: '100% 100%, 0 100%',
+          backgroundRepeat: 'no-repeat',
+        },
+        '@media (prefers-reduced-motion: no-preference)': {
+          '.animated-underline': {
+            transition: '0.3s ease',
+            transitionProperty:
+              'background-size, color, background-color, border-color',
+          },
+        },
+        '.animated-underline:hover, .animated-underline:focus-visible, .animated-underline.active':
+          {
+            backgroundSize: '0 2px, 100% 2px',
+          },
+      });
+    }),
+  ],
 } satisfies Config;
