@@ -28,6 +28,11 @@ export default function AirLabExperience() {
           awards={["ICRA 2025 Best Conference Paper Award", "Best Paper Award on Robot Perception"]}
           slides={[{ title: "MAC-VO Presentation Slide", link: "/files/MAC-VO-AirLab-Long-Presentation.pdf" }]}
         />,
+        <Paperlink key="mac-i2"
+          title="MAC-I²: Learned Metrics-Aware Covariance for Robust Visual-Inertial Fusion in Initialization and Calibration"
+          link="https://mac-i2.github.io/"
+          venue="arXiv Preprint"
+        />,
         <Paperlink key={1}
           title="UFM: A Simple Path towards Unified Dense Correspondence with Flow"
           link="https://uniflowmatch.github.io"

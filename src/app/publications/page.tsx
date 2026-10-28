@@ -22,6 +22,28 @@ const publications: PublicationEntryProps[] = [
     awards: ["Best Conference Paper Award", "Best Paper Award on Robot Perception"],
   },
   {
+    title: "Self-Supervised Inertial Odometry",
+    authors: [
+      "Yuheng Qiu", "Yutian Chen", "Carlton Cort", "Weison Huang", "Shibo Zhao",
+      "Pieter Abbeel", "Rocky Duan", "Koushil Sreenath", "C. Karen Liu",
+      "Carmelo Sferrazza", "Junyi Geng", "Sebastian Scherer", "Guanya Shi",
+    ],
+    venue: "arXiv Preprint",
+    arxiv: "https://arxiv.org/abs/2610.25988",
+    homepage: "https://ssio-imu.github.io/",
+    github: "https://github.com/amazon-far/SSIO",
+  },
+  {
+    title: "MAC-I²: Learned Metrics-Aware Covariance for Robust Visual-Inertial Fusion in Initialization and Calibration",
+    authors: [
+      "Xiang Fei*", "Yuheng Qiu*", "Can Xu", "Yutian Chen", "Ruogu Li",
+      "Xingxing Zuo", "Wenshan Wang", "Sebastian Scherer",
+    ],
+    venue: "arXiv Preprint",
+    arxiv: "https://arxiv.org/abs/2609.07116",
+    homepage: "https://mac-i2.github.io/",
+  },
+  {
     title: "Co-Me: Confidence-Guided Token Merging for Visual Geometric Transformers",
     authors: ["Yutian Chen", "Yuheng Qiu", "Ruogu Li", "Jay Patrikar", "Sebastian Scherer"],
     venue: "CVPR 2026",

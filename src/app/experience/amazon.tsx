@@ -1,4 +1,5 @@
 import ExperienceHead from '@/components/custom/experience_heading';
+import Paperlink from '@/components/custom/paper_link';
 import UnderlineLink from '@/components/links/UnderlineLink';
 
 import AmazonLogo from '~/images/Amazon_Logo.png';
@@ -17,7 +18,13 @@ export default function AmazonExperience() {
           As an intern Member of Technical Staff, where I have the honor of working with Professor <UnderlineLink bold href="https://me.berkeley.edu/people/koushil-sreenath/">Koushil Sreenath</UnderlineLink> on an IMU foundation model for human and humanoid motion &mdash; a robust, generalizable encoder for multiple downstream tasks.
         </p>
       }
-      items={[]}
+      items={[
+        <Paperlink key="ssio"
+          title="Self-Supervised Inertial Odometry"
+          link="https://ssio-imu.github.io/"
+          venue="arXiv Preprint"
+        />
+      ]}
     />
   );
 }
