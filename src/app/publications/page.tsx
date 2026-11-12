@@ -22,6 +22,17 @@ const publications: PublicationEntryProps[] = [
     awards: ["Best Conference Paper Award", "Best Paper Award on Robot Perception"],
   },
   {
+    title: "A Unified Inertial Encoder for Human and Humanoid Motion",
+    authors: [
+      "Yutian Chen", "Shibo Zhao", "Rocky Duan", "Karen Liu", "Carmelo Sferrazza",
+      "Guanya Shi", "Yuheng Qiu", "Koushil Sreenath",
+    ],
+    venue: "arXiv Preprint",
+    arxiv: "https://arxiv.org/abs/2611.10137",
+    homepage: "https://unified-inertial-encoder.github.io/",
+    github: "https://github.com/amazon-far/Unified-Inertial-Encoder",
+  },
+  {
     title: "Self-Supervised Inertial Odometry",
     authors: [
       "Yuheng Qiu", "Yutian Chen", "Carlton Cort", "Weison Huang", "Shibo Zhao",

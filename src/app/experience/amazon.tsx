@@ -12,13 +12,18 @@ export default function AmazonExperience() {
       place="Amazon, Frontier AI Robotics (FAR)"
       link="https://www.amazon.science/research-areas/robotics"
       from_date="May 2026"
-      to_date="Now"
+      to_date="Aug 2026"
       desc={
         <p>
           As an intern Member of Technical Staff, where I have the honor of working with Professor <UnderlineLink bold href="https://me.berkeley.edu/people/koushil-sreenath/">Koushil Sreenath</UnderlineLink> on an IMU foundation model for human and humanoid motion &mdash; a robust, generalizable encoder for multiple downstream tasks.
         </p>
       }
       items={[
+        <Paperlink key="unified-inertial-encoder"
+          title="A Unified Inertial Encoder for Human and Humanoid Motion"
+          link="https://unified-inertial-encoder.github.io/"
+          venue="arXiv Preprint"
+        />,
         <Paperlink key="ssio"
           title="Self-Supervised Inertial Odometry"
           link="https://ssio-imu.github.io/"
